@@ -1,200 +1,1089 @@
-## 🔧 Desarrollo
+# 🔧 Terminal Biométrica - Documentación Técnica del Sistema
 
-### Configuración del Entorno de Desarrollo
+> Sistema de control de acceso biométrico híbrido (online/offline) que combina reconocimiento facial y verificación por huella dactilar. Este documento explica el concepto del dispositivo, su lógica de funcionamiento y la arquitectura de código necesaria para implementarlo.
 
-#### 1. Preparación del Entorno
-```bash
-# Clonar repositorio
-git clone https://github.com/empresa/biometric-terminal.git
-cd biometric-terminal
+## 📋 Tabla de Contenidos
 
-# Crear entorno virtual
-python3 -m venv venv
-source venv/bin/activate  # Linux/Mac
-# venv\Scripts\activate   # Windows
+1. [Concepto del Dispositivo](#-concepto-del-dispositivo)
+2. [Lógica de Funcionamiento](#-lógica-de-funcionamiento)
+3. [Arquitectura del Sistema](#️-arquitectura-del-sistema)
+4. [Estructura del Código](#-estructura-del-código)
+5. [Funcionamiento de los Módulos](#-funcionamiento-de-los-módulos)
+6. [Flujo de Ejecución](#-flujo-de-ejecución)
+7. [Gestión de Estados](#-gestión-de-estados)
+8. [Comunicación Entre Módulos](#-comunicación-entre-módulos)
+9. [Persistencia de Datos](#-persistencia-de-datos)
+10. [Casos de Uso del Código](#-casos-de-uso-del-código)
 
-# Instalar dependencias de desarrollo
-pip install -r requirements.txt
-pip install -r requirements-dev.txt
+## 🎯 Concepto del Dispositivo
+
+### ¿Qué es?
+Un dispositivo **autónomo** de control de acceso que opera bajo el principio de **funcionamiento híbrido inteligente**:
+- **Modo Online**: Reconocimiento facial vía API cuando hay conectividad
+- **Modo Offline**: Verificación por huella usando sensor local cuando no hay conectividad  
+- **Modo Manual**: Entrada por cédula como fallback cuando fallan los métodos biométricos
+
+### Hardware Principal
+- **Raspberry Pi Zero 2W**: Procesamiento central
+- **Pantalla táctil 4"**: Interfaz usuario (400x800 vertical)
+- **Cámara OV5647**: Captura para reconocimiento facial
+- **Sensor AS608**: Verificación de huella (almacena hasta 162 templates internamente)
+- **Sensor APDS-9930**: Detección de proximidad para activación automática
+
+### Principio de Operación
+1. **Detección de proximidad** → Activa el sistema
+2. **Evaluación de conectividad** → Decide qué modo usar
+3. **Identificación biométrica** → Facial (online) o huella (offline)
+4. **Registro local** → Siempre guarda en SQLite local
+5. **Sincronización** → Envía a servidor cuando hay conectividad
+
+## 🧠 Lógica de Funcionamiento
+
+### Estados del Sistema
+
+```mermaid
+stateDiagram-v2
+    [*] --> IDLE
+    IDLE --> ACTIVATION : proximity_detected
+    ACTIVATION --> FACIAL_RECOGNITION : has_connectivity
+    ACTIVATION --> FINGERPRINT_VERIFICATION : no_connectivity
+    FACIAL_RECOGNITION --> CONFIRMATION : face_recognized
+    FACIAL_RECOGNITION --> FINGERPRINT_VERIFICATION : api_error
+    FACIAL_RECOGNITION --> MANUAL_ENTRY : max_attempts_reached
+    FINGERPRINT_VERIFICATION --> CONFIRMATION : fingerprint_verified
+    FINGERPRINT_VERIFICATION --> MANUAL_ENTRY : max_attempts_reached
+    MANUAL_ENTRY --> CONFIRMATION : document_entered
+    CONFIRMATION --> IDLE : timeout_or_user_left
+    FACIAL_RECOGNITION --> IDLE : user_left
+    FINGERPRINT_VERIFICATION --> IDLE : user_left
+    MANUAL_ENTRY --> IDLE : cancelled
 ```
 
-#### 2. Variables de Entorno
-```bash
-# Crear archivo .env basado en .env.example
-cp .env.example .env
-
-# Editar variables de entorno
-nano .env
+### Algoritmo de Decisión
+```python
+def determine_operation_mode():
+    if connectivity_monitor.is_online() and api_manager.health_check():
+        return "FACIAL_RECOGNITION"
+    elif fingerprint_manager.is_available():
+        return "FINGERPRINT_VERIFICATION"
+    else:
+        return "MANUAL_ENTRY"
 ```
 
-**Contenido de .env:**
-```bash
-# Configuración del sistema
-DEVICE_ID=TERMINAL_DEV_001
-DEBUG_MODE=true
-LOG_LEVEL=DEBUG
+### Lógica de Sincronización
+- **Local First**: Todo se guarda primero en SQLite local
+- **Background Sync**: Sincronización en segundo plano cuando hay conectividad
+- **Queue Management**: Cola de registros pendientes con retry inteligente
+- **Conflict Resolution**: Timestamp-based para resolver conflictos
 
-# Base de datos
-DATABASE_PATH=data/database_dev.db
+## 🏗️ Arquitectura del Sistema
 
-# API
-API_BASE_URL=https://api-dev.empresa.com/biometric
-API_KEY=dev_api_key_here
-API_TIMEOUT=10
+### Principios de Diseño
 
-# Hardware (para testing sin hardware real)
-MOCK_HARDWARE=true
-MOCK_CAMERA=true
-MOCK_FINGERPRINT=true
-MOCK_PROXIMITY=true
+#### 1. Separación por Responsabilidades
+- **Core**: Lógica de negocio pura
+- **Hardware**: Abstracción de dispositivos físicos  
+- **UI**: Interfaz de usuario
+- **Services**: Orquestación de operaciones complejas
+- **Models**: Estructuras de datos
+- **Utils**: Funcionalidad compartida
 
-# Seguridad
-ADMIN_PASSWORD=admin123  # Solo para desarrollo
-ENCRYPTION_KEY=dev_encryption_key
+#### 2. Patrón Observer para Eventos
+```python
+# Ejemplo de arquitectura de eventos
+event_manager.subscribe("user_detected", camera_manager.start_preview)
+event_manager.subscribe("face_recognized", database_manager.create_record)
+event_manager.subscribe("sync_needed", sync_service.add_to_queue)
 ```
 
-### Arquitectura de Clases Principales
+#### 3. Máquina de Estados Centralizada
+```python
+class StateManager:
+    def transition_to(self, new_state, data=None):
+        # Validar transición
+        # Cleanup estado anterior  
+        # Setup nuevo estado
+        # Notificar cambio
+```
 
-#### CameraManager
+## 📁 Estructura del Código
+
+```
+biometric_terminal/
+├── main.py                          # Punto de entrada - inicialización y bucle principal
+├── core/                            # Lógica de negocio principal
+│   ├── __init__.py
+│   ├── camera_manager.py            # Detección facial + captura para API
+│   ├── fingerprint_manager.py       # Comandos al AS608 (no almacena templates)
+│   ├── proximity_manager.py         # APDS-9930 - activación automática
+│   ├── api_manager.py               # Comunicación HTTP con servidor
+│   ├── database_manager.py          # SQLite local - CRUD operaciones
+│   ├── audio_manager.py             # Sonidos de confirmación/error
+│   └── connectivity_monitor.py      # Health check periódico de API
+├── ui/                              # Interfaces de usuario
+│   ├── __init__.py
+│   ├── main_screen.py               # Preview cámara + detección en tiempo real
+│   ├── admin_screen.py              # Panel configuración + gestión usuarios
+│   ├── registration_screen.py       # Proceso enrollment huella
+│   ├── manual_entry_screen.py       # Teclado numérico para cédula
+│   └── success_screen.py            # Confirmación con datos usuario
+├── hardware/                        # Abstracción de hardware
+│   ├── __init__.py
+│   ├── i2c_handler.py               # Comunicación I2C (APDS-9930)
+│   ├── uart_handler.py              # Comunicación UART (AS608)
+│   └── camera_handler.py            # Wrapper picamera2
+├── services/                        # Servicios de alto nivel
+│   ├── __init__.py
+│   ├── enrollment_service.py        # Proceso completo registro usuario
+│   ├── verification_service.py      # Orquestación facial vs huella
+│   └── sync_service.py              # Gestión cola sincronización
+├── models/                          # Estructuras de datos
+│   ├── __init__.py
+│   ├── user.py                      # Clase User con validaciones
+│   ├── access_record.py             # Clase AccessRecord
+│   └── sync_queue.py                # Clase SyncQueueItem
+├── utils/                           # Utilidades compartidas
+│   ├── __init__.py
+│   ├── config.py                    # ConfigManager - JSON + env vars
+│   ├── logger.py                    # Logging estructurado
+│   ├── state_manager.py             # Máquina de estados global
+│   └── event_manager.py             # Patrón Observer
+└── data/                            # Datos persistentes
+    ├── database.db                  # SQLite - usuarios + registros + sync_queue
+    ├── config.json                  # Configuración del dispositivo
+    └── logs/                        # Archivos de log rotativos
+```
+
+## 🔧 Funcionamiento de los Módulos
+
+### Core Modules
+
+#### camera_manager.py
 ```python
 class CameraManager:
-    """Gestión de cámara y detección facial"""
+    """Gestiona detección facial y captura para API"""
     
-    def __init__(self, config: dict):
-        self.config = config
+    def __init__(self, config):
         self.picam2 = None
-        self.face_cascade = None
-        self.is_active = False
+        self.face_cascade = cv2.CascadeClassifier(...)
+        self.is_preview_active = False
     
-    async def initialize(self) -> bool:
-        """Inicializar cámara y clasificador"""
-        
-    async def start_preview(self) -> None:
-        """Iniciar preview de cámara"""
-        
-    async def detect_faces(self, frame: np.ndarray) -> List[Dict]:
-        """Detectar rostros en frame"""
-        
+    async def start_preview(self):
+        """Inicia preview para UI + detección en tiempo real"""
+        self.picam2.start()
+        self.is_preview_active = True
+    
+    async def detect_faces(self) -> List[Dict]:
+        """
+        Detecta rostros en frame actual
+        Returns: [{"x": 100, "y": 50, "w": 150, "h": 200, "confidence": 0.8}]
+        """
+        frame = self.picam2.capture_array()
+        # Procesar con OpenCV...
+        return detected_faces
+    
     async def capture_for_recognition(self) -> bytes:
-        """Capturar imagen optimizada para API"""
-        
-    async def stop_preview(self) -> None:
-        """Detener preview y liberar recursos"""
+        """
+        Captura imagen optimizada para envío a API
+        Returns: JPEG bytes optimizado para reconocimiento
+        """
+        # Captura en alta calidad
+        # Optimiza tamaño/compresión
+        return jpeg_bytes
+    
+    async def stop_preview(self):
+        """Libera recursos de cámara"""
+        self.picam2.stop()
+        self.is_preview_active = False
 ```
 
-#### FingerprintManager
+#### fingerprint_manager.py
 ```python
 class FingerprintManager:
-    """Comunicación con sensor AS608"""
+    """Comunicación con sensor AS608 - NO almacena templates"""
     
-    def __init__(self, uart_port: str, baud_rate: int):
-        self.uart_port = uart_port
-        self.baud_rate = baud_rate
-        self.connection = None
+    def __init__(self, uart_port="/dev/serial0"):
+        self.uart = None
+        self.port = uart_port
     
-    async def initialize(self) -> bool:
-        """Inicializar comunicación UART"""
-        
     async def enroll_fingerprint(self, user_id: int) -> Dict:
-        """Registrar nueva huella en sensor"""
-        
+        """
+        Registra nueva huella en sensor AS608
+        Returns: {"success": True, "template_id": 45, "quality": 85}
+        """
+        # 1. Encontrar slot libre en sensor (1-162)
+        # 2. Capturar huella 3 veces
+        # 3. Crear template y almacenar en sensor
+        # 4. Retornar template_id para asociar con user_id
+    
     async def verify_fingerprint(self) -> Dict:
-        """Verificar huella contra base interna"""
-        
-    async def delete_fingerprint(self, template_id: int) -> bool:
-        """Eliminar template del sensor"""
-        
+        """
+        Verifica huella contra base interna del sensor
+        Returns: {"success": True, "template_id": 23, "confidence": 95}
+        """
+        # 1. Sensor hace matching interno
+        # 2. Retorna template_id si encuentra match
+        # 3. NO retorna datos de usuario (eso lo hace database_manager)
+    
+    async def delete_template(self, template_id: int) -> bool:
+        """Elimina template del sensor AS608"""
+        # Comando para borrar template específico
+    
     async def get_template_count(self) -> int:
-        """Obtener número de templates almacenados"""
+        """Retorna número de templates almacenados en sensor"""
 ```
 
-#### DatabaseManager
+#### database_manager.py
 ```python
 class DatabaseManager:
-    """Gestión de base de datos SQLite"""
+    """Gestión de SQLite local - única fuente de verdad local"""
+    
+    async def create_user(self, user_data: Dict) -> int:
+        """
+        Crea usuario en base local
+        Args: {"name": "Juan", "document_id": "12345", "fingerprint_template_id": 23}
+        Returns: user_id generado
+        """
+    
+    async def get_user_by_fingerprint_id(self, template_id: int) -> Optional[Dict]:
+        """
+        Busca usuario por template_id del AS608
+        Critical para modo offline: template_id -> user_data
+        """
+    
+    async def create_access_record(self, record: Dict) -> int:
+        """
+        Crea registro de acceso - SIEMPRE local primero
+        Args: {"user_id": 1, "timestamp": "...", "method": "online", "verification_type": "facial"}
+        """
+    
+    async def get_pending_sync_records(self) -> List[Dict]:
+        """Retorna registros no sincronizados para sync_service"""
+    
+    async def mark_as_synced(self, record_id: int):
+        """Marca registro como sincronizado exitosamente"""
+```
+
+#### api_manager.py
+```python
+class APIManager:
+    """Cliente HTTP para comunicación con servidor"""
+    
+    async def health_check(self) -> bool:
+        """Ping rápido para verificar disponibilidad"""
+        try:
+            response = await self.session.get(f"{self.base_url}/health", timeout=3)
+            return response.status == 200
+        except:
+            return False
+    
+    async def recognize_face(self, image_bytes: bytes) -> Dict:
+        """
+        Envía imagen para reconocimiento facial
+        Returns: {"success": True, "user": {"id": 1, "name": "Juan", ...}, "confidence": 0.95}
+        """
+    
+    async def sync_access_record(self, record: Dict) -> bool:
+        """Envía registro de acceso al servidor"""
+        
+    async def sync_user_data(self, user: Dict) -> bool:
+        """Sincroniza datos de usuario con servidor"""
+```
+
+### UI Modules
+
+#### main_screen.py
+```python
+class MainScreen:
+    """Pantalla principal - preview + detección en tiempo real"""
+    
+    def __init__(self, camera_manager, state_manager):
+        self.camera_manager = camera_manager
+        self.state_manager = state_manager
+        self.detection_overlay = None
+    
+    async def show_facial_recognition_mode(self):
+        """
+        Modo online: muestra preview con rectángulos de detección
+        """
+        # Iniciar preview de cámara
+        await self.camera_manager.start_preview()
+        
+        # Loop de detección + UI update
+        while self.state_manager.current_state == SystemState.FACIAL_RECOGNITION:
+            faces = await self.camera_manager.detect_faces()
+            self.update_detection_overlay(faces)
+            await asyncio.sleep(0.1)
+    
+    async def show_fingerprint_mode(self):
+        """
+        Modo offline: UI para colocación de dedo
+        """
+        # Mostrar instrucciones + animación sensor
+        # Esperar eventos de fingerprint_manager
+    
+    def update_detection_overlay(self, faces: List[Dict]):
+        """Dibuja rectángulos sobre rostros detectados"""
+        # Actualiza UI con rectángulos verdes sobre caras
+```
+
+### Services Modules
+
+#### verification_service.py
+```python
+class VerificationService:
+    """Orquesta el proceso completo de verificación"""
+    
+    def __init__(self, camera_manager, fingerprint_manager, api_manager, database_manager):
+        self.camera_manager = camera_manager
+        self.fingerprint_manager = fingerprint_manager
+        self.api_manager = api_manager
+        self.database_manager = database_manager
+    
+    async def perform_facial_verification(self) -> Dict:
+        """
+        Proceso completo de verificación facial
+        Returns: {"success": True, "user_data": {...}, "method": "facial"}
+        """
+        # 1. Capturar imagen optimizada
+        image_data = await self.camera_manager.capture_for_recognition()
+        
+        # 2. Enviar a API
+        api_result = await self.api_manager.recognize_face(image_data)
+        
+        # 3. Procesar resultado
+        if api_result["success"]:
+            return {
+                "success": True,
+                "user_data": api_result["user"],
+                "method": "facial",
+                "confidence": api_result["confidence"]
+            }
+        else:
+            return {"success": False, "error": "not_recognized"}
+    
+    async def perform_fingerprint_verification(self) -> Dict:
+        """
+        Proceso completo de verificación por huella
+        """
+        # 1. Verificar con AS608
+        fp_result = await self.fingerprint_manager.verify_fingerprint()
+        
+        if fp_result["success"]:
+            # 2. Buscar datos de usuario en base local
+            user_data = await self.database_manager.get_user_by_fingerprint_id(
+                fp_result["template_id"]
+            )
+            
+            if user_data:
+                return {
+                    "success": True,
+                    "user_data": user_data,
+                    "method": "fingerprint",
+                    "confidence": fp_result["confidence"]
+                }
+        
+        return {"success": False, "error": "not_verified"}
+```
+
+#### sync_service.py
+```python
+class SyncService:
+    """Gestiona cola de sincronización con retry inteligente"""
+    
+    async def add_to_sync_queue(self, record_id: int, action: str = "create_record"):
+        """Agrega registro a cola de sincronización"""
+        sync_item = {
+            "record_id": record_id,
+            "action": action,
+            "attempts": 0,
+            "created_at": datetime.now()
+        }
+        await self.database_manager.create_sync_queue_item(sync_item)
+    
+    async def process_sync_queue(self):
+        """
+        Procesa cola de sincronización con backoff exponencial
+        """
+        pending_items = await self.database_manager.get_pending_sync_items()
+        
+        for item in pending_items:
+            # Calcular delay según número de intentos
+            delay = min(2 ** item["attempts"], 300)  # max 5 minutos
+            
+            if self.should_retry(item, delay):
+                success = await self.attempt_sync(item)
+                
+                if success:
+                    await self.database_manager.mark_sync_successful(item["id"])
+                else:
+                    await self.database_manager.increment_sync_attempts(item["id"])
+```
+
+## ⚡ Flujo de Ejecución
+
+### 1. Inicialización del Sistema
+
+```python
+# main.py
+async def main():
+    """Punto de entrada principal"""
+    
+    # 1. Cargar configuración
+    config = ConfigManager.load_config()
+    
+    # 2. Inicializar managers en orden de dependencia
+    # Hardware primero
+    proximity_manager = ProximityManager(config.hardware.proximity)
+    camera_manager = CameraManager(config.hardware.camera)
+    fingerprint_manager = FingerprintManager(config.hardware.fingerprint)
+    
+    # Core services
+    database_manager = DatabaseManager(config.database.path)
+    api_manager = APIManager(config.api)
+    connectivity_monitor = ConnectivityMonitor(api_manager)
+    
+    # High-level services  
+    verification_service = VerificationService(
+        camera_manager, fingerprint_manager, api_manager, database_manager
+    )
+    sync_service = SyncService(database_manager, api_manager)
+    
+    # UI
+    ui_manager = UIManager(camera_manager)
+    
+    # Estado global
+    state_manager = StateManager()
+    event_manager = EventManager()
+    
+    # 3. Configurar event listeners
+    setup_event_listeners(event_manager, state_manager, ui_manager)
+    
+    # 4. Inicializar hardware
+    await initialize_hardware()
+    
+    # 5. Iniciar bucle principal
+    await main_operation_loop()
+
+async def main_operation_loop():
+    """Bucle principal del sistema"""
+    
+    while True:
+        current_state = state_manager.get_current_state()
+        
+        # Dispatch a handler según estado actual
+        handler = {
+            SystemState.IDLE: handle_idle_state,
+            SystemState.ACTIVATION: handle_activation_state,
+            SystemState.FACIAL_RECOGNITION: handle_facial_recognition_state,
+            SystemState.FINGERPRINT_VERIFICATION: handle_fingerprint_verification_state,
+            SystemState.MANUAL_ENTRY: handle_manual_entry_state,
+            SystemState.CONFIRMATION: handle_confirmation_state
+        }
+        
+        await handler[current_state]()
+        
+        # Procesar eventos pendientes
+        await event_manager.process_pending_events()
+        
+        # Procesar sincronización en background
+        if connectivity_monitor.is_online():
+            await sync_service.process_sync_queue()
+        
+        # Pequeña pausa para no saturar CPU
+        await asyncio.sleep(0.1)
+```
+
+### 2. Handlers de Estados
+
+```python
+async def handle_idle_state():
+    """Estado de reposo - solo proximity activo"""
+    
+    # Verificar proximidad
+    proximity_detected = await proximity_manager.check_proximity()
+    
+    if proximity_detected:
+        logger.info("Usuario detectado - activando sistema")
+        
+        # Despertar pantalla
+        await ui_manager.wake_screen()
+        
+        # Transición a activación
+        state_manager.transition_to(SystemState.ACTIVATION)
+        
+        # Publicar evento
+        await event_manager.publish("user_detected", {"timestamp": datetime.now()})
+
+async def handle_activation_state():
+    """Determinar modo de operación"""
+    
+    # Evaluar conectividad
+    is_online = await connectivity_monitor.is_online()
+    api_responsive = await api_manager.health_check()
+    
+    if is_online and api_responsive:
+        # Modo online - facial recognition
+        logger.info("Modo online: reconocimiento facial")
+        await ui_manager.show_facial_recognition_screen()
+        state_manager.transition_to(SystemState.FACIAL_RECOGNITION)
+        
+    elif await fingerprint_manager.is_available():
+        # Modo offline - fingerprint
+        logger.info("Modo offline: verificación por huella")
+        await ui_manager.show_fingerprint_screen()
+        state_manager.transition_to(SystemState.FINGERPRINT_VERIFICATION)
+        
+    else:
+        # Fallback - manual entry
+        logger.warning("Hardware limitado: entrada manual")
+        await ui_manager.show_manual_entry_screen()
+        state_manager.transition_to(SystemState.MANUAL_ENTRY)
+
+async def handle_facial_recognition_state():
+    """Reconocimiento facial activo"""
+    
+    # Verificar que usuario sigue presente
+    if not await proximity_manager.check_proximity():
+        logger.info("Usuario se alejó durante reconocimiento facial")
+        state_manager.transition_to(SystemState.IDLE)
+        return
+    
+    # Intentar verificación facial
+    result = await verification_service.perform_facial_verification()
+    
+    if result["success"]:
+        # Usuario identificado
+        logger.info(f"Usuario identificado: {result['user_data']['name']}")
+        
+        # Guardar registro
+        await save_access_record(result["user_data"], "facial", result["confidence"])
+        
+        # Mostrar confirmación
+        state_manager.transition_to(SystemState.CONFIRMATION, result)
+        
+    else:
+        # Incrementar intentos
+        attempts = state_manager.increment_attempts("facial")
+        
+        if attempts >= MAX_FACIAL_ATTEMPTS:
+            # Cambiar a modo fallback
+            logger.warning("Máximo de intentos faciales alcanzado")
+            
+            if await fingerprint_manager.is_available():
+                state_manager.transition_to(SystemState.FINGERPRINT_VERIFICATION)
+            else:
+                state_manager.transition_to(SystemState.MANUAL_ENTRY)
+
+async def handle_fingerprint_verification_state():
+    """Verificación por huella activa"""
+    
+    # Verificar proximidad
+    if not await proximity_manager.check_proximity():
+        state_manager.transition_to(SystemState.IDLE)
+        return
+    
+    # Verificar si hay dedo en sensor
+    finger_detected = await fingerprint_manager.detect_finger()
+    
+    if finger_detected:
+        # Intentar verificación
+        result = await verification_service.perform_fingerprint_verification()
+        
+        if result["success"]:
+            # Usuario verificado
+            logger.info(f"Huella verificada: {result['user_data']['name']}")
+            
+            # Guardar registro
+            await save_access_record(result["user_data"], "fingerprint", result["confidence"])
+            
+            # Mostrar confirmación
+            state_manager.transition_to(SystemState.CONFIRMATION, result)
+            
+        else:
+            # Incrementar intentos
+            attempts = state_manager.increment_attempts("fingerprint")
+            
+            if attempts >= MAX_FINGERPRINT_ATTEMPTS:
+                logger.warning("Máximo de intentos de huella alcanzado")
+                state_manager.transition_to(SystemState.MANUAL_ENTRY)
+```
+
+### 3. Registro de Accesos
+
+```python
+async def save_access_record(user_data: Dict, verification_type: str, confidence: float = None):
+    """Función central para guardar registros de acceso"""
+    
+    # Crear registro
+    record = {
+        "user_id": user_data["id"],
+        "document_id": user_data["document_id"], 
+        "employee_name": user_data["name"],
+        "access_timestamp": datetime.now(),
+        "method": "online" if connectivity_monitor.is_online() else "offline",
+        "verification_type": verification_type,
+        "confidence_score": confidence,
+        "device_id": config.device_id,
+        "location_name": config.location
+    }
+    
+    # Guardar localmente SIEMPRE
+    record_id = await database_manager.create_access_record(record)
+    
+    # Intentar sincronizar inmediatamente si hay conectividad
+    if connectivity_monitor.is_online():
+        try:
+            await api_manager.sync_access_record(record)
+            await database_manager.mark_as_synced(record_id)
+            logger.info(f"Registro {record_id} sincronizado inmediatamente")
+        except Exception as e:
+            # Agregar a cola para retry posterior
+            await sync_service.add_to_sync_queue(record_id)
+            logger.warning(f"Sincronización inmediata falló: {e}")
+    else:
+        # Agregar a cola de sincronización
+        await sync_service.add_to_sync_queue(record_id)
+        logger.info(f"Registro {record_id} agregado a cola de sincronización")
+    
+    # Reproducir sonido de confirmación
+    await audio_manager.play_success_sound()
+    
+    # Publicar evento
+    await event_manager.publish("access_recorded", {
+        "user_id": user_data["id"],
+        "method": record["method"],
+        "verification_type": verification_type
+    })
+```
+
+## 🎛️ Gestión de Estados
+
+### StateManager Implementation
+
+```python
+class StateManager:
+    """Máquina de estados centralizada"""
+    
+    def __init__(self):
+        self.current_state = SystemState.IDLE
+        self.previous_state = None
+        self.state_data = {}
+        self.attempt_counters = defaultdict(int)
+        self.state_start_time = datetime.now()
+        self.valid_transitions = self._define_valid_transitions()
+    
+    def _define_valid_transitions(self) -> Dict[SystemState, List[SystemState]]:
+        """Define transiciones válidas entre estados"""
+        return {
+            SystemState.IDLE: [SystemState.ACTIVATION],
+            SystemState.ACTIVATION: [
+                SystemState.FACIAL_RECOGNITION,
+                SystemState.FINGERPRINT_VERIFICATION, 
+                SystemState.MANUAL_ENTRY,
+                SystemState.IDLE
+            ],
+            SystemState.FACIAL_RECOGNITION: [
+                SystemState.CONFIRMATION,
+                SystemState.FINGERPRINT_VERIFICATION,
+                SystemState.MANUAL_ENTRY,
+                SystemState.IDLE
+            ],
+            SystemState.FINGERPRINT_VERIFICATION: [
+                SystemState.CONFIRMATION,
+                SystemState.MANUAL_ENTRY,
+                SystemState.IDLE
+            ],
+            SystemState.MANUAL_ENTRY: [
+                SystemState.CONFIRMATION,
+                SystemState.IDLE
+            ],
+            SystemState.CONFIRMATION: [SystemState.IDLE]
+        }
+    
+    async def transition_to(self, new_state: SystemState, data: Dict = None):
+        """Ejecuta transición controlada entre estados"""
+        
+        # Validar transición
+        if new_state not in self.valid_transitions[self.current_state]:
+            raise InvalidStateTransitionError(
+                f"Invalid transition: {self.current_state} -> {new_state}"
+            )
+        
+        # Cleanup estado actual
+        await self._cleanup_current_state()
+        
+        # Actualizar estado
+        self.previous_state = self.current_state
+        self.current_state = new_state
+        self.state_data = data or {}
+        self.state_start_time = datetime.now()
+        
+        # Setup nuevo estado
+        await self._setup_new_state()
+        
+        # Reset contadores si cambió el contexto
+        if self._should_reset_attempts(new_state):
+            self.attempt_counters.clear()
+        
+        # Log transición
+        logger.info(f"State transition: {self.previous_state} -> {new_state}")
+        
+        # Publicar evento
+        await event_manager.publish("state_changed", {
+            "from": self.previous_state,
+            "to": new_state,
+            "data": self.state_data
+        })
+    
+    def increment_attempts(self, attempt_type: str = "default") -> int:
+        """Incrementa contador de intentos para contexto actual"""
+        key = f"{self.current_state}_{attempt_type}"
+        self.attempt_counters[key] += 1
+        return self.attempt_counters[key]
+    
+    def get_attempts(self, attempt_type: str = "default") -> int:
+        """Obtiene número actual de intentos"""
+        key = f"{self.current_state}_{attempt_type}"
+        return self.attempt_counters[key]
+    
+    async def _cleanup_current_state(self):
+        """Limpieza al salir de un estado"""
+        cleanup_handlers = {
+            SystemState.FACIAL_RECOGNITION: self._cleanup_facial_recognition,
+            SystemState.FINGERPRINT_VERIFICATION: self._cleanup_fingerprint_verification,
+            SystemState.CONFIRMATION: self._cleanup_confirmation
+        }
+        
+        handler = cleanup_handlers.get(self.current_state)
+        if handler:
+            await handler()
+    
+    async def _cleanup_facial_recognition(self):
+        """Cleanup específico para reconocimiento facial"""
+        await camera_manager.stop_preview()
+        await ui_manager.hide_facial_recognition_screen()
+    
+    async def _cleanup_fingerprint_verification(self):
+        """Cleanup específico para verificación por huella"""
+        await fingerprint_manager.deactivate_sensor()
+        await ui_manager.hide_fingerprint_screen()
+```
+
+## 🔄 Comunicación Entre Módulos
+
+### EventManager Implementation
+
+```python
+class EventManager:
+    """Sistema de eventos para comunicación desacoplada"""
+    
+    def __init__(self):
+        self.listeners = defaultdict(list)
+        self.event_queue = asyncio.Queue()
+    
+    def subscribe(self, event_type: str, callback: Callable):
+        """Suscribir callback a tipo de evento"""
+        self.listeners[event_type].append(callback)
+    
+    async def publish(self, event_type: str, data: Any):
+        """Publicar evento de forma asíncrona"""
+        await self.event_queue.put({"type": event_type, "data": data})
+    
+    async def process_pending_events(self):
+        """Procesar eventos en cola (llamado desde main loop)"""
+        while not self.event_queue.empty():
+            try:
+                event = await asyncio.wait_for(self.event_queue.get(), timeout=0.1)
+                await self._dispatch_event(event)
+            except asyncio.TimeoutError:
+                break
+    
+    async def _dispatch_event(self, event: Dict):
+        """Enviar evento a todos los listeners suscritos"""
+        event_type = event["type"]
+        data = event["data"]
+        
+        for callback in self.listeners[event_type]:
+            try:
+                if asyncio.iscoroutinefunction(callback):
+                    await callback(data)
+                else:
+                    callback(data)
+            except Exception as e:
+                logger.error(f"Error in event callback for {event_type}: {e}")
+
+# Configuración de eventos en main.py
+def setup_event_listeners():
+    """Configurar todos los event listeners del sistema"""
+    
+    # Estado del sistema
+    event_manager.subscribe("user_detected", on_user_detected)
+    event_manager.subscribe("user_left", on_user_left)
+    event_manager.subscribe("state_changed", on_state_changed)
+    
+    # Verificación biométrica
+    event_manager.subscribe("face_detected", on_face_detected)
+    event_manager.subscribe("face_recognized", on_face_recognized)
+    event_manager.subscribe("fingerprint_verified", on_fingerprint_verified)
+    
+    # Registros de acceso
+    event_manager.subscribe("access_recorded", on_access_recorded)
+    event_manager.subscribe("sync_needed", sync_service.add_to_sync_queue)
+    
+    # Conectividad
+    event_manager.subscribe("connectivity_changed", on_connectivity_changed)
+    event_manager.subscribe("api_error", on_api_error)
+
+async def on_user_detected(data):
+    """Handler cuando se detecta usuario"""
+    logger.info(f"Usuario detectado a las {data['timestamp']}")
+    await ui_manager.wake_screen()
+    await audio_manager.play_activation_sound()
+
+async def on_face_recognized(data):
+    """Handler cuando se reconoce una cara"""
+    user_data = data["user_data"]
+    confidence = data["confidence"]
+    
+    logger.info(f"Cara reconocida: {user_data['name']} (confianza: {confidence})")
+    
+    # Guardar registro
+    await save_access_record(user_data, "facial", confidence)
+    
+    # Mostrar confirmación
+    await ui_manager.show_success_screen(user_data)
+
+async def on_connectivity_changed(data):
+    """Handler cuando cambia conectividad"""
+    is_online = data["is_online"]
+    
+    if is_online:
+        logger.info("Conectividad restaurada - procesando cola de sincronización")
+        await sync_service.process_sync_queue()
+    else:
+        logger.warning("Conectividad perdida - modo offline activado")
+    
+    # Actualizar UI con estado de conectividad
+    await ui_manager.update_connectivity_status(is_online)
+```
+
+## 💾 Persistencia de Datos
+
+### Esquema de Base de Datos
+
+```sql
+-- Esquema SQLite optimizado para el dispositivo
+CREATE TABLE users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    employee_id TEXT UNIQUE NOT NULL,        -- ID en sistema central
+    document_id TEXT UNIQUE NOT NULL,        -- Cédula
+    name TEXT NOT NULL,
+    department TEXT,
+    position TEXT,
+    fingerprint_template_id INTEGER,         -- ID en AS608 (1-162)
+    photo_hash TEXT,                         -- Hash para verificación
+    is_active BOOLEAN DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Tabla crítica: registros de acceso
+CREATE TABLE access_records (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,                         -- NULL para entradas manuales
+    document_id TEXT NOT NULL,               -- Siempre poblado
+    employee_name TEXT NOT NULL,             -- Redundancia para auditoría
+    access_timestamp TIMESTAMP NOT NULL,
+    method TEXT NOT NULL,                    -- 'online' | 'offline'
+    verification_type TEXT NOT NULL,         -- 'facial' | 'fingerprint' | 'manual'
+    confidence_score REAL,                  -- Para reconocimiento facial
+    device_id TEXT NOT NULL,
+    location_name TEXT,
+    
+    -- Campos de sincronización
+    is_synced BOOLEAN DEFAULT 0,
+    sync_attempts INTEGER DEFAULT 0,
+    last_sync_attempt TIMESTAMP,
+    sync_error_message TEXT,
+    
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users (id)
+);
+
+-- Cola de sincronización
+CREATE TABLE sync_queue (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    record_id INTEGER,                       -- FK a access_records
+    action TEXT NOT NULL,                    -- 'create_record' | 'update_user'
+    payload TEXT NOT NULL,                   -- JSON serializado
+    attempts INTEGER DEFAULT 0,
+    max_attempts INTEGER DEFAULT 5,
+    last_attempt TIMESTAMP,
+    status TEXT DEFAULT 'pending',           -- 'pending' | 'success' | 'failed'
+    error_message TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (record_id) REFERENCES access_records (id)
+);
+
+-- Índices para optimización
+CREATE INDEX idx_access_records_timestamp ON access_records(access_timestamp);
+CREATE INDEX idx_access_records_sync ON access_records(is_synced, sync_attempts);
+CREATE INDEX idx_users_fingerprint ON users(fingerprint_template_id);
+CREATE INDEX idx_users_document ON users(document_id);
+CREATE INDEX idx_sync_queue_status ON sync_queue(status, attempts);
+```
+
+### DatabaseManager Implementation
+
+```python
+class DatabaseManager:
+    """Gestión completa de SQLite local"""
     
     def __init__(self, db_path: str):
         self.db_path = db_path
-        self.connection = None
-    
-    async def initialize_database(self) -> None:
-        """Crear estructura de BD si no existe"""
+        self.connection_pool = None
         
+    async def initialize(self):
+        """Inicializar base de datos y crear esquema si no existe"""
+        async with aiosqlite.connect(self.db_path) as db:
+            await db.executescript(self.get_schema_sql())
+            await db.commit()
+    
     async def create_user(self, user_data: Dict) -> int:
-        """Crear nuevo usuario"""
+        """
+        Crear usuario en base local
+        Returns: user_id generado
+        """
+        sql = """
+        INSERT INTO users (employee_id, document_id, name, department, position, fingerprint_template_id)
+        VALUES (?, ?, ?, ?, ?, ?)
+        """
         
-    async def get_user_by_id(self, user_id: int) -> Optional[Dict]:
-        """Obtener usuario por ID"""
+        async with aiosqlite.connect(self.db_path) as db:
+            cursor = await db.execute(sql, (
+                user_data["employee_id"],
+                user_data["document_id"],
+                user_data["name"],
+                user_data.get("department"),
+                user_data.get("position"),
+                user_data.get("fingerprint_template_id")
+            ))
+            await db.commit()
+            return cursor.lastrowid
+    
+    async def get_user_by_fingerprint_id(self, template_id: int) -> Optional[Dict]:
+        """
+        CRÍTICO: Buscar usuario por template_id del AS608
+        Esta función es clave para el modo offline
+        """
+        sql = """
+        SELECT id, employee_id, document_id, name, department, position
+        FROM users 
+        WHERE fingerprint_template_id = ? AND is_active = 1
+        """
         
+        async with aiosqlite.connect(self.db_path) as db:
+            async with db.execute(sql, (template_id,)) as cursor:
+                row = await cursor.fetchone()
+                
+                if row:
+                    return {
+                        "id": row[0],
+                        "employee_id": row[1],
+                        "document_id": row[2],
+                        "name": row[3],
+                        "department": row[4],
+                        "position": row[5]
+                    }
+                return None
+    
     async def create_access_record(self, record_data: Dict) -> int:
-        """Crear registro de acceso"""
+        """
+        CRÍTICO: Crear registro de acceso - SIEMPRE local primero
+        """
+        sql = """
+        INSERT INTO access_records (
+            user_id, document_id, employee_name, access_timestamp,
+            method, verification_type, confidence_score, device_id, location_name
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """
         
+        async with aiosqlite.connect(self.db_path) as db:
+            cursor = await db.execute(sql, (
+                record_data.get("user_id"),
+                record_data["document_id"],
+                record_data["employee_name"],
+                record_data["access_timestamp"],
+                record_data["method"],
+                record_data["verification_type"],
+                record_data.get("confidence_score"),
+                record_data["device_id"],
+                record_data.get("location_name")
+            ))
+            await db.commit()
+            return cursor.lastrowid
+    
     async def get_pending_sync_records(self) -> List[Dict]:
-        """Obtener registros pendientes de sincronización"""
-```
-
-### Patrones de Diseño Implementados
-
-#### 1. Singleton para Gestores Globales
-```python
-class StateManager:
-    """Singleton para estado global de la aplicación"""
-    _instance = None
-    
-    def __new__(cls):
-        if cls._instance is None:
-            cls._instance = super().__new__(cls)
-        return cls._instance
-    
-    def __init__(self):
-        if not hasattr(self, 'initialized'):
-            self.current_mode = 'idle'
-            self.is_online = False
-            self.current_user = None
-            self.initialized = True
-```
-
-#### 2. Observer para Eventos del Sistema
-```python
-class EventManager:
-    """Patrón Observer para eventos del sistema"""
-    
-    def __init__(self):
-        self.listeners = {}
-    
-    def subscribe(self, event_type: str, callback: Callable):
-        """Suscribirse a evento"""
-        if event_type not in self.listeners:
-            self.listeners[event_type] = []
-        self.listeners[event_type].append(callback)
-    
-    def publish(self, event_type: str, data: Any):
-        """Publicar evento"""
-        for callback in self.listeners.get(event_type, []):
-            callback(data)
-```
-
-#### 3. Factory para Pantallas UI
-```python
-class ScreenFactory:
-    """Factory para crear pantallas de UI"""
-    
-    @staticmethod
-    def create_screen(screen_type: str, **kwargs) -> BaseScreen:
-        screens = {
-            'main': MainScreen,
-            'admin': AdminScreen,
-            'registration': RegistrationScreen,
-            'manual_entry': ManualEntryScreen,
-            'success': SuccessScreen
-        }
+        """Obtener registros no sincronizados para SyncService"""
+        sql = """
+        SELECT ar.id, ar.user_id, ar.document_id, ar.employee_name, 
+               ar.access_timestamp, ar.method, ar.verification_type, 
+               ar.confidence_score, ar.device_id, ar.location_name,
+               ar.sync_attempts, ar.last_sync_attempt
+        FROM access_records ar
+        WHERE ar.is_synced = 0 AND ar.sync_attempts < 5
+        ORDER BY ar.access_timestamp ASC
+        """
         
-        screen_class = screens.get(screen_type)
-        if not screen_class:
-            raise ValueError(f"Screen type '{screen_type}' not found")
+        async with aiosqlite.connect(self.db_path) as db:
+            async with db.execute(sql) as cursor:
+                rows = await cursor.fetchall()
+                
+                return [
+                    {
+                        "id": row[0],
+                        "user_id": row[1],
+                        "document_id": row[2],
+                        "employee_name": row[3],
+                        "access_timestamp": row[4],
+                        "method": row[5],
+                        "verification_type": row[6],
+                        "confidence_score": row[7],
+                        "device_id": row[8],
+                        "location_name": row[9],
+                        "sync_attempts": row[10],
+                        "last_sync_attempt": row[11]
+                    }
+                    for row in rows
+                ]
+    
+    async def mark_as_synced(self, record_id: int):
+        """Marcar registro como sincronizado exitosamente"""
+        sql = """
+        UPDATE access_records 
+        SET is_synced = 1, last_sync_attempt = CURRENT_TIMESTAMP
+        WHERE id = ?
+        """
         
-        return screen_class(**kwargs)
+        async with aiosqlite.connect(self.db_path) as db:
+            await db.execute(sql, (record_id,))
+            await db.commit()
+    
+    async def increment_sync_attempts(self, record_id: int):
+        """Incrementar contador de intentos de sincronización"""
+        sql = """
+        UPDATE access_records 
+        SET sync_attempts = sync_attempts + 1, last_sync_attempt = CURRENT_TIMESTAMP
+        WHERE id = ?
+        """
+        
+        async with aiosqlite.connect(self.db_path) as db:
+            await db.execute(sql, (record_id,))
+            await db.commit()
 ```
+
+## 🧪 Casos de Uso del Código
 
 ### Flujo de Datos
 
@@ -234,114 +1123,47 @@ sequenceDiagram
     D->>U: Mostrar confirmación
 ```
 
-### Testing
+### Patrones de Diseño Implementados
 
-#### 1. Tests Unitarios
-```bash
-# Ejecutar todos los tests
-python -m pytest tests/
-
-# Ejecutar tests específicos
-python -m pytest tests/test_camera_manager.py -v
-
-# Ejecutar con cobertura
-python -m pytest --cov=core tests/
-```
-
-#### 2. Tests de Integración
-```bash
-# Tests de integración con hardware mock
-MOCK_HARDWARE=true python -m pytest tests/test_integration.py
-
-# Tests con hardware real (solo en dispositivo)
-python -m pytest tests/test_hardware_integration.py
-```
-
-#### 3. Mock para Desarrollo sin Hardware
+#### 1. Singleton para Gestores Globales
 ```python
-class MockFingerprintManager:
-    """Mock del FingerprintManager para desarrollo"""
+class StateManager:
+    """Singleton para estado global de la aplicación"""
+    _instance = None
     
-    def __init__(self, *args, **kwargs):
-        self.mock_templates = {1: "user_1", 2: "user_2"}
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
     
-    async def verify_fingerprint(self) -> Dict:
-        # Simular verificación exitosa
-        return {
-            "success": True,
-            "template_id": 1,
-            "confidence": 0.95
+    def __init__(self):
+        if not hasattr(self, 'initialized'):
+            self.current_mode = 'idle'
+            self.is_online = False
+            self.current_user = None
+            self.initialized = True
+```
+
+#### 2. Factory para Pantallas UI
+```python
+class ScreenFactory:
+    """Factory para crear pantallas de UI"""
+    
+    @staticmethod
+    def create_screen(screen_type: str, **kwargs) -> BaseScreen:
+        screens = {
+            'main': MainScreen,
+            'admin': AdminScreen,
+            'registration': RegistrationScreen,
+            'manual_entry': ManualEntryScreen,
+            'success': SuccessScreen
         }
-```
-
-### Debugging y Logging
-
-#### 1. Configuración de Logs
-```python
-# utils/logger.py
-import logging
-from logging.handlers import RotatingFileHandler
-
-def setup_logging(config: dict):
-    """Configurar sistema de logging"""
-    
-    # Configurar formato
-    formatter = logging.Formatter(
-        '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    )
-    
-    # Handler para archivo
-    file_handler = RotatingFileHandler(
-        'logs/system.log',
-        maxBytes=10*1024*1024,  # 10MB
-        backupCount=5
-    )
-    file_handler.setFormatter(formatter)
-    
-    # Handler para consola
-    console_handler = logging.StreamHandler()
-    console_handler.setFormatter(formatter)
-    
-    # Configurar logger principal
-    logger = logging.getLogger('biometric_terminal')
-    logger.setLevel(getattr(logging, config.get('log_level', 'INFO')))
-    logger.addHandler(file_handler)
-    logger.addHandler(console_handler)
-```
-
-#### 2. Debugging de Hardware
-```python
-class HardwareDebugger:
-    """Herramientas de debugging para hardware"""
-    
-    @staticmethod
-    async def test_camera():
-        """Test básico de cámara"""
-        try:
-            picam2 = Picamera2()
-            picam2.start()
-            frame = picam2.capture_array()
-            picam2.stop()
-            return {"success": True, "resolution": frame.shape}
-        except Exception as e:
-            return {"success": False, "error": str(e)}
-    
-    @staticmethod
-    async def test_i2c_devices():
-        """Escanear dispositivos I2C"""
-        try:
-            import smbus2
-            bus = smbus2.SMBus(1)
-            devices = []
-            for addr in range(0x03, 0x78):
-                try:
-                    bus.read_byte(addr)
-                    devices.append(hex(addr))
-                except:
-                    pass
-            return {"success": True, "devices": devices}
-        except Exception as e:
-            return {"success": False, "error": str(e)}
+        
+        screen_class = screens.get(screen_type)
+        if not screen_class:
+            raise ValueError(f"Screen type '{screen_type}' not found")
+        
+        return screen_class(**kwargs)
 ```
 
 ### Performance y Optimización
@@ -390,12 +1212,109 @@ class UserCache:
         return await self.db_manager.get_user_by_fingerprint_id(template_id)
 ```
 
+### Testing y Debugging
+
+#### 1. Tests Unitarios
+```bash
+# Ejecutar todos los tests
+python -m pytest tests/
+
+# Ejecutar tests específicos
+python -m pytest tests/test_camera_manager.py -v
+
+# Ejecutar con cobertura
+python -m pytest --cov=core tests/
+```
+
+#### 2. Tests de Integración
+```bash
+# Tests de integración con hardware mock
+MOCK_HARDWARE=true python -m pytest tests/test_integration.py
+
+# Tests con hardware real (solo en dispositivo)
+python -m pytest tests/test_hardware_integration.py
+```
+
+#### 3. Mock para Desarrollo sin Hardware
+```python
+class MockFingerprintManager:
+    """Mock del FingerprintManager para desarrollo"""
+    
+    def __init__(self, *args, **kwargs):
+        self.mock_templates = {1: "user_1", 2: "user_2"}
+    
+    async def verify_fingerprint(self) -> Dict:
+        # Simular verificación exitosa
+        return {
+            "success": True,
+            "template_id": 1,
+            "confidence": 0.95
+        }
+```
+
+#### 4. Debugging de Hardware
+```python
+class HardwareDebugger:
+    """Herramientas de debugging para hardware"""
+    
+    @staticmethod
+    async def test_camera():
+        """Test básico de cámara"""
+        try:
+            picam2 = Picamera2()
+            picam2.start()
+            frame = picam2.capture_array()
+            picam2.stop()
+            return {"success": True, "resolution": frame.shape}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+    
+    @staticmethod
+    async def test_i2c_devices():
+        """Escanear dispositivos I2C"""
+        try:
+            import smbus2
+            bus = smbus2.SMBus(1)
+            devices = []
+            for addr in range(0x03, 0x78):
+                try:
+                    bus.read_byte(addr)
+                    devices.append(hex(addr))
+                except:
+                    pass
+            return {"success": True, "devices": devices}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+```
+
+### Configuración de Desarrollo
+
+#### Variables de Entorno para Testing
+```bash
+# .env para desarrollo
+DEVICE_ID=TERMINAL_DEV_001
+DEBUG_MODE=true
+LOG_LEVEL=DEBUG
+
+# Base de datos
+DATABASE_PATH=data/database_dev.db
+
+# Hardware (para testing sin hardware real)
+MOCK_HARDWARE=true
+MOCK_CAMERA=true
+MOCK_FINGERPRINT=true
+MOCK_PROXIMITY=true
+
+# Seguridad
+ADMIN_PASSWORD=admin123  # Solo para desarrollo
+ENCRYPTION_KEY=dev_encryption_key
+```
+
 ## 🐛 Troubleshooting
 
-### Problemas Comunes y Soluciones
+### Problemas Comunes de Hardware
 
 #### 1. Cámara no Detectada
-
 **Síntomas:**
 - Error al ejecutar `libcamera-hello`
 - Excepción en CameraManager.initialize()
@@ -411,28 +1330,13 @@ sudo raspi-config
 
 # Verificar configuración en /boot/firmware/config.txt
 grep camera /boot/firmware/config.txt
-
-# Debería mostrar:
-# camera_auto_detect=1
-# o
-# dtoverlay=ov5647
 ```
 
 #### 2. Sensor AS608 no Responde
-
-**Síntomas:**
-- Timeout en comunicación UART
-- Error "Device not found"
-
 **Diagnóstico:**
 ```bash
 # Verificar dispositivo UART
 ls -la /dev/serial*
-ls -la /dev/ttyS*
-
-# Verificar configuración UART
-grep enable_uart /boot/firmware/config.txt
-# Debería mostrar: enable_uart=1
 
 # Test de comunicación
 sudo minicom -D /dev/serial0 -b 9600
@@ -443,25 +1347,15 @@ sudo minicom -D /dev/serial0 -b 9600
 # Configurar permisos UART
 sudo usermod -a -G dialout $USER
 
-# Deshabilitar login shell en UART (mantener hardware habilitado)
+# Configurar UART en raspi-config
 sudo raspi-config
 # → Interfacing Options → Serial Port
-# → Login shell: No
-# → Serial hardware: Yes
+# → Login shell: No, Serial hardware: Yes
 ```
 
 #### 3. APDS-9930 no Detecta
-
-**Síntomas:**
-- No se activa proximidad
-- Error I2C communication
-
 **Diagnóstico:**
 ```bash
-# Verificar I2C habilitado
-grep dtparam=i2c_arm /boot/firmware/config.txt
-# Debería mostrar: dtparam=i2c_arm=on
-
 # Escanear dispositivos I2C
 sudo i2cdetect -y 1
 # APDS-9930 debería aparecer en 0x39
@@ -480,1283 +1374,345 @@ sudo raspi-config
 # SCL → GPIO3 (Pin 5)
 ```
 
-#### 4. Pantalla Táctil no Funciona
+### Códigos de Error del Sistema
 
-**Síntomas:**
-- Touch no registra eventos
-- Pantalla muestra imagen pero no responde al toque
-
-**Verificación:**
-```bash
-# Verificar eventos de input
-sudo evtest
-# Debería listar dispositivo como "ADS7846 Touchscreen"
-
-# Verificar configuración touchscreen
-cat /usr/share/X11/xorg.conf.d/99-calibration.conf
-```
-
-**Soluciones:**
-```bash
-# Verificar overlay en /boot/firmware/config.txt
-grep ads7846 /boot/firmware/config.txt
-
-# Configuración correcta:
-dtoverlay=ads7846,cs=1,penirq=25,penirq_pull=2,speed=50000,keep_vref_on=0,swapxy=0,pmax=255,xohms=150
-
-# Recalibrar touchscreen
-sudo apt install xinput-calibrator
-xinput_calibrator
-```
-
-#### 5. Sistema se Sobrecalienta
-
-**Síntomas:**
-- Throttling del CPU
-- Rendimiento degradado
-- Sistema se cuelga
-
-**Monitoreo:**
-```bash
-# Verificar temperatura
-vcgencmd measure_temp
-
-# Verificar throttling
-vcgencmd get_throttled
-# 0x0 = OK, otros valores indican problemas
-
-# Monitoreo en tiempo real
-watch -n 1 'vcgencmd measure_temp && vcgencmd get_throttled'
-```
-
-**Soluciones:**
-```bash
-# Configurar límites en /boot/firmware/config.txt
-temp_limit=70
-initial_turbo=30
-
-# Optimizar configuración de cámara
-# Reducir FPS y resolución
-# Procesar cada N frames en lugar de todos
-
-# Mejorar ventilación física
-# Agregar disipador de calor
-# Mejorar flujo de aire
-```
-
-#### 6. Base de Datos Corrupta
-
-**Síntomas:**
-- Errores SQLite "database is locked"
-- Datos inconsistentes
-
-**Diagnóstico:**
-```bash
-# Verificar integridad
-sqlite3 data/database.db "PRAGMA integrity_check;"
-
-# Verificar locks
-lsof data/database.db
-```
-
-**Recuperación:**
-```bash
-# Backup de seguridad
-cp data/database.db data/database_backup.db
-
-# Reparar base de datos
-sqlite3 data/database.db ".backup main data/database_repaired.db"
-mv data/database_repaired.db data/database.db
-
-# Restaurar desde backup más reciente
-ls -la data/backups/
-cp data/backups/database_YYYY-MM-DD.db data/database.db
-```
-
-#### 7. Problemas de Conectividad API
-
-**Síntomas:**
-- Requests timeout
-- SSL errors
-- Certificados inválidos
-
-**Diagnóstico:**
-```bash
-# Test básico de conectividad
-ping api.empresa.com
-
-# Test HTTPS
-curl -I https://api.empresa.com/biometric/health
-
-# Verificar certificados
-openssl s_client -connect api.empresa.com:443
-```
-
-**Soluciones:**
-```bash
-# Actualizar certificados
-sudo apt update && sudo apt install ca-certificates
-
-# Configurar proxy si es necesario
-export https_proxy=http://proxy.empresa.com:8080
-
-# Verificar configuración DNS
-cat /etc/resolv.conf
-```
-
-### Logs de Debugging
-
-#### Ubicaciones de Logs
-```bash
-# Log principal del sistema
-tail -f logs/system.log
-
-# Log específico de accesos
-tail -f logs/access.log
-
-# Log de errores
-tail -f logs/errors.log
-
-# Log de comunicación API
-tail -f logs/api.log
-
-# Log de hardware
-tail -f logs/hardware.log
-
-# Logs del sistema operativo
-sudo journalctl -u biometric-terminal.service -f
-```
-
-#### Interpretar Códigos de Error
-
-**Códigos de Hardware:**
+#### Códigos de Hardware
 - `HW001`: Error de inicialización de cámara
 - `HW002`: Error de comunicación UART (AS608)
 - `HW003`: Error I2C (APDS-9930)
 - `HW004`: Error de GPIO
 - `HW005`: Error de touchscreen
 
-**Códigos de API:**
+#### Códigos de API
 - `API001`: Timeout de conexión
 - `API002`: Error de autenticación
 - `API003`: Error de formato de respuesta
 - `API004`: Rate limit excedido
 - `API005`: Servidor no disponible
 
-**Códigos de Base de Datos:**
+#### Códigos de Base de Datos
 - `DB001`: Error de conexión
 - `DB002`: Error de consulta SQL
 - `DB003`: Violación de constraint
 - `DB004`: Base de datos corrupta
 - `DB005`: Espacio insuficiente
 
-## 🔧 Mantenimiento
+### Caso 1: Usuario Llega - Modo Online
 
-### Rutinas de Mantenimiento
-
-#### 1. Mantenimiento Diario (Automatizado)
-```bash
-#!/bin/bash
-# scripts/daily_maintenance.sh
-
-# Rotar logs
-find logs/ -name "*.log" -size +50M -exec logrotate {} \;
-
-# Backup de base de datos
-sqlite3 data/database.db ".backup data/backups/database_$(date +%Y-%m-%d).db"
-
-# Limpiar backups antiguos (mantener 7 días)
-find data/backups/ -name "database_*.db" -mtime +7 -delete
-
-# Verificar integridad de BD
-sqlite3 data/database.db "PRAGMA integrity_check;" >> logs/maintenance.log
-
-# Monitorear espacio en disco
-df -h / >> logs/disk_usage.log
-
-# Verificar temperatura
-vcgencmd measure_temp >> logs/temperature.log
-```
-
-#### 2. Mantenimiento Semanal
-```bash
-#!/bin/bash
-# scripts/weekly_maintenance.sh
-
-# Actualizar sistema (solo parches de seguridad)
-sudo apt update
-sudo apt list --upgradable | grep -i security
-
-# Análisis de logs
-awk '/ERROR|CRITICAL/' logs/system.log | tail -20
-
-# Estadísticas de uso
-sqlite3 data/database.db "
-SELECT 
-    DATE(timestamp) as date,
-    COUNT(*) as total_access,
-    SUM(CASE WHEN method='online' THEN 1 ELSE 0 END) as online_count,
-    SUM(CASE WHEN method='offline' THEN 1 ELSE 0 END) as offline_count
-FROM access_records 
-WHERE timestamp >= DATE('now', '-7 days')
-GROUP BY DATE(timestamp)
-ORDER BY date;
-"
-
-# Verificar sincronización pendiente
-sqlite3 data/database.db "SELECT COUNT(*) FROM access_records WHERE is_synced=0;"
-```
-
-#### 3. Mantenimiento Mensual
-```bash
-#!/bin/bash
-# scripts/monthly_maintenance.sh
-
-# Backup completo del sistema
-tar -czf /tmp/biometric_backup_$(date +%Y-%m-%d).tar.gz \
-    data/ logs/ assets/ config.json
-
-# Optimizar base de datos
-sqlite3 data/database.db "VACUUM;"
-sqlite3 data/database.db "REINDEX;"
-
-# Verificar salud del hardware
-python3 -c "
-from hardware.i2c_handler import I2CHandler
-from hardware.uart_handler import UARTHandler
-print('I2C Status:', I2CHandler.test_connection())
-print('UART Status:', UARTHandler.test_connection())
-"
-
-# Análisis de rendimiento
-python3 -c "
-import psutil
-print(f'CPU Usage: {psutil.cpu_percent()}%')
-print(f'Memory Usage: {psutil.virtual_memory().percent}%')
-print(f'Disk Usage: {psutil.disk_usage(\"/\").percent}%')
-print(f'Temperature: {psutil.sensors_temperatures().get(\"cpu_thermal\", [{}])[0].current if psutil.sensors_temperatures() else \"N/A\"}°C')
-"
-```
-
-### Actualizaciones de Software
-
-#### 1. Actualización Automática
-```bash
-#!/bin/bash
-# scripts/update.sh
-
-# Verificar versión actual
-CURRENT_VERSION=$(cat VERSION)
-echo "Versión actual: $CURRENT_VERSION"
-
-# Backup antes de actualizar
-./scripts/backup.sh
-
-# Detener servicio
-sudo systemctl stop biometric-terminal.service
-
-# Actualizar código
-git fetch origin
-git checkout main
-git pull origin main
-
-# Actualizar dependencias
-source venv/bin/activate
-pip install -r requirements.txt
-
-# Ejecutar migraciones de BD si existen
-python3 scripts/migrate_database.py
-
-# Reiniciar servicio
-sudo systemctl start biometric-terminal.service
-
-# Verificar estado
-sudo systemctl status biometric-terminal.service
-```
-
-#### 2. Rollback en Caso de Problemas
-```bash
-#!/bin/bash
-# scripts/rollback.sh
-
-# Obtener último backup
-LAST_BACKUP=$(ls -t data/backups/ | head -1)
-
-# Detener servicio
-sudo systemctl stop biometric-terminal.service
-
-# Restaurar base de datos
-cp "data/backups/$LAST_BACKUP" data/database.db
-
-# Volver a versión anterior
-git checkout HEAD~1
-
-# Reinstalar dependencias de versión anterior
-pip install -r requirements.txt
-
-# Reiniciar servicio
-sudo systemctl start biometric-terminal.service
-```
-
-### Monitoreo del Sistema
-
-#### 1. Health Check Endpoint Interno
 ```python
-# /admin/health
-{
-    "status":# 🏢 Terminal Biométrica - Sistema de Control de Acceso
+# Flujo completo de código para reconocimiento facial exitoso
 
-> Sistema híbrido de control de acceso con reconocimiento facial y verificación por huella dactilar, diseñado para funcionar tanto en modo online como offline.
+# 1. ProximityManager detecta usuario
+proximity_detected = await proximity_manager.check_proximity()  # -> True
 
-[![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://python.org)
-[![Raspberry Pi](https://img.shields.io/badge/Hardware-Raspberry%20Pi%20Zero%202W-red.svg)](https://www.raspberrypi.org/)
-[![License](https://img.shields.io/badge/License-Propietario-yellow.svg)]()
+# 2. StateManager transiciona a ACTIVATION
+await state_manager.transition_to(SystemState.ACTIVATION)
 
-## 📋 Tabla de Contenidos
+# 3. Handle activation evalúa conectividad
+is_online = await connectivity_monitor.is_online()  # -> True
+api_responsive = await api_manager.health_check()  # -> True
 
-1. [Descripción General](#descripción-general)
-2. [Características](#características)
-3. [Hardware Requerido](#hardware-requerido)
-4. [Arquitectura del Sistema](#arquitectura-del-sistema)
-5. [Instalación](#instalación)
-6. [Configuración](#configuración)
-7. [Uso del Sistema](#uso-del-sistema)
-8. [API y Conectividad](#api-y-conectividad)
-9. [Base de Datos](#base-de-datos)
-10. [Estructura del Proyecto](#estructura-del-proyecto)
-11. [Desarrollo](#desarrollo)
-12. [Troubleshooting](#troubleshooting)
-13. [Mantenimiento](#mantenimiento)
-14. [Seguridad](#seguridad)
-15. [Changelog](#changelog)
+# 4. Transición a FACIAL_RECOGNITION
+await state_manager.transition_to(SystemState.FACIAL_RECOGNITION)
 
-## 🎯 Descripción General
+# 5. UIManager muestra preview de cámara
+await ui_manager.show_facial_recognition_screen()
+await camera_manager.start_preview()
 
-La **Terminal Biométrica** es un sistema de control de acceso empresarial que utiliza tecnología biométrica dual (reconocimiento facial + huella dactilar) para registrar la entrada y salida de empleados. El sistema está diseñado para ser robusto y funcional tanto con conexión a internet como en modo offline.
-
-### Casos de Uso
-
-- **Control de acceso empresarial**: Registro de entrada/salida de empleados
-- **Gestión de tiempo laboral**: Seguimiento automatizado de horarios
-- **Seguridad física**: Control de acceso a instalaciones
-- **Modo híbrido**: Funcionamiento continuo sin dependencia de conectividad
-
-### Modos de Operación
-
-1. **Modo Online**: Reconocimiento facial vía API externa
-2. **Modo Offline**: Verificación por huella dactilar local
-3. **Modo Manual**: Entrada por cédula como fallback
-4. **Modo Administrador**: Configuración y gestión del sistema
-
-## ✨ Características
-
-### 🔍 Detección y Reconocimiento
-- **Detección facial en tiempo real** con OpenCV
-- **Verificación por huella dactilar** usando sensor AS608
-- **Sensor de proximidad** APDS-9930 para activación automática
-- **Captura optimizada** para envío a API de reconocimiento
-
-### 🌐 Conectividad Híbrida
-- **Modo online**: Reconocimiento facial vía API REST
-- **Modo offline**: Verificación local por huella dactilar
-- **Sincronización automática** cuando se restaura la conexión
-- **Health check periódico** de conectividad API
-
-### 📱 Interfaz de Usuario
-- **Pantalla táctil** 4" (800x400) en orientación vertical
-- **Preview de cámara** en tiempo real
-- **Feedback visual y sonoro** para interacciones
-- **Pantallas de confirmación** con datos del usuario
-
-### 🔧 Administración
-- **Panel de administración** protegido por contraseña
-- **Gestión de usuarios** (registro, modificación, eliminación)
-- **Configuración de red** WiFi
-- **Monitoreo de sistema** y logs
-- **Backup y restore** de datos
-
-### 💾 Persistencia de Datos
-- **Base de datos SQLite** local
-- **Queue de sincronización** para registros offline
-- **Encriptación** de datos sensibles
-- **Logs detallados** del sistema
-
-## 🛠️ Hardware Requerido
-
-### Componentes Principales
-
-| Componente | Modelo | Función | Conexión |
-|------------|--------|---------|----------|
-| **Computadora** | Raspberry Pi Zero 2W | Procesamiento principal | - |
-| **Pantalla** | LCD 4" 800x400 táctil | Interfaz de usuario | HDMI + GPIO |
-| **Cámara** | OV5647 (Pi Camera v1) | Captura para reconocimiento facial | CSI |
-| **Sensor Huella** | AS608 | Verificación biométrica offline | UART |
-| **Sensor Proximidad** | APDS-9930 | Detección de presencia | I2C |
-| **Speaker** | Mini speaker 3W | Feedback sonoro | GPIO/Audio Jack |
-
-### Especificaciones Técnicas
-
-#### Raspberry Pi Zero 2W
-- **CPU**: ARM Cortex-A53 quad-core 1GHz
-- **RAM**: 512MB LPDDR2
-- **Conectividad**: WiFi 802.11n, Bluetooth 4.2
-- **GPIO**: 40 pines
-- **OS**: Raspberry Pi OS (32-bit)
-
-#### Pantalla LCD 4"
-- **Resolución**: 800x400 píxeles
-- **Orientación**: Vertical (400x800 en uso)
-- **Touch**: Capacitivo/Resistivo
-- **Driver**: XPT2046 (touchscreen)
-
-#### Cámara OV5647
-- **Sensor**: 5MP CMOS
-- **Resolución máxima**: 2592x1944
-- **Video**: 1080p@30fps, 720p@60fps
-- **Enfoque**: Fijo (optimizado para 2m)
-
-#### AS608 Fingerprint Sensor
-- **Capacidad**: 162 templates internos
-- **Tiempo de identificación**: <1.5 segundos
-- **FAR**: <0.001% (False Accept Rate)
-- **FRR**: <1.0% (False Reject Rate)
-- **Comunicación**: UART (9600 baud)
-
-#### APDS-9930
-- **Tipo**: Proximidad y luz ambiente
-- **Rango**: 0-100mm (ajustable)
-- **Comunicación**: I2C
-- **Consumo**: <200µA en modo activo
-
-### Conexiones Hardware
-
-```
-
-```bash
-Raspberry Pi Zero 2W Pinout:
-┌─────────────────────────────────────┐
-│  3.3V  [1] [2]  5V                  │
-│  GPIO2 [3] [4]  5V                  │
-│  GPIO3 [5] [6]  GND                 │
-│  GPIO4 [7] [8]  GPIO14 (UART TX)    │
-│  GND   [9] [10] GPIO15 (UART RX)    │
-│ ...                                 │
-└─────────────────────────────────────┘
-
-Conexiones:
-AS608:
-- VCC → Pin 1 (3.3V)
-- GND → Pin 6 (GND)
-- TX  → Pin 10 (GPIO15/UART RX)
-- RX  → Pin 8 (GPIO14/UART TX)
-
-APDS-9930:
-- VCC → Pin 1 (3.3V)
-- GND → Pin 6 (GND)
-- SDA → Pin 3 (GPIO2/I2C SDA)
-- SCL → Pin 5 (GPIO3/I2C SCL)
-
-Touchscreen (XPT2046):
-- T_VCC → Pin 1 (3.3V)
-- T_GND → Pin 6 (GND)
-- T_CS  → Pin 24 (GPIO8)
-- T_CLK → Pin 23 (GPIO11)
-- T_DIN → Pin 19 (GPIO10)
-- T_DO  → Pin 21 (GPIO9)
-- T_IRQ → Pin 22 (GPIO25)
-```
-
-## 🏗️ Arquitectura del Sistema
-
-### Diagrama de Arquitectura
-
-```mermaid
-graph TB
-    A[Usuario se acerca] --> B[APDS-9930 detecta proximidad]
-    B --> C[Activa cámara y sistema]
-    C --> D{¿Hay conectividad API?}
+# 6. Loop de detección en main screen
+while state_manager.current_state == SystemState.FACIAL_RECOGNITION:
+    faces = await camera_manager.detect_faces()  # -> [{"x": 100, "y": 50, ...}]
+    ui_manager.update_detection_overlay(faces)
     
-    D -->|SÍ| E[Modo Online - Reconocimiento Facial]
-    D -->|NO| F[Modo Offline - Huella Dactilar]
-    
-    E --> G{¿Rostro reconocido?}
-    G -->|SÍ| H[Registrar acceso + Mostrar confirmación]
-    G -->|NO| I{¿Intentos < máximo?}
-    I -->|SÍ| E
-    I -->|NO| J[Modo Manual - Ingresar Cédula]
-    
-    F --> K{¿Huella reconocida?}
-    K -->|SÍ| L[Registrar acceso offline + Mostrar confirmación]
-    K -->|NO| M{¿Intentos < máximo?}
-    M -->|SÍ| F
-    M -->|NO| J
-    
-    J --> N[Guardar registro manual]
-    H --> O[Queue para sync si offline]
-    L --> O
-    N --> O
-    
-    O --> P[Volver a modo reposo]
-```
-
-### Flujo de Estados
-
-```mermaid
-stateDiagram-v2
-    [*] --> Idle
-    Idle --> ProximityDetected: APDS-9930 activo
-    ProximityDetected --> CameraActivated
-    CameraActivated --> ConnectivityCheck
-    
-    ConnectivityCheck --> OnlineMode: API disponible
-    ConnectivityCheck --> OfflineMode: Sin API
-    
-    OnlineMode --> FacialRecognition
-    FacialRecognition --> Success: Reconocido
-    FacialRecognition --> Retry: No reconocido
-    Retry --> FacialRecognition: Intentos < max
-    Retry --> ManualEntry: Intentos >= max
-    
-    OfflineMode --> FingerprintVerification
-    FingerprintVerification --> Success: Verificado
-    FingerprintVerification --> RetryFP: No verificado
-    RetryFP --> FingerprintVerification: Intentos < max
-    RetryFP --> ManualEntry: Intentos >= max
-    
-    ManualEntry --> Success: Cédula ingresada
-    Success --> ConfirmationScreen
-    ConfirmationScreen --> Idle: Timeout o usuario se aleja
-```
-
-### Componentes del Sistema
-
-#### Core Services
-- **CameraManager**: Detección facial y captura
-- **FingerprintManager**: Comunicación con AS608
-- **ProximityManager**: Gestión del APDS-9930
-- **APIManager**: Comunicación con servidor
-- **DatabaseManager**: Persistencia local
-- **AudioManager**: Feedback sonoro
-
-#### UI Components
-- **MainScreen**: Pantalla principal con preview
-- **AdminScreen**: Panel de administración
-- **RegistrationScreen**: Registro de usuarios
-- **ManualEntryScreen**: Entrada manual por cédula
-- **SuccessScreen**: Confirmación de acceso
-
-#### Hardware Abstraction
-- **I2CHandler**: Comunicación I2C (APDS-9930)
-- **UARTHandler**: Comunicación UART (AS608)
-- **GPIOHandler**: GPIO general
-
-## 📦 Instalación
-
-### Requisitos Previos
-
-#### Sistema Operativo
-```bash
-# Raspberry Pi OS (32-bit) - Bookworm o superior
-# Verificar versión
-cat /etc/os-release
-```
-
-#### Configuración Inicial del Sistema
-```bash
-# Actualizar sistema
-sudo apt update && sudo apt upgrade -y
-
-# Habilitar interfaces necesarias
-sudo raspi-config
-# → Interface Options → I2C → Enable
-# → Interface Options → Serial Port → Login shell: No, Serial hardware: Yes
-# → Interface Options → Camera → Enable
-```
-
-#### Configuración de Hardware
-```bash
-# Editar /boot/firmware/config.txt
-sudo nano /boot/firmware/config.txt
-
-# Agregar configuraciones:
-dtparam=i2c_arm=on
-dtparam=spi=on
-enable_uart=1
-dtoverlay=vc4-kms-v3d
-dtoverlay=ov5647,rotation=0  # Ajustar según orientación física
-dtoverlay=ads7846,cs=1,penirq=25,penirq_pull=2,speed=50000,keep_vref_on=0,swapxy=0,pmax=255,xohms=150
-
-# Configuración de pantalla para 800x400
-hdmi_force_hotplug=1
-hdmi_group=2
-hdmi_mode=87
-hdmi_cvt 800 400 60 6 0 0 0
-display_rotate=1  # Rotación 90° para vertical
-```
-
-### Instalación Automatizada
-
-```bash
-# Clonar repositorio
-git clone https://github.com/empresa/biometric-terminal.git
-cd biometric-terminal
-
-# Ejecutar script de instalación
-chmod +x install.sh
-sudo ./install.sh
-```
-
-### Instalación Manual
-
-#### 1. Dependencias del Sistema
-```bash
-# Librerías base
-sudo apt install -y python3-pip python3-venv git
-sudo apt install -y python3-opencv opencv-data
-sudo apt install -y sqlite3 libsqlite3-dev
-sudo apt install -y portaudio19-dev python3-pyaudio
-sudo apt install -y i2c-tools python3-smbus
-
-# Herramientas de desarrollo
-sudo apt install -y build-essential python3-dev
-sudo apt install -y libatlas-base-dev libhdf5-dev
-```
-
-#### 2. Entorno Virtual Python
-```bash
-# Crear entorno virtual
-python3 -m venv biometric_env
-source biometric_env/bin/activate
-
-# Instalar dependencias Python
-pip install --upgrade pip
-pip install -r requirements.txt
-```
-
-#### 3. Configuración de Base de Datos
-```bash
-# Crear estructura de base de datos
-python3 -c "
-from core.database_manager import DatabaseManager
-db = DatabaseManager()
-db.initialize_database()
-print('Base de datos inicializada')
-"
-```
-
-#### 4. Configuración de Servicios
-```bash
-# Crear servicio systemd
-sudo cp biometric-terminal.service /etc/systemd/system/
-sudo systemctl daemon-reload
-sudo systemctl enable biometric-terminal.service
-```
-
-### Dependencias Python (requirements.txt)
-
-```txt
-# Core
-opencv-python==4.8.1.78
-numpy==1.24.3
-Pillow==10.0.0
-
-# Hardware
-picamera2==0.3.12
-RPi.GPIO==0.7.1
-pyserial==3.5
-smbus2==0.4.2
-
-# Database
-sqlite3  # Built-in
-
-# UI
-tkinter  # Built-in
-pygame==2.5.2
-
-# API
-requests==2.31.0
-urllib3==2.0.4
-
-# Audio
-pyaudio==0.2.13
-pydub==0.25.1
-
-# Utilities
-python-dateutil==2.8.2
-pytz==2023.3
-cryptography==41.0.4
-```
-
-## ⚙️ Configuración
-
-### Archivo de Configuración Principal
-
-```json
-{
-  "system": {
-    "device_id": "TERMINAL_001",
-    "location": "Oficina Principal - Entrada",
-    "timezone": "America/Bogota",
-    "debug_mode": false,
-    "log_level": "INFO"
-  },
-  "hardware": {
-    "camera": {
-      "resolution": [640, 480],
-      "rotation": 0,
-      "fps": 30,
-      "detection_confidence": 0.7
-    },
-    "proximity": {
-      "threshold_distance": 50,
-      "activation_time": 1.0,
-      "deactivation_time": 5.0
-    },
-    "fingerprint": {
-      "uart_port": "/dev/serial0",
-      "baud_rate": 9600,
-      "timeout": 5.0,
-      "max_attempts": 3
-    },
-    "display": {
-      "resolution": [400, 800],
-      "brightness": 80,
-      "timeout": 30
-    },
-    "audio": {
-      "enabled": true,
-      "volume": 70,
-      "success_sound": "assets/sounds/success.wav",
-      "error_sound": "assets/sounds/error.wav"
-    }
-  },
-  "api": {
-    "base_url": "https://api.empresa.com/biometric",
-    "endpoints": {
-      "health": "/health",
-      "recognize": "/recognize",
-      "sync": "/sync"
-    },
-    "timeout": 10,
-    "retry_attempts": 3,
-    "api_key": "your_api_key_here"
-  },
-  "database": {
-    "path": "data/database.db",
-    "backup_interval": 3600,
-    "max_backup_files": 7
-  },
-  "security": {
-    "admin_password_hash": "hashed_password",
-    "session_timeout": 300,
-    "encryption_key": "your_encryption_key"
-  },
-  "sync": {
-    "auto_sync": true,
-    "sync_interval": 300,
-    "max_queue_size": 1000,
-    "retry_delay": 60
-  }
-}
-```
-
-### Configuraciones de Hardware Específicas
-
-#### AS608 - Configuración UART
-```bash
-# Verificar puerto UART disponible
-ls -la /dev/serial*
-
-# Configurar permisos
-sudo usermod -a -G dialout pi
-
-# Verificar comunicación
-sudo minicom -D /dev/serial0 -b 9600
-```
-
-#### APDS-9930 - Configuración I2C
-```bash
-# Verificar dispositivos I2C
-sudo i2cdetect -y 1
-
-# Debería mostrar dispositivo en dirección 0x39
-#      0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
-# 30: -- -- -- -- -- -- -- -- -- 39 -- -- -- -- -- --
-```
-
-#### Cámara OV5647 - Verificación
-```bash
-# Verificar detección de cámara
-libcamera-hello --list-cameras
-
-# Output esperado:
-# Available cameras
-# 0 : ov5647 [2592x1944 10-bit GBRG] (/base/soc/i2c0mux/i2c@1/ov5647@36)
-```
-
-## 🖥️ Uso del Sistema
-
-### Flujo de Usuario Final
-
-#### 1. Activación por Proximidad
-- Usuario se acerca al terminal (< 50cm)
-- APDS-9930 detecta presencia
-- Sistema activa cámara y pantalla
-- Muestra preview en tiempo real
-
-#### 2. Reconocimiento Biométrico
-
-**Modo Online (Con internet):**
-```
-┌─────────────────────────────────────┐
-│  🎥 RECONOCIMIENTO FACIAL           │
-│                                     │
-│  Posicione su rostro frente         │
-│  a la cámara                        │
-│                                     │
-│  [   PREVIEW DE CÁMARA   ]          │
-│                                     │
-│  ● Detectando...                    │
-└─────────────────────────────────────┘
-```
-
-**Modo Offline (Sin internet):**
-```
-┌─────────────────────────────────────┐
-│  👆 VERIFICACIÓN POR HUELLA         │
-│                                     │
-│  Coloque su dedo en el sensor       │
-│  de huella dactilar                 │
-│                                     │
-│        [SENSOR AS608]               │
-│                                     │
-│  ● Verificando...                   │
-└─────────────────────────────────────┘
-```
-
-#### 3. Pantalla de Confirmación
-```
-┌─────────────────────────────────────┐
-│  ✅ ACCESO AUTORIZADO               │
-│                                     │
-│  👤 Juan Pérez Gómez                │
-│  🆔 CC: 12.345.678                  │
-│  ⏰ 08:30 AM - 15 Jul 2025          │
-│  📍 Entrada Principal               │
-│                                     │
-│  Bienvenido                         │
-└─────────────────────────────────────┘
-```
-
-#### 4. Modo Manual (Fallback)
-```
-┌─────────────────────────────────────┐
-│  📝 ENTRADA MANUAL                  │
-│                                     │
-│  No se pudo verificar identidad     │
-│                                     │
-│  Ingrese su número de cédula:       │
-│  [    1 2 3 4 5 6 7 8    ]          │
-│                                     │
-│  [7] [8] [9]  [Borrar]              │
-│  [4] [5] [6]  [Confirmar]           │
-│  [1] [2] [3]                        │
-│      [0]                            │
-└─────────────────────────────────────┘
-```
-
-### Panel de Administración
-
-#### Acceso al Panel
-1. Mantener presionada esquina superior derecha por 3 segundos
-2. Ingresar contraseña de administrador
-3. Acceder al menú de configuración
-
-#### Funciones Administrativas
-
-**Gestión de Usuarios:**
-- Registrar nuevo usuario (datos + huella)
-- Modificar información existente
-- Eliminar usuarios
-- Ver historial de accesos
-
-**Configuración del Sistema:**
-- Configurar red WiFi
-- Ajustar sensibilidad de proximidad
-- Configurar sonidos
-- Establecer horarios de operación
-
-**Monitoreo y Mantenimiento:**
-- Ver logs del sistema
-- Estadísticas de uso
-- Estado de hardware
-- Backup/restore de datos
-
-**Sincronización:**
-- Forzar sincronización manual
-- Ver cola de sincronización
-- Configurar intervalos de sync
-
-## 🌐 API y Conectividad
-
-### Especificaciones de la API
-
-#### Health Check Endpoint
-```http
-GET /api/v1/health
-Content-Type: application/json
-Authorization: Bearer {api_key}
-
-Response:
-{
-  "status": "healthy",
-  "timestamp": "2025-07-15T08:30:00Z",
-  "version": "1.0.0"
-}
-```
-
-#### Reconocimiento Facial
-```http
-POST /api/v1/recognize
-Content-Type: multipart/form-data
-Authorization: Bearer {api_key}
-
-Body:
-- device_id: "TERMINAL_001"
-- timestamp: "2025-07-15T08:30:00Z"
-- image: [archivo binario JPG]
-
-Response Success:
-{
-  "success": true,
-  "user": {
-    "id": 123,
-    "name": "Juan Pérez Gómez",
-    "document_id": "12345678",
-    "photo_url": "https://cdn.empresa.com/photos/123.jpg"
-  },
-  "confidence": 0.95
-}
-
-Response Failure:
-{
-  "success": false,
-  "message": "Usuario no reconocido",
-  "confidence": 0.45
-}
-```
-
-#### Sincronización de Registros
-```http
-POST /api/v1/sync
-Content-Type: application/json
-Authorization: Bearer {api_key}
-
-Body:
-{
-  "device_id": "TERMINAL_001",
-  "records": [
-    {
-      "local_id": 1,
-      "user_id": 123,
-      "document_id": "12345678",
-      "timestamp": "2025-07-15T08:30:00Z",
-      "method": "offline",
-      "verification_type": "fingerprint"
-    }
-  ]
-}
-
-Response:
-{
-  "success": true,
-  "synced_count": 1,
-  "failed_records": []
-}
-```
-
-### Manejo de Conectividad
-
-#### Monitor de Conexión
-```python
-# Pseudocódigo del monitor de conectividad
-class ConnectivityMonitor:
-    def __init__(self):
-        self.is_online = False
-        self.last_check = None
-        self.check_interval = 30  # segundos
-    
-    async def check_connectivity(self):
-        try:
-            response = await api_client.health_check()
-            self.is_online = response.status_code == 200
-        except Exception:
-            self.is_online = False
+    if faces:
+        # 7. Capturar imagen optimizada
+        image_data = await camera_manager.capture_for_recognition()  # -> bytes
         
-        self.last_check = datetime.now()
-        return self.is_online
+        # 8. Enviar a API
+        result = await api_manager.recognize_face(image_data)
+        # -> {"success": True, "user": {"id": 1, "name": "Juan"}, "confidence": 0.95}
+        
+        if result["success"]:
+            # 9. Guardar registro localmente
+            record_data = {
+                "user_id": result["user"]["id"],
+                "document_id": result["user"]["document_id"],
+                "employee_name": result["user"]["name"],
+                "access_timestamp": datetime.now(),
+                "method": "online",
+                "verification_type": "facial",
+                "confidence_score": result["confidence"],
+                "device_id": config.device_id
+            }
+            
+            record_id = await database_manager.create_access_record(record_data)
+            
+            # 10. Sincronizar inmediatamente (ya online)
+            await api_manager.sync_access_record(record_data)
+            await database_manager.mark_as_synced(record_id)
+            
+            # 11. Transición a confirmación
+            await state_manager.transition_to(SystemState.CONFIRMATION, result)
+            
+            # 12. Mostrar pantalla de éxito
+            await ui_manager.show_success_screen(result["user"])
+            await audio_manager.play_success_sound()
+            
+            break
 ```
 
-#### Queue de Sincronización
-- **Almacenamiento local** de registros cuando offline
-- **Sincronización automática** cuando se restaura conectividad
-- **Retry logic** con backoff exponencial
-- **Priorización** de registros por timestamp
+### Caso 2: Usuario Sale - Modo Offline
 
-## 💾 Base de Datos
+```python
+# Flujo completo para verificación por huella cuando no hay internet
 
-### Esquema Completo
+# 1. Proximidad detectada
+proximity_detected = await proximity_manager.check_proximity()  # -> True
 
-```sql
--- Tabla de usuarios
-CREATE TABLE users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
-    document_id TEXT UNIQUE NOT NULL,
-    fingerprint_id INTEGER UNIQUE, -- ID interno del AS608 (1-162)
-    photo_path TEXT,
-    phone TEXT,
-    email TEXT,
-    department TEXT,
-    position TEXT,
-    is_active BOOLEAN DEFAULT 1,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+# 2. Activación evalúa conectividad
+is_online = await connectivity_monitor.is_online()  # -> False
+api_responsive = await api_manager.health_check()  # -> False
 
--- Tabla de registros de acceso
-CREATE TABLE access_records (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER,
-    document_id TEXT, -- Para entradas manuales sin user_id
-    timestamp TIMESTAMP NOT NULL,
-    method TEXT NOT NULL, -- 'online' | 'offline'
-    verification_type TEXT NOT NULL, -- 'facial' | 'fingerprint' | 'manual'
-    confidence REAL, -- Para reconocimiento facial
-    device_id TEXT NOT NULL,
-    location TEXT,
-    is_synced BOOLEAN DEFAULT 0,
-    sync_attempts INTEGER DEFAULT 0,
-    last_sync_attempt TIMESTAMP,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users (id)
-);
+# 3. Transición a verificación por huella
+await state_manager.transition_to(SystemState.FINGERPRINT_VERIFICATION)
 
--- Cola de sincronización
-CREATE TABLE sync_queue (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    record_id INTEGER,
-    action TEXT NOT NULL, -- 'create_record' | 'create_user' | 'update_user'
-    payload TEXT NOT NULL, -- JSON con datos a sincronizar
-    attempts INTEGER DEFAULT 0,
-    max_attempts INTEGER DEFAULT 5,
-    last_attempt TIMESTAMP,
-    status TEXT DEFAULT 'pending', -- 'pending' | 'success' | 'failed' | 'abandoned'
-    error_message TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (record_id) REFERENCES access_records (id)
-);
+# 4. UI muestra pantalla de huella
+await ui_manager.show_fingerprint_screen()
 
--- Configuraciones del sistema
-CREATE TABLE system_config (
-    key TEXT PRIMARY KEY,
-    value TEXT NOT NULL,
-    description TEXT,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Logs del sistema
-CREATE TABLE system_logs (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    level TEXT NOT NULL, -- 'DEBUG' | 'INFO' | 'WARNING' | 'ERROR' | 'CRITICAL'
-    component TEXT NOT NULL, -- Componente que generó el log
-    message TEXT NOT NULL,
-    details TEXT, -- Información adicional en JSON
-    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Índices para optimización
-CREATE INDEX idx_access_records_timestamp ON access_records(timestamp);
-CREATE INDEX idx_access_records_user_id ON access_records(user_id);
-CREATE INDEX idx_access_records_sync ON access_records(is_synced, sync_attempts);
-CREATE INDEX idx_sync_queue_status ON sync_queue(status, attempts);
-CREATE INDEX idx_system_logs_level ON system_logs(level, timestamp);
+# 5. Loop esperando dedo en sensor
+while state_manager.current_state == SystemState.FINGERPRINT_VERIFICATION:
+    finger_detected = await fingerprint_manager.detect_finger()  # -> True
+    
+    if finger_detected:
+        # 6. AS608 hace verificación interna
+        fp_result = await fingerprint_manager.verify_fingerprint()
+        # -> {"success": True, "template_id": 23, "confidence": 95}
+        
+        if fp_result["success"]:
+            # 7. Buscar usuario en base local por template_id
+            user_data = await database_manager.get_user_by_fingerprint_id(23)
+            # -> {"id": 1, "name": "María", "document_id": "87654321", ...}
+            
+            if user_data:
+                # 8. Crear registro offline
+                record_data = {
+                    "user_id": user_data["id"],
+                    "document_id": user_data["document_id"],
+                    "employee_name": user_data["name"],
+                    "access_timestamp": datetime.now(),
+                    "method": "offline",
+                    "verification_type": "fingerprint",
+                    "confidence_score": fp_result["confidence"],
+                    "device_id": config.device_id
+                }
+                
+                record_id = await database_manager.create_access_record(record_data)
+                
+                # 9. Agregar a cola de sincronización
+                await sync_service.add_to_sync_queue(record_id, "create_record")
+                
+                # 10. Mostrar confirmación
+                await state_manager.transition_to(SystemState.CONFIRMATION, {
+                    "user_data": user_data,
+                    "method": "fingerprint"
+                })
+                
+                await ui_manager.show_success_screen(user_data)
+                await audio_manager.play_success_sound()
+                
+                break
 ```
 
-### Operaciones Comunes
+### Caso 3: Sincronización Cuando Vuelve Internet
 
-#### Registro de Acceso Online
-```sql
--- Insertar registro exitoso online
-INSERT INTO access_records (
-    user_id, timestamp, method, verification_type, 
-    confidence, device_id, location, is_synced
-) VALUES (
-    123, '2025-07-15 08:30:00', 'online', 'facial',
-    0.95, 'TERMINAL_001', 'Entrada Principal', 1
-);
+```python
+# Proceso de sincronización automática en background
+
+# 1. ConnectivityMonitor detecta que volvió internet
+connectivity_restored = await connectivity_monitor.check_connection()  # -> True
+
+# 2. Evento de conectividad restaurada
+await event_manager.publish("connectivity_changed", {"is_online": True})
+
+# 3. Handler procesa cola de sincronización
+async def on_connectivity_changed(data):
+    if data["is_online"]:
+        await sync_service.process_sync_queue()
+
+# 4. SyncService procesa registros pendientes
+async def process_sync_queue(self):
+    pending_records = await database_manager.get_pending_sync_records()
+    # -> [{"id": 5, "user_id": 1, "access_timestamp": "...", "method": "offline", ...}]
+    
+    for record in pending_records:
+        try:
+            # 5. Intentar sincronizar cada registro
+            success = await api_manager.sync_access_record(record)
+            
+            if success:
+                # 6. Marcar como sincronizado
+                await database_manager.mark_as_synced(record["id"])
+                logger.info(f"Registro {record['id']} sincronizado exitosamente")
+            else:
+                # 7. Incrementar intentos si falla
+                await database_manager.increment_sync_attempts(record["id"])
+                
+        except Exception as e:
+            logger.error(f"Error sincronizando registro {record['id']}: {e}")
+            await database_manager.increment_sync_attempts(record["id"])
 ```
 
-#### Registro de Acceso Offline
-```sql
--- Insertar registro offline para sincronizar después
-INSERT INTO access_records (
-    user_id, timestamp, method, verification_type,
-    device_id, location, is_synced
-) VALUES (
-    123, '2025-07-15 08:30:00', 'offline', 'fingerprint',
-    'TERMINAL_001', 'Entrada Principal', 0
-);
+### Caso 4: Registro de Nuevo Usuario
 
--- Agregar a cola de sincronización
-INSERT INTO sync_queue (record_id, action, payload) VALUES (
-    last_insert_rowid(), 'create_record',
-    '{"user_id": 123, "timestamp": "2025-07-15T08:30:00Z", ...}'
-);
+```python
+# Proceso completo de enrollment de usuario
+
+# 1. Admin accede al panel
+await ui_manager.show_admin_login()
+admin_authenticated = await authenticate_admin(password)  # -> True
+
+# 2. Admin selecciona "Registrar Usuario"
+await ui_manager.show_registration_screen()
+
+# 3. Captura de datos básicos
+user_data = await ui_manager.get_user_data_input()
+# -> {"employee_id": "EMP001", "document_id": "12345678", "name": "Ana", ...}
+
+# 4. Proceso de enrollment de huella
+enrollment_result = await enrollment_service.enroll_user_fingerprint(user_data)
+
+async def enroll_user_fingerprint(self, user_data: Dict) -> Dict:
+    # 4.1. Encontrar slot libre en AS608
+    template_id = await fingerprint_manager.find_free_template_slot()  # -> 45
+    
+    # 4.2. UI guía proceso de captura
+    await ui_manager.show_fingerprint_enrollment_screen(user_data["name"])
+    
+    # 4.3. Capturar huella 3 veces
+    for attempt in range(3):
+        await ui_manager.show_enrollment_step(attempt + 1)
+        
+        finger_placed = await fingerprint_manager.wait_for_finger()
+        capture_result = await fingerprint_manager.capture_fingerprint()
+        
+        if not capture_result["success"]:
+            await ui_manager.show_enrollment_error()
+            continue
+    
+    # 4.4. Crear template en AS608
+    template_result = await fingerprint_manager.store_template(template_id)
+    # -> {"success": True, "template_id": 45, "quality": 85}
+    
+    if template_result["success"]:
+        # 4.5. Guardar usuario en base local
+        user_data["fingerprint_template_id"] = template_id
+        user_id = await database_manager.create_user(user_data)
+        
+        # 4.6. Agregar a cola de sincronización
+        await sync_service.add_to_sync_queue(user_id, "create_user")
+        
+        return {"success": True, "user_id": user_id, "template_id": template_id}
+    
+    return {"success": False, "error": "template_creation_failed"}
+
+# 5. Mostrar confirmación de registro
+await ui_manager.show_enrollment_success(user_data, enrollment_result)
 ```
 
-#### Consultas de Reportes
-```sql
--- Registros del día actual
-SELECT u.name, u.document_id, ar.timestamp, ar.verification_type
-FROM access_records ar
-LEFT JOIN users u ON ar.user_id = u.id
-WHERE DATE(ar.timestamp) = DATE('now')
-ORDER BY ar.timestamp DESC;
+### Caso 5: Manejo de Errores y Recuperación
 
--- Estadísticas por método
-SELECT 
-    method,
-    verification_type,
-    COUNT(*) as count,
-    DATE(timestamp) as date
-FROM access_records
-WHERE timestamp >= DATE('now', '-7 days')
-GROUP BY method, verification_type, DATE(timestamp);
+```python
+# Manejo robusto de errores en tiempo real
 
--- Registros pendientes de sincronización
-SELECT COUNT(*) as pending_records
-FROM access_records
-WHERE is_synced = 0;
+# 1. Error de hardware - sensor de huella no responde
+try:
+    finger_detected = await fingerprint_manager.detect_finger()
+except HardwareError as e:
+    logger.error(f"Error en sensor de huella: {e}")
+    
+    # Marcar sensor como no disponible
+    fingerprint_manager.set_unavailable()
+    
+    # Si estamos en modo fingerprint, cambiar a manual
+    if state_manager.current_state == SystemState.FINGERPRINT_VERIFICATION:
+        await ui_manager.show_error_message("Sensor de huella no disponible")
+        await state_manager.transition_to(SystemState.MANUAL_ENTRY)
+
+# 2. Error de API - timeout o error de red
+try:
+    result = await api_manager.recognize_face(image_data)
+except APITimeoutError:
+    logger.warning("API timeout - cambiando a modo offline")
+    
+    # Marcar API como no disponible temporalmente
+    connectivity_monitor.mark_api_unavailable()
+    
+    # Cambiar a verificación por huella
+    if fingerprint_manager.is_available():
+        await state_manager.transition_to(SystemState.FINGERPRINT_VERIFICATION)
+    else:
+        await state_manager.transition_to(SystemState.MANUAL_ENTRY)
+
+# 3. Error de base de datos - corrupción o lock
+try:
+    record_id = await database_manager.create_access_record(record_data)
+except DatabaseError as e:
+    logger.critical(f"Error crítico de base de datos: {e}")
+    
+    # Intentar backup de emergencia
+    await database_manager.create_emergency_backup()
+    
+    # Intentar reparación automática
+    repair_success = await database_manager.attempt_repair()
+    
+    if not repair_success:
+        # Modo de emergencia - solo logs
+        await emergency_mode.log_access_attempt(record_data)
+        await ui_manager.show_critical_error()
+
+# 4. Recuperación automática de conectividad
+async def connectivity_recovery_loop():
+    """Background task para recuperación de conectividad"""
+    
+    while True:
+        if not connectivity_monitor.is_online():
+            # Intentar reconectar cada 30 segundos
+            reconnect_success = await connectivity_monitor.attempt_reconnection()
+            
+            if reconnect_success:
+                logger.info("Conectividad restaurada")
+                await event_manager.publish("connectivity_changed", {"is_online": True})
+                
+                # Procesar cola de sincronización
+                await sync_service.process_sync_queue()
+        
+        await asyncio.sleep(30)
 ```
 
-## 📁 Estructura del Proyecto
+## 🏁 Conclusión del Código
 
-### Estructura Detallada de Directorios
+### Principios Clave de la Implementación
+
+1. **Estado Centralizado**: `StateManager` controla todas las transiciones
+2. **Eventos Desacoplados**: `EventManager` permite comunicación sin dependencias directas
+3. **Local First**: `DatabaseManager` siempre guarda localmente primero
+4. **Hardware Abstracto**: Cada sensor tiene su manager específico
+5. **Sync Inteligente**: `SyncService` maneja retry automático con backoff
+6. **UI Reactiva**: Las pantallas responden a cambios de estado automáticamente
+
+### Flujo de Datos
 
 ```
-biometric_terminal/
-├── 📁 core/                           # Componentes principales del sistema
-│   ├── __init__.py
-│   ├── camera_manager.py              # Gestión de cámara y detección facial
-│   ├── fingerprint_manager.py         # Comunicación con AS608
-│   ├── proximity_manager.py           # Gestión del APDS-9930
-│   ├── api_manager.py                 # Cliente API REST
-│   ├── database_manager.py            # ORM y operaciones de BD
-│   ├── audio_manager.py               # Sistema de sonidos
-│   └── connectivity_monitor.py        # Monitor de conectividad
-│
-├── 📁 ui/                             # Interfaces de usuario
-│   ├── __init__.py
-│   ├── base_screen.py                 # Clase base para pantallas
-│   ├── main_screen.py                 # Pantalla principal con preview
-│   ├── admin_screen.py                # Panel de administración
-│   ├── registration_screen.py         # Registro de usuarios
-│   ├── manual_entry_screen.py         # Entrada manual por cédula
-│   ├── success_screen.py              # Confirmación de acceso
-│   ├── loading_screen.py              # Pantalla de carga
-│   └── error_screen.py                # Pantalla de errores
-│
-├── 📁 utils/                          # Utilidades del sistema
-│   ├── __init__.py
-│   ├── config.py                      # Gestor de configuraciones
-│   ├── logger.py                      # Sistema de logging
-│   ├── crypto.py                      # Encriptación y seguridad
-│   ├── state_manager.py               # Estado global de la aplicación
-│   ├── validators.py                  # Validadores de datos
-│   └── decorators.py                  # Decoradores útiles
-│
-├── 📁 models/                         # Modelos de datos
-│   ├── __init__.py
-│   ├── user.py                        # Modelo de usuario
-│   ├── access_record.py               # Modelo de registro de acceso
-│   ├── sync_queue.py                  # Modelo de cola de sincronización
-│   └── system_config.py               # Modelo de configuración
-│
-├── 📁 hardware/                       # Abstracción de hardware
-│   ├── __init__.py
-│   ├── i2c_handler.py                 # Comunicación I2C (APDS-9930)
-│   ├── uart_handler.py                # Comunicación UART (AS608)
-│   ├── gpio_handler.py                # GPIO general
-│   └── camera_handler.py              # Abstracción de cámara
-│
-├── 📁 services/                       # Servicios de negocio
-│   ├── __init__.py
-│   ├── enrollment_service.py          # Servicio de registro de usuarios
-│   ├── verification_service.py        # Servicio de verificación biométrica
-│   ├── sync_service.py                # Servicio de sincronización
-│   ├── backup_service.py              # Servicio de backup
-│   └── health_service.py              # Monitoreo de salud del sistema
-│
-├── 📁 data/                           # Datos persistentes
-│   ├── database.db                    # Base de datos SQLite
-│   ├── config.json                    # Configuraciones principales
-│   ├── device_id.txt                  # Identificador único del dispositivo
-│   └── backups/                       # Backups automáticos
-│       ├── database_2025-07-15.db
-│       └── config_2025-07-15.json
-│
-├── 📁 logs/                           # Archivos de log
-│   ├── system.log                     # Log principal del sistema
-│   ├── access.log                     # Log de accesos
-│   ├── errors.log                     # Log de errores
-│   ├── api.log                        # Log de comunicación API
-│   └── hardware.log                   # Log de comunicación hardware
-│
-├── 📁 assets/                         # Recursos del sistema
-│   ├── 📁 sounds/                     # Archivos de audio
-│   │   ├── success.wav                # Sonido de éxito
-│   │   ├── error.wav                  # Sonido de error
-│   │   ├── beep.wav                   # Beep general
-│   │   └── welcome.wav                # Sonido de bienvenida
-│   ├── 📁 icons/                      # Iconos de la interfaz
-│   │   ├── user.png                   # Icono de usuario
-│   │   ├── settings.png               # Icono de configuración
-│   │   ├── fingerprint.png            # Icono de huella
-│   │   └── camera.png                 # Icono de cámara
-│   ├── 📁 fonts/                      # Fuentes personalizadas
-│   │   ├── Roboto-Regular.ttf
-│   │   └── Roboto-Bold.ttf
-│   └── 📁 images/                     # Imágenes del sistema
-│       ├── logo.png                   # Logo de la empresa
-│       └── background.png             # Fondo de pantalla
-│
-├── 📁 tests/                          # Tests unitarios e integración
-│   ├── __init__.py
-│   ├── test_camera_manager.py
-│   ├── test_fingerprint_manager.py
-│   ├── test_database_manager.py
-│   ├── test_api_manager.py
-│   └── test_integration.py
-│
-├── 📁 scripts/                        # Scripts de utilidad
-│   ├── install.sh                     # Script de instalación
-│   ├── update.sh                      # Script de actualización
-│   ├── backup.sh                      # Script de backup manual
-│   ├── restore.sh                     # Script de restauración
-│   └── maintenance.sh                 # Script de mantenimiento
-│
-├── 📁 docs/                           # Documentación
-│   ├── API.md                         # Documentación de API
-│   ├── HARDWARE.md                    # Guía de hardware
-│   ├── DEPLOYMENT.md                  # Guía de despliegue
-│   └── TROUBLESHOOTING.md             # Guía de solución de problemas
-│
-├── 📄 requirements.txt                # Dependencias Python
-├── 📄 biometric-terminal.service      # Servicio systemd
-├── 📄 .env.example                    # Ejemplo de variables de entorno
-├── 📄 .gitignore                      # Archivos ignorados por Git
-├── 📄 LICENSE                         # Licencia del software
-├── 📄 CHANGELOG.md                    # Historial de cambios
-├── 📄 README.md                       # Este archivo
-└── 📄 main.py                         # Punto de entrada principal
+Sensor → Manager → Service → StateManager → UI
+   ↓
+Database (local) → SyncService → API (cuando disponible)
+```
+
+### Robustez y Confiabilidad
+
+- **Nunca pierde datos**: SQLite local es la fuente de verdad
+- **Tolerante a fallos**: Cada componente puede fallar sin afectar el sistema
+- **Auto-recuperación**: Reconexión automática y retry inteligente
+- **Degradación elegante**: Siempre hay un modo de operación disponible
+
+Esta arquitectura garantiza que el dispositivo **siempre funcione**, independientemente de las condiciones de red, estado del hardware o errores temporales, mientras mantiene la integridad de los datos y la experiencia del usuario.
