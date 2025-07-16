@@ -1,0 +1,52 @@
+{
+  "hardware": {
+    "camera_enabled": true,
+    "camera_resolution": [640, 480],
+    "camera_fps": 15,
+    "camera_rotation": 0,
+    "fingerprint_enabled": true,
+    "fingerprint_uart_port": "/dev/serial0",
+    "fingerprint_baudrate": 57600,
+    "fingerprint_timeout": 5,
+    "proximity_enabled": true,
+    "proximity_i2c_address": 57,
+    "proximity_threshold": 100,
+    "audio_enabled": true,
+    "audio_volume": 80,
+    "display_brightness": 80,
+    "display_timeout": 60
+  },
+  "api": {
+    "base_url": "http://localhost:8000",
+    "terminal_id": "TERMINAL_001",
+    "api_key": "terminal_key_001",
+    "timeout": 30,
+    "max_retries": 3,
+    "retry_delay": 1
+  },
+  "database": {
+    "path": "data/database.db",
+    "backup_interval": 3600,
+    "max_records": 10000,
+    "cleanup_days": 30
+  },
+  "operation": {
+    "mode": "hybrid",
+    "max_facial_attempts": 3,
+    "max_fingerprint_attempts": 3,
+    "timeout_seconds": 30,
+    "auto_sync_interval": 300,
+    "detection_interval": 3,
+    "location_name": "Terminal Principal",
+    "location_lat": null,
+    "location_lng": null,
+    "location_radius": 200
+  },
+  "logging": {
+    "level": "INFO",
+    "file_path": "data/logs/terminal.log",
+    "max_file_size": 10485760,
+    "backup_count": 5,
+    "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  }
+}
