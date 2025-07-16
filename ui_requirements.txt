@@ -1,0 +1,20 @@
+# UI Dependencies for BioEntry Terminal
+# Core UI framework
+pygame>=2.1.0
+
+# Image processing and computer vision
+numpy>=1.21.0
+opencv-python>=4.5.0  # For camera integration and image processing
+
+# Optional: PIL for additional image support
+Pillow>=8.0.0
+
+# Data handling
+dataclasses-json>=0.5.0  # For configuration management
+
+# Async support (included in Python 3.7+)
+# asyncio - built-in
+
+# Development and testing
+pytest>=6.0.0
+pytest-asyncio>=0.18.0
