@@ -7,7 +7,7 @@ from pathlib import Path
 
 @dataclass
 class HardwareConfig:
-    """Configuración de hardware del terminal"""
+    """Hardware configuration for the terminal"""
     camera_enabled: bool = True
     camera_resolution: tuple = (640, 480)
     camera_fps: int = 15
@@ -31,7 +31,7 @@ class HardwareConfig:
 
 @dataclass
 class ApiConfig:
-    """Configuración de API del servidor"""
+    """Server API configuration"""
     base_url: str = "http://localhost:8000"
     terminal_id: str = "TERMINAL_001"
     api_key: str = "terminal_key_001"
@@ -42,24 +42,24 @@ class ApiConfig:
 
 @dataclass
 class DatabaseConfig:
-    """Configuración de base de datos local"""
+    """Local database configuration"""
     path: str = "data/database.db"
-    backup_interval: int = 3600  # 1 hora en segundos
+    backup_interval: int = 3600  # 1 hour in seconds
     max_records: int = 10000
     cleanup_days: int = 30
 
 
 @dataclass
 class OperationConfig:
-    """Configuración de operación del terminal"""
+    """Terminal operation configuration"""
     mode: str = "hybrid"  # hybrid, online_only, offline_only
     max_facial_attempts: int = 3
     max_fingerprint_attempts: int = 3
     timeout_seconds: int = 30
-    auto_sync_interval: int = 300  # 5 minutos
-    detection_interval: int = 3  # Detectar cada 3 frames
+    auto_sync_interval: int = 300  # 5 minutes
+    detection_interval: int = 3  # Detect every 3 frames
     
-    # Configuración de ubicación
+    # Location configuration
     location_name: str = "Terminal Principal"
     location_lat: Optional[float] = None
     location_lng: Optional[float] = None
@@ -68,7 +68,7 @@ class OperationConfig:
 
 @dataclass
 class LoggingConfig:
-    """Configuración de logging"""
+    """Logging configuration"""
     level: str = "INFO"
     file_path: str = "data/logs/terminal.log"
     max_file_size: int = 10485760  # 10MB
@@ -77,39 +77,39 @@ class LoggingConfig:
 
 
 class ConfigManager:
-    """Gestor centralizado de configuración"""
+    """Centralized configuration manager"""
     
     def __init__(self, config_file: str = "data/config.json"):
         self.config_file = Path(config_file)
         self.config_dir = self.config_file.parent
         
-        # Crear directorio de configuración si no existe
+        # Create config directory if it doesn't exist
         self.config_dir.mkdir(parents=True, exist_ok=True)
         
-        # Configuraciones por defecto
+        # Default configurations
         self.hardware = HardwareConfig()
         self.api = ApiConfig()
         self.database = DatabaseConfig()
         self.operation = OperationConfig()
         self.logging = LoggingConfig()
         
-        # Cargar configuración desde archivo
+        # Load configuration from file
         self.load_config()
         
-        # Cargar variables de entorno
+        # Load environment variables
         self.load_environment_variables()
     
     def load_config(self) -> None:
-        """Carga configuración desde archivo JSON"""
+        """Load configuration from JSON file"""
         if not self.config_file.exists():
-            self.save_config()  # Crear archivo con valores por defecto
+            self.save_config()  # Create file with default values
             return
         
         try:
             with open(self.config_file, 'r', encoding='utf-8') as f:
                 config_data = json.load(f)
             
-            # Actualizar configuraciones
+            # Update configurations
             if 'hardware' in config_data:
                 self._update_dataclass(self.hardware, config_data['hardware'])
             
@@ -126,11 +126,11 @@ class ConfigManager:
                 self._update_dataclass(self.logging, config_data['logging'])
                 
         except (json.JSONDecodeError, FileNotFoundError, KeyError) as e:
-            print(f"Error cargando configuración: {e}")
-            print("Usando configuración por defecto")
+            print(f"Error loading configuration: {e}")
+            print("Using default configuration")
     
     def load_environment_variables(self) -> None:
-        """Carga configuraciones desde variables de entorno"""
+        """Load configurations from environment variables"""
         # Hardware
         if os.getenv("MOCK_HARDWARE"):
             self.hardware.camera_enabled = not bool(os.getenv("MOCK_CAMERA"))
@@ -159,7 +159,7 @@ class ConfigManager:
             self.logging.level = "DEBUG"
     
     def save_config(self) -> None:
-        """Guarda configuración actual al archivo JSON"""
+        """Save current configuration to JSON file"""
         config_data = {
             'hardware': self._dataclass_to_dict(self.hardware),
             'api': self._dataclass_to_dict(self.api),
@@ -172,10 +172,10 @@ class ConfigManager:
             with open(self.config_file, 'w', encoding='utf-8') as f:
                 json.dump(config_data, f, indent=2, ensure_ascii=False)
         except Exception as e:
-            print(f"Error guardando configuración: {e}")
+            print(f"Error saving configuration: {e}")
     
     def update_config(self, section: str, updates: Dict[str, Any]) -> None:
-        """Actualiza una sección específica de la configuración"""
+        """Update a specific configuration section"""
         if section == 'hardware':
             self._update_dataclass(self.hardware, updates)
         elif section == 'api':
@@ -187,12 +187,12 @@ class ConfigManager:
         elif section == 'logging':
             self._update_dataclass(self.logging, updates)
         else:
-            raise ValueError(f"Sección de configuración desconocida: {section}")
+            raise ValueError(f"Unknown configuration section: {section}")
         
         self.save_config()
     
     def get_config_dict(self) -> Dict[str, Any]:
-        """Obtiene toda la configuración como diccionario"""
+        """Get all configuration as dictionary"""
         return {
             'hardware': self._dataclass_to_dict(self.hardware),
             'api': self._dataclass_to_dict(self.api),
@@ -202,61 +202,61 @@ class ConfigManager:
         }
     
     def is_mock_mode(self) -> bool:
-        """Determina si está en modo mock para desarrollo"""
+        """Determine if in mock mode for development"""
         return bool(os.getenv("MOCK_HARDWARE")) or bool(os.getenv("DEBUG_MODE"))
     
     def get_full_database_path(self) -> Path:
-        """Obtiene la ruta completa de la base de datos"""
+        """Get full database path"""
         if self.database.path.startswith('/'):
             return Path(self.database.path)
         else:
             return Path(__file__).parent.parent / self.database.path
     
     def get_full_log_path(self) -> Path:
-        """Obtiene la ruta completa del archivo de log"""
+        """Get full log file path"""
         if self.logging.file_path.startswith('/'):
             return Path(self.logging.file_path)
         else:
             return Path(__file__).parent.parent / self.logging.file_path
     
     def _update_dataclass(self, dataclass_instance, updates: Dict[str, Any]) -> None:
-        """Actualiza un dataclass con nuevos valores"""
+        """Update a dataclass with new values"""
         for key, value in updates.items():
             if hasattr(dataclass_instance, key):
                 setattr(dataclass_instance, key, value)
     
     def _dataclass_to_dict(self, dataclass_instance) -> Dict[str, Any]:
-        """Convierte un dataclass a diccionario"""
+        """Convert a dataclass to dictionary"""
         return {
             field: getattr(dataclass_instance, field)
             for field in dataclass_instance.__dataclass_fields__
         }
 
 
-# Instancia global del gestor de configuración
+# Global configuration manager instance
 config_manager = ConfigManager()
 
 
 def get_config() -> ConfigManager:
-    """Obtiene la instancia global del gestor de configuración"""
+    """Get the global configuration manager instance"""
     return config_manager
 
 
 def reload_config() -> None:
-    """Recarga la configuración desde el archivo"""
+    """Reload configuration from file"""
     global config_manager
     config_manager.load_config()
 
 
 if __name__ == "__main__":
-    # Test de configuración
+    # Test configuration
     config = get_config()
-    print("Configuración cargada:")
+    print("Configuration loaded:")
     print(json.dumps(config.get_config_dict(), indent=2))
     
-    # Test de modo mock
-    print(f"\nModo mock: {config.is_mock_mode()}")
+    # Test mock mode
+    print(f"\nMock mode: {config.is_mock_mode()}")
     
-    # Test de rutas
-    print(f"Ruta DB: {config.get_full_database_path()}")
-    print(f"Ruta Log: {config.get_full_log_path()}")
+    # Test paths
+    print(f"DB path: {config.get_full_database_path()}")
+    print(f"Log path: {config.get_full_log_path()}")
