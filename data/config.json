@@ -14,7 +14,8 @@
     "audio_enabled": true,
     "audio_volume": 80,
     "display_brightness": 80,
-    "display_timeout": 60
+    "display_timeout": 60,
+    "display_resolution": [480, 800]
   },
   "api": {
     "base_url": "http://localhost:8000",

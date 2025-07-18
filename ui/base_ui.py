@@ -334,11 +334,18 @@ class UIManager:
         # Initialize pygame
         pygame.init()
         
-        # Screen setup
-        self.screen_width = 400
-        self.screen_height = 800
-        self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
+        # Screen setup - Configure for Raspberry Pi touchscreen (800x400)
+        # Get screen info for fullscreen mode
+        info = pygame.display.Info()
+        self.screen_width = info.current_w
+        self.screen_height = info.current_h
+        
+        # Set fullscreen mode for Raspberry Pi
+        self.screen = pygame.display.set_mode((self.screen_width, self.screen_height), pygame.FULLSCREEN)
         pygame.display.set_caption("BioEntry Terminal")
+        
+        # Hide mouse cursor in fullscreen mode
+        pygame.mouse.set_visible(False)
         
         # Screen management
         self.screens: Dict[str, UIScreen] = {}
@@ -475,7 +482,7 @@ def get_ui_manager() -> UIManager:
 
 
 def create_centered_rect(width: int, height: int, 
-                        screen_width: int = 400, screen_height: int = 800,
+                        screen_width: int = 480, screen_height: int = 800,
                         y_offset: int = 0) -> UIRect:
     """Create a centered rectangle"""
     x = (screen_width - width) // 2
@@ -484,7 +491,7 @@ def create_centered_rect(width: int, height: int,
 
 
 def create_grid_rect(col: int, row: int, cols: int, rows: int,
-                    margin: int = 10, screen_width: int = 400, screen_height: int = 800) -> UIRect:
+                    margin: int = 10, screen_width: int = 480, screen_height: int = 800) -> UIRect:
     """Create a rectangle in a grid layout"""
     cell_width = (screen_width - margin * (cols + 1)) // cols
     cell_height = (screen_height - margin * (rows + 1)) // rows

@@ -22,29 +22,148 @@ from utils.config import get_config
 from utils.logger import get_logger, setup_logging
 
 
-class MockCameraManager:
-    """Mock camera manager for demonstration"""
+class CameraManager:
+    """Camera manager with Picamera2 support and mock fallback"""
     
     def __init__(self):
         self.running = False
         self.frame_callback = None
         self.face_callback = None
+        self.use_picamera = False
+        self.picam2 = None
+        self.face_detector = None
+        
+        # Try to initialize Picamera2 and face detector
+        self._initialize_camera()
+        self._initialize_face_detector()
+        
+    def _initialize_camera(self):
+        """Initialize Picamera2 if available"""
+        try:
+            from picamera2 import Picamera2
+            self.picam2 = Picamera2()
+            # Configure for 480x800 display (vertical orientation)
+            config = self.picam2.create_preview_configuration(
+                main={"size": (640, 480)}  # Standard resolution
+            )
+            self.picam2.configure(config)
+            self.use_picamera = True
+            print("Picamera2 initialized successfully")
+        except ImportError:
+            print("Picamera2 not available, using mock camera")
+            self.use_picamera = False
+        except Exception as e:
+            print(f"Error initializing Picamera2: {e}, using mock camera")
+            self.use_picamera = False
+    
+    def _initialize_face_detector(self):
+        """Initialize face detector with OpenCV"""
+        try:
+            import cv2
+            
+            # Try to load face cascade from common paths
+            cascade_paths = [
+                '/usr/share/opencv4/haarcascades/haarcascade_frontalface_default.xml',
+                '/usr/share/opencv/haarcascades/haarcascade_frontalface_default.xml',
+                '/usr/local/share/opencv4/haarcascades/haarcascade_frontalface_default.xml',
+                'haarcascade_frontalface_default.xml'
+            ]
+            
+            for path in cascade_paths:
+                if os.path.exists(path):
+                    self.face_detector = cv2.CascadeClassifier(path)
+                    if not self.face_detector.empty():
+                        print(f"Face detector loaded from: {path}")
+                        break
+            
+            if self.face_detector is None or self.face_detector.empty():
+                print("Face detector not available, using mock detection")
+                self.face_detector = None
+                
+        except ImportError:
+            print("OpenCV not available, using mock face detection")
+            self.face_detector = None
         
     def start(self, frame_callback=None, face_callback=None):
-        """Start mock camera"""
+        """Start camera"""
         self.running = True
         self.frame_callback = frame_callback
         self.face_callback = face_callback
         
-        # Start mock frame generation
-        threading.Thread(target=self._generate_frames, daemon=True).start()
+        if self.use_picamera:
+            # Start real camera
+            threading.Thread(target=self._real_camera_loop, daemon=True).start()
+        else:
+            # Start mock camera
+            threading.Thread(target=self._mock_camera_loop, daemon=True).start()
     
     def stop(self):
-        """Stop mock camera"""
+        """Stop camera"""
         self.running = False
+        if self.use_picamera and self.picam2:
+            try:
+                self.picam2.stop()
+            except:
+                pass
     
-    def _generate_frames(self):
-        """Generate mock camera frames"""
+    def _real_camera_loop(self):
+        """Real camera loop using Picamera2"""
+        try:
+            self.picam2.start()
+            time.sleep(2)  # Allow camera to warm up
+            
+            while self.running:
+                try:
+                    # Capture frame
+                    frame = self.picam2.capture_array()
+                    
+                    # Convert RGB to BGR for OpenCV compatibility
+                    import cv2
+                    frame_bgr = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
+                    
+                    # Detect faces if detector is available
+                    faces = []
+                    if self.face_detector is not None:
+                        gray = cv2.cvtColor(frame_bgr, cv2.COLOR_BGR2GRAY)
+                        faces = self.face_detector.detectMultiScale(
+                            gray,
+                            scaleFactor=1.1,
+                            minNeighbors=5,
+                            minSize=(50, 50)
+                        )
+                        
+                        # Draw face rectangles
+                        for (x, y, w, h) in faces:
+                            cv2.rectangle(frame_bgr, (x, y), (x+w, y+h), (0, 255, 0), 2)
+                            cv2.putText(frame_bgr, "FACE DETECTED", (x, y-10), 
+                                       cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
+                    
+                    # Send frame to callback
+                    if self.frame_callback:
+                        self.frame_callback(frame_bgr)
+                    
+                    # Send face detections
+                    if self.face_callback and len(faces) > 0:
+                        # Normalize coordinates
+                        height, width = frame_bgr.shape[:2]
+                        normalized_faces = []
+                        for (x, y, w, h) in faces:
+                            normalized_faces.append((x/width, y/height, w/width, h/height))
+                        self.face_callback(normalized_faces)
+                    
+                    time.sleep(1/15)  # 15 FPS
+                    
+                except Exception as e:
+                    print(f"Error in real camera loop: {e}")
+                    time.sleep(1)
+                    
+        except Exception as e:
+            print(f"Critical error in real camera: {e}")
+            # Fall back to mock camera
+            self._mock_camera_loop()
+    
+    def _mock_camera_loop(self):
+        """Mock camera loop for demonstration"""
         frame_count = 0
         
         while self.running:
@@ -62,14 +181,12 @@ class MockCameraManager:
             
             # Add some "face detection" simulation
             if frame_count % 60 < 30:  # Show face detection for half the time
-                # Draw a simple face-like rectangle
-                cv2_available = True
                 try:
                     import cv2
-                    cv2.rectangle(frame, (250, 180), (390, 300), (255, 255, 255), 2)
-                    cv2.putText(frame, "MOCK FACE", (270, 250), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
+                    cv2.rectangle(frame, (250, 180), (390, 300), (0, 255, 0), 3)
+                    cv2.putText(frame, "MOCK FACE", (270, 250), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
                 except ImportError:
-                    cv2_available = False
+                    pass
                 
                 if self.face_callback:
                     # Send normalized face detection coordinates
@@ -189,8 +306,8 @@ class TerminalDemo:
         self.ui_manager = initialize_ui()
         self.screens = get_screen_references()
         
-        # Mock services
-        self.camera_manager = MockCameraManager()
+        # Initialize services
+        self.camera_manager = CameraManager()
         self.verification_service = MockVerificationService()
         
         # State

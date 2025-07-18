@@ -122,7 +122,7 @@ utils/        # Shared utilities
 - **OV5647 Camera**: Facial recognition (online mode)
 - **AS608 Fingerprint Sensor**: Local verification (offline mode, stores 1-162 templates)
 - **APDS-9930 Proximity Sensor**: Automatic activation via I2C
-- **4" Touchscreen**: User interface (400x800 vertical)
+- **4" Touchscreen**: User interface (480x800 vertical)
 
 ### Database Schema (SQLite)
 
@@ -200,7 +200,7 @@ The terminal includes a complete pygame-based UI system with the following compo
 **Key UI Features:**
 - **State Integration**: UI automatically responds to state machine transitions
 - **Mock Mode Support**: Complete functionality without hardware
-- **Responsive Design**: Optimized for 400x800 touchscreen
+- **Responsive Design**: Optimized for 480x800 touchscreen
 - **Accessibility**: Clear visual feedback and intuitive navigation
 - **Performance**: 30 FPS with efficient rendering
 
