@@ -24,7 +24,7 @@ class CameraPreviewComponent(UIComponent):
     def __init__(self, rect: UIRect):
         super().__init__(rect)
         self.camera_surface = None
-        self.no_camera_text = "Cámara no disponible"
+        self.no_camera_text = "Camera not available"
         self.face_detection_enabled = False
         self.face_boxes = []  # List of face detection boxes
         
@@ -117,7 +117,7 @@ class StatusIndicator(UIComponent):
     def __init__(self, rect: UIRect):
         super().__init__(rect)
         self.status = "idle"
-        self.message = "Acérquese al terminal"
+        self.message = "Approach the terminal"
         self.color = UIColors.TEXT_SECONDARY
         self.icon = None
         
@@ -167,7 +167,7 @@ class MainScreen(UIScreen):
         self.progress_bar = None
         
         # State
-        self.current_instruction = "Acérquese al terminal"
+        self.current_instruction = "Approach the terminal"
         self.verification_progress = 0.0
         self.last_frame_time = datetime.now()
         
@@ -250,7 +250,7 @@ class MainScreen(UIScreen):
         
         self.manual_entry_button = UIButton(
             UIRect(50, footer_y, self.SCREEN_WIDTH - 100, 50),
-            "Ingreso Manual",
+            "Manual Entry",
             self._on_manual_entry_button_click,
             "secondary"
         )
@@ -285,8 +285,8 @@ class MainScreen(UIScreen):
     
     def _on_idle_state(self, state: SystemState, data: StateData) -> None:
         """Handle idle state"""
-        self.status_indicator.set_status("idle", "Acérquese al terminal", UIColors.TEXT_SECONDARY)
-        self.instruction_label.set_text("Acérquese al terminal para iniciar")
+        self.status_indicator.set_status("idle", "Approach the terminal", UIColors.TEXT_SECONDARY)
+        self.instruction_label.set_text("Approach the terminal to begin")
         self.progress_bar.set_visible(False)
         self.manual_entry_button.set_enabled(True)
         self.admin_button.set_enabled(True)
@@ -296,8 +296,8 @@ class MainScreen(UIScreen):
         
     def _on_activation_state(self, state: SystemState, data: StateData) -> None:
         """Handle activation state"""
-        self.status_indicator.set_status("activating", "Activando...", UIColors.WARNING)
-        self.instruction_label.set_text("Detectando usuario...")
+        self.status_indicator.set_status("activating", "Activating...", UIColors.WARNING)
+        self.instruction_label.set_text("Detecting user...")
         self.progress_bar.set_visible(True)
         self.progress_bar.set_value(0.1)
         self.manual_entry_button.set_enabled(False)
@@ -307,8 +307,8 @@ class MainScreen(UIScreen):
     
     def _on_facial_recognition_state(self, state: SystemState, data: StateData) -> None:
         """Handle facial recognition state"""
-        self.status_indicator.set_status("facial_recognition", "Reconocimiento facial", UIColors.PRIMARY)
-        self.instruction_label.set_text("Mire hacia la cámara\nMantenga su rostro visible")
+        self.status_indicator.set_status("facial_recognition", "Facial recognition", UIColors.PRIMARY)
+        self.instruction_label.set_text("Look at the camera\nKeep your face visible")
         self.progress_bar.set_visible(True)
         self.progress_bar.set_value(0.3)
         self.manual_entry_button.set_enabled(True)
@@ -318,8 +318,8 @@ class MainScreen(UIScreen):
     
     def _on_fingerprint_verification_state(self, state: SystemState, data: StateData) -> None:
         """Handle fingerprint verification state"""
-        self.status_indicator.set_status("fingerprint_verification", "Verificación de huella", UIColors.ACCENT)
-        self.instruction_label.set_text("Coloque su dedo en el sensor\nde huellas dactilares")
+        self.status_indicator.set_status("fingerprint_verification", "Fingerprint verification", UIColors.ACCENT)
+        self.instruction_label.set_text("Place your finger on the\nfingerprint sensor")
         self.progress_bar.set_visible(True)
         self.progress_bar.set_value(0.6)
         self.manual_entry_button.set_enabled(True)
@@ -329,8 +329,8 @@ class MainScreen(UIScreen):
     
     def _on_manual_entry_state(self, state: SystemState, data: StateData) -> None:
         """Handle manual entry state"""
-        self.status_indicator.set_status("manual_entry", "Ingreso manual", UIColors.SECONDARY)
-        self.instruction_label.set_text("Ingrese su número de documento")
+        self.status_indicator.set_status("manual_entry", "Manual entry", UIColors.SECONDARY)
+        self.instruction_label.set_text("Enter your document number")
         self.progress_bar.set_visible(False)
         self.manual_entry_button.set_enabled(False)
         
@@ -339,12 +339,12 @@ class MainScreen(UIScreen):
     
     def _on_error_state(self, state: SystemState, data: StateData) -> None:
         """Handle error state"""
-        error_message = "Error del sistema"
+        error_message = "System error"
         if data and data.error_info:
             error_message = data.error_info.get("message", error_message)
         
         self.status_indicator.set_status("error", error_message, UIColors.ERROR)
-        self.instruction_label.set_text("Se produjo un error\nIntente nuevamente")
+        self.instruction_label.set_text("An error occurred\nPlease try again")
         self.progress_bar.set_visible(False)
         self.manual_entry_button.set_enabled(True)
         self.admin_button.set_enabled(True)
@@ -385,19 +385,19 @@ class MainScreen(UIScreen):
                                  user_name: str = "") -> None:
         """Show verification feedback"""
         if success:
-            self.status_indicator.set_status("success", f"Acceso concedido - {user_name}", UIColors.SUCCESS)
-            self.instruction_label.set_text("Acceso concedido\nBienvenido")
+            self.status_indicator.set_status("success", f"Access granted - {user_name}", UIColors.SUCCESS)
+            self.instruction_label.set_text("Access granted\nWelcome")
             self.progress_bar.set_value(1.0)
         else:
-            self.status_indicator.set_status("failed", "Verificación fallida", UIColors.ERROR)
-            self.instruction_label.set_text("Verificación fallida\nIntente nuevamente")
+            self.status_indicator.set_status("failed", "Verification failed", UIColors.ERROR)
+            self.instruction_label.set_text("Verification failed\nPlease try again")
             self.progress_bar.set_value(0.0)
     
     def show_connection_status(self, connected: bool) -> None:
         """Show connection status"""
         if not connected:
             # Show offline indicator
-            self.status_indicator.set_status("offline", "Modo offline", UIColors.WARNING)
+            self.status_indicator.set_status("offline", "Offline mode", UIColors.WARNING)
     
     def draw(self, surface: pygame.Surface) -> None:
         """Draw the main screen"""

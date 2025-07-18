@@ -127,13 +127,13 @@ class WelcomeMessage(UIComponent):
         alpha = int(255 * min(1.0, self.animation_progress))
         
         # Welcome text
-        welcome_text = "¡Bienvenido!"
+        welcome_text = "Welcome!"
         font_welcome = pygame.font.Font(None, UIFonts.TITLE)
         welcome_surface = font_welcome.render(welcome_text, True, UIColors.SUCCESS)
         welcome_surface.set_alpha(alpha)
         
         # User name text
-        user_text = self.user_name if self.user_name else "Usuario"
+        user_text = self.user_name if self.user_name else "User"
         font_user = pygame.font.Font(None, UIFonts.SUBTITLE)
         user_surface = font_user.render(user_text, True, UIColors.TEXT_PRIMARY)
         user_surface.set_alpha(alpha)
@@ -179,21 +179,21 @@ class AccessInfo(UIComponent):
         
         # Method display
         method_display = {
-            "facial": "Reconocimiento Facial",
-            "fingerprint": "Huella Dactilar",
-            "manual": "Ingreso Manual"
-        }.get(self.verification_method, "Desconocido")
+            "facial": "Facial Recognition",
+            "fingerprint": "Fingerprint",
+            "manual": "Manual Entry"
+        }.get(self.verification_method, "Unknown")
         
         # Confidence display
         confidence_str = f"{self.confidence_score:.1%}" if self.confidence_score > 0 else "N/A"
         
         # Create info lines
         info_lines = [
-            f"Hora: {time_str}",
-            f"Fecha: {date_str}",
-            f"Método: {method_display}",
-            f"Confianza: {confidence_str}",
-            f"Ubicación: {self.location}"
+            f"Time: {time_str}",
+            f"Date: {date_str}",
+            f"Method: {method_display}",
+            f"Confidence: {confidence_str}",
+            f"Location: {self.location}"
         ]
         
         # Draw info lines
@@ -264,7 +264,7 @@ class SuccessScreen(UIScreen):
         # Return button
         self.return_button = UIButton(
             create_centered_rect(200, 50, y_offset=250),
-            "Continuar",
+            "Continue",
             self._on_return_button_click,
             "primary"
         )
@@ -272,7 +272,7 @@ class SuccessScreen(UIScreen):
         # Countdown label
         self.countdown_label = UILabel(
             create_centered_rect(350, 30, y_offset=320),
-            "Regresando automáticamente en 3s",
+            "Returning automatically in 3s",
             UIFonts.CAPTION,
             UIColors.TEXT_SECONDARY,
             "center"
@@ -291,7 +291,7 @@ class SuccessScreen(UIScreen):
         
         # Extract user data from state
         if data and data.user_data:
-            self.user_name = data.user_data.get("name", "Usuario")
+            self.user_name = data.user_data.get("name", "User")
             self.access_time = datetime.now()
             
         if data and data.verification_result:
@@ -333,7 +333,7 @@ class SuccessScreen(UIScreen):
         remaining = max(0, self.AUTO_RETURN_DELAY - elapsed)
         
         if remaining > 0:
-            self.countdown_label.set_text(f"Regresando automáticamente en {remaining:.0f}s")
+            self.countdown_label.set_text(f"Returning automatically in {remaining:.0f}s")
             self.countdown_label.set_visible(True)
         else:
             self.countdown_label.set_visible(False)
@@ -398,7 +398,7 @@ class SuccessScreen(UIScreen):
     
     def set_user_data(self, user_data: Dict[str, Any]) -> None:
         """Set user data for display"""
-        self.user_name = user_data.get("name", "Usuario")
+        self.user_name = user_data.get("name", "User")
         self.welcome_message.set_user_name(self.user_name)
         
     def set_verification_result(self, method: str, confidence: float) -> None:
@@ -436,7 +436,7 @@ if __name__ == "__main__":
     ui_manager.register_screen(success_screen)
     
     # Set test data
-    success_screen.set_user_data({"name": "Juan Pérez"})
+    success_screen.set_user_data({"name": "Test User"})
     success_screen.set_verification_result("facial", 0.95)
     
     # Show success screen

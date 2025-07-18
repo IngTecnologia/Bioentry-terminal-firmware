@@ -43,11 +43,11 @@ class SystemInfoPanel(UIComponent):
         
         self.system_info = {
             "Terminal ID": config.api.terminal_id,
-            "Estado": state_manager.get_current_state().value,
-            "Modo": config.operation.mode,
-            "Ubicación": config.operation.location_name,
-            "Versión": "1.0.0",
-            "Tiempo activo": self._get_uptime()
+            "Status": state_manager.get_current_state().value,
+            "Mode": config.operation.mode,
+            "Location": config.operation.location_name,
+            "Version": "1.0.0",
+            "Uptime": self._get_uptime()
         }
     
     def _get_uptime(self) -> str:
@@ -73,7 +73,7 @@ class SystemInfoPanel(UIComponent):
         
         # Draw title
         font_title = pygame.font.Font(None, UIFonts.SUBTITLE)
-        title_surface = font_title.render("Información del Sistema", True, UIColors.PRIMARY)
+        title_surface = font_title.render("System Information", True, UIColors.PRIMARY)
         title_rect = title_surface.get_rect(x=self.rect.x + 10, y=self.rect.y + 10)
         surface.blit(title_surface, title_rect)
         
@@ -107,13 +107,13 @@ class StatisticsPanel(UIComponent):
         """Update statistics"""
         # TODO: Get real statistics from database
         self.statistics = {
-            "Usuarios registrados": 145,
-            "Accesos hoy": 23,
-            "Accesos esta semana": 167,
-            "Tasa de éxito": "94.2%",
-            "Reconocimiento facial": "78%",
-            "Huella dactilar": "16%",
-            "Ingreso manual": "6%"
+            "Registered users": 145,
+            "Today's access": 23,
+            "This week's access": 167,
+            "Success rate": "94.2%",
+            "Facial recognition": "78%",
+            "Fingerprint": "16%",
+            "Manual entry": "6%"
         }
     
     def draw(self, surface: pygame.Surface) -> None:
@@ -126,7 +126,7 @@ class StatisticsPanel(UIComponent):
         
         # Draw title
         font_title = pygame.font.Font(None, UIFonts.SUBTITLE)
-        title_surface = font_title.render("Estadísticas", True, UIColors.PRIMARY)
+        title_surface = font_title.render("Statistics", True, UIColors.PRIMARY)
         title_rect = title_surface.get_rect(x=self.rect.x + 10, y=self.rect.y + 10)
         surface.blit(title_surface, title_rect)
         
@@ -161,10 +161,10 @@ class QuickActionsPanel(UIComponent):
     def _setup_buttons(self) -> None:
         """Setup quick action buttons"""
         actions = [
-            ("Sincronizar", "sync"),
+            ("Sync", "sync"),
             ("Backup DB", "backup"),
-            ("Reiniciar", "restart"),
-            ("Mantenimiento", "maintenance")
+            ("Restart", "restart"),
+            ("Maintenance", "maintenance")
         ]
         
         button_width = (self.rect.width - 50) // 2
@@ -196,7 +196,7 @@ class QuickActionsPanel(UIComponent):
         
         # Draw title
         font_title = pygame.font.Font(None, UIFonts.SUBTITLE)
-        title_surface = font_title.render("Acciones Rápidas", True, UIColors.PRIMARY)
+        title_surface = font_title.render("Quick Actions", True, UIColors.PRIMARY)
         title_rect = title_surface.get_rect(x=self.rect.x + 10, y=self.rect.y + 10)
         surface.blit(title_surface, title_rect)
         
@@ -248,7 +248,7 @@ class AdminScreen(UIScreen):
         # Title
         self.title_label = UILabel(
             UIRect(20, 20, 300, 40),
-            "Administración",
+            "Administration",
             UIFonts.TITLE,
             UIColors.PRIMARY,
             "left"
@@ -257,17 +257,17 @@ class AdminScreen(UIScreen):
         # Back button
         self.back_button = UIButton(
             UIRect(320, 20, 60, 40),
-            "Volver",
+            "Back",
             self._on_back_click,
             "outline"
         )
         
         # Section navigation buttons
         sections = [
-            ("Estado", AdminSection.SYSTEM_STATUS),
-            ("Usuarios", AdminSection.USER_MANAGEMENT),
+            ("Status", AdminSection.SYSTEM_STATUS),
+            ("Users", AdminSection.USER_MANAGEMENT),
             ("Config", AdminSection.CONFIGURATION),
-            ("Diagnóstico", AdminSection.DIAGNOSTICS)
+            ("Diagnostics", AdminSection.DIAGNOSTICS)
         ]
         
         for i, (text, section) in enumerate(sections):
@@ -362,21 +362,21 @@ class AdminScreen(UIScreen):
         # TODO: Implement actual sync logic
         
         # Show progress feedback
-        self._show_action_feedback("Sincronizando datos...", 3.0)
+        self._show_action_feedback("Synchronizing data...", 3.0)
     
     def _perform_backup(self) -> None:
         """Perform database backup"""
         self.logger.info("Performing database backup")
         # TODO: Implement actual backup logic
         
-        self._show_action_feedback("Creando backup...", 2.0)
+        self._show_action_feedback("Creating backup...", 2.0)
     
     def _perform_restart(self) -> None:
         """Perform system restart"""
         self.logger.info("Performing system restart")
         
         # Show confirmation dialog
-        self._show_action_feedback("Reiniciando sistema...", 5.0)
+        self._show_action_feedback("Restarting system...", 5.0)
         
         # TODO: Implement actual restart logic
     
@@ -461,7 +461,7 @@ class AdminScreen(UIScreen):
         """Draw user management specific content"""
         # Placeholder for user management UI
         font = pygame.font.Font(None, UIFonts.BODY)
-        text = "Gestión de usuarios en desarrollo"
+        text = "User management in development"
         text_surface = font.render(text, True, UIColors.TEXT_SECONDARY)
         text_rect = text_surface.get_rect(center=(self.SCREEN_WIDTH // 2, 400))
         surface.blit(text_surface, text_rect)
@@ -470,7 +470,7 @@ class AdminScreen(UIScreen):
         """Draw configuration specific content"""
         # Placeholder for configuration UI
         font = pygame.font.Font(None, UIFonts.BODY)
-        text = "Configuración del sistema en desarrollo"
+        text = "System configuration in development"
         text_surface = font.render(text, True, UIColors.TEXT_SECONDARY)
         text_rect = text_surface.get_rect(center=(self.SCREEN_WIDTH // 2, 400))
         surface.blit(text_surface, text_rect)
@@ -483,11 +483,11 @@ class AdminScreen(UIScreen):
         
         # Hardware status
         hardware_status = [
-            ("Cámara", "OK", UIColors.SUCCESS),
-            ("Sensor de huella", "OK", UIColors.SUCCESS),
-            ("Sensor de proximidad", "OK", UIColors.SUCCESS),
-            ("Conectividad", "Intermitente", UIColors.WARNING),
-            ("Base de datos", "OK", UIColors.SUCCESS)
+            ("Camera", "OK", UIColors.SUCCESS),
+            ("Fingerprint sensor", "OK", UIColors.SUCCESS),
+            ("Proximity sensor", "OK", UIColors.SUCCESS),
+            ("Connectivity", "Intermittent", UIColors.WARNING),
+            ("Database", "OK", UIColors.SUCCESS)
         ]
         
         for component, status, color in hardware_status:
@@ -518,20 +518,20 @@ class AdminScreen(UIScreen):
         
         # Auth message
         font = pygame.font.Font(None, UIFonts.SUBTITLE)
-        auth_text = "Acceso de administrador"
+        auth_text = "Administrator access"
         auth_surface = font.render(auth_text, True, UIColors.TEXT_PRIMARY)
         auth_rect = auth_surface.get_rect(center=(200, 320))
         surface.blit(auth_surface, auth_rect)
         
         # Instructions
         font_small = pygame.font.Font(None, UIFonts.BODY)
-        instr_text = "Autenticación requerida"
+        instr_text = "Authentication required"
         instr_surface = font_small.render(instr_text, True, UIColors.TEXT_SECONDARY)
         instr_rect = instr_surface.get_rect(center=(200, 350))
         surface.blit(instr_surface, instr_rect)
         
         # Temporary bypass message
-        bypass_text = "Presione cualquier tecla para continuar"
+        bypass_text = "Press any key to continue"
         bypass_surface = font_small.render(bypass_text, True, UIColors.WARNING)
         bypass_rect = bypass_surface.get_rect(center=(200, 400))
         surface.blit(bypass_surface, bypass_rect)

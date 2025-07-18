@@ -32,7 +32,7 @@ class NumericKeypad(UIComponent):
             ['1', '2', '3'],
             ['4', '5', '6'],
             ['7', '8', '9'],
-            ['+', '0', '']
+            ['DEL', '0', 'OK']
         ]
         
         button_width = (self.rect.width - 30) // 3  # 3 columns with margins
@@ -44,10 +44,10 @@ class NumericKeypad(UIComponent):
                 y = self.rect.y + 10 + row_idx * (button_height + 5)
                 
                 # Determine button style
-                if key == '+':
+                if key == 'DEL':
                     style = "outline"
                     text_color = UIColors.ERROR
-                elif key == '':
+                elif key == 'OK':
                     style = "primary"
                     text_color = UIColors.SURFACE
                 else:
@@ -138,10 +138,10 @@ class DocumentIDField(UIComponent):
         # Basic validation: at least 6 digits, only numbers
         if len(self.text) < 6:
             self.is_valid = False
-            self.error_message = "Mínimo 6 dígitos"
+            self.error_message = "Minimum 6 digits"
         elif not self.text.isdigit():
             self.is_valid = False
-            self.error_message = "Solo números"
+            self.error_message = "Numbers only"
         else:
             self.is_valid = True
             self.error_message = ""
@@ -190,7 +190,7 @@ class DocumentIDField(UIComponent):
         if len(self.text) < 8:  # Show guidance for common ID length
             font_small = pygame.font.Font(None, UIFonts.CAPTION)
             remaining = 8 - len(self.text)
-            dots = """ * remaining
+            dots = "." * remaining
             dots_surface = font_small.render(dots, True, UIColors.TEXT_DISABLED)
             dots_rect = dots_surface.get_rect(left=text_rect.right + 10, centery=text_rect.centery)
             surface.blit(dots_surface, dots_rect)
@@ -237,7 +237,7 @@ class ManualEntryScreen(UIScreen):
         # Title
         self.title_label = UILabel(
             UIRect(20, 20, self.SCREEN_WIDTH - 40, 40),
-            "Ingreso Manual",
+            "Manual Entry",
             UIFonts.TITLE,
             UIColors.PRIMARY,
             "center"
@@ -246,7 +246,7 @@ class ManualEntryScreen(UIScreen):
         # Instructions
         self.instruction_label = UILabel(
             UIRect(20, 80, self.SCREEN_WIDTH - 40, 60),
-            "Ingrese su número de documento\ny presione  para continuar",
+            "Enter your document number\nand press OK to continue",
             UIFonts.BODY,
             UIColors.TEXT_PRIMARY,
             "center"
@@ -266,7 +266,7 @@ class ManualEntryScreen(UIScreen):
         # Submit button
         self.submit_button = UIButton(
             create_centered_rect(250, 50, y_offset=180),
-            "Verificar Documento",
+            "Verify Document",
             self._on_submit_click,
             "primary"
         )
@@ -275,7 +275,7 @@ class ManualEntryScreen(UIScreen):
         # Cancel button
         self.cancel_button = UIButton(
             create_centered_rect(200, 40, y_offset=250),
-            "Cancelar",
+            "Cancel",
             self._on_cancel_click,
             "outline"
         )
@@ -332,9 +332,9 @@ class ManualEntryScreen(UIScreen):
         if self.is_verifying:
             return
         
-        if key == '+':
+        if key == 'DEL':
             self.document_field.remove_character()
-        elif key == '':
+        elif key == 'OK':
             self._submit_document_id()
         elif key.isdigit():
             self.document_field.add_character(key)
@@ -362,7 +362,7 @@ class ManualEntryScreen(UIScreen):
     def _submit_document_id(self) -> None:
         """Submit document ID for verification"""
         if not self.document_field.is_valid or len(self.document_field.text) < 6:
-            self._show_error("Documento inválido")
+            self._show_error("Invalid document")
             return
         
         if self.is_verifying:
@@ -378,7 +378,7 @@ class ManualEntryScreen(UIScreen):
         # Update UI
         self.submit_button.set_enabled(False)
         self.keypad.set_enabled(False)
-        self.instruction_label.set_text("Verificando documento...")
+        self.instruction_label.set_text("Verifying document...")
         
         # TODO: Integrate with verification service
         # For now, simulate verification
@@ -397,12 +397,12 @@ class ManualEntryScreen(UIScreen):
                 # Success
                 self._on_verification_success({
                     "document_id": document_id,
-                    "name": "Usuario de Prueba",
+                    "name": "Test User",
                     "employee_id": "EMP001"
                 })
             else:
                 # Failure
-                self._on_verification_failure("Documento no encontrado")
+                self._on_verification_failure("Document not found")
         
         threading.Thread(target=verify, daemon=True).start()
     
@@ -442,7 +442,7 @@ class ManualEntryScreen(UIScreen):
         
         # Check if max attempts reached
         if self.current_attempts >= self.max_attempts:
-            self._show_error("Máximo de intentos alcanzado")
+            self._show_error("Maximum attempts reached")
             self.keypad.set_enabled(False)
             self.submit_button.set_enabled(False)
             
@@ -459,7 +459,7 @@ class ManualEntryScreen(UIScreen):
         else:
             # Re-enable input
             self.keypad.set_enabled(True)
-            self.instruction_label.set_text("Ingrese su número de documento\ny presione  para continuar")
+            self.instruction_label.set_text("Enter your document number\nand press OK to continue")
             self.submit_button.set_enabled(
                 len(self.document_field.text) >= 6 and self.document_field.is_valid
             )
@@ -473,9 +473,9 @@ class ManualEntryScreen(UIScreen):
         """Update attempts display"""
         remaining = self.max_attempts - self.current_attempts
         if remaining > 0:
-            self.attempts_label.set_text(f"Intentos restantes: {remaining}")
+            self.attempts_label.set_text(f"Remaining attempts: {remaining}")
         else:
-            self.attempts_label.set_text("Sin intentos restantes")
+            self.attempts_label.set_text("No attempts remaining")
     
     def update(self) -> None:
         """Update screen state"""
@@ -485,7 +485,7 @@ class ManualEntryScreen(UIScreen):
         # Check for verification timeout
         if (self.is_verifying and self.verification_start_time and 
             (datetime.now() - self.verification_start_time).total_seconds() > self.VERIFICATION_TIMEOUT):
-            self._on_verification_failure("Tiempo de verificación agotado")
+            self._on_verification_failure("Verification timeout")
     
     def handle_event(self, event: pygame.event.Event) -> bool:
         """Handle pygame event"""
