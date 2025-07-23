@@ -8,7 +8,7 @@ from .base_ui import (
     UIRect, UIColors, UIFonts, get_ui_manager, create_centered_rect, create_grid_rect
 )
 
-from .main_screen import MainScreen, CameraPreviewComponent, StatusIndicator
+from .main_screen import MainScreen
 from .success_screen import SuccessScreen, SuccessIcon, WelcomeMessage, AccessInfo
 from .manual_entry_screen import ManualEntryScreen, NumericKeypad, DocumentIDField
 from .admin_screen import AdminScreen, SystemInfoPanel, StatisticsPanel, QuickActionsPanel
@@ -23,9 +23,8 @@ __all__ = [
     'MainScreen', 'SuccessScreen', 'ManualEntryScreen', 'AdminScreen',
     
     # Specialized components
-    'CameraPreviewComponent', 'StatusIndicator', 'SuccessIcon', 'WelcomeMessage',
-    'AccessInfo', 'NumericKeypad', 'DocumentIDField', 'SystemInfoPanel',
-    'StatisticsPanel', 'QuickActionsPanel'
+    'SuccessIcon', 'WelcomeMessage', 'AccessInfo', 'NumericKeypad', 'DocumentIDField', 
+    'SystemInfoPanel', 'StatisticsPanel', 'QuickActionsPanel'
 ]
 
 def initialize_ui() -> UIManager:

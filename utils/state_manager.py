@@ -86,10 +86,10 @@ class StateManager:
         
         # Configure timeouts
         self.state_timeouts: Dict[SystemState, int] = {
-            SystemState.ACTIVATION: self.config.operation.timeout_seconds,
-            SystemState.FACIAL_RECOGNITION: self.config.operation.timeout_seconds,
-            SystemState.FINGERPRINT_VERIFICATION: self.config.operation.timeout_seconds,
-            SystemState.MANUAL_ENTRY: self.config.operation.timeout_seconds * 2,
+            SystemState.ACTIVATION: self.config.operation.verification_timeout_seconds,
+            SystemState.FACIAL_RECOGNITION: self.config.operation.verification_timeout_seconds,
+            SystemState.FINGERPRINT_VERIFICATION: self.config.operation.verification_timeout_seconds,
+            SystemState.MANUAL_ENTRY: self.config.operation.verification_timeout_seconds * 2,
             SystemState.CONFIRMATION: 5,  # 5 seconds for confirmation
         }
         

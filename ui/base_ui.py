@@ -530,14 +530,22 @@ class UIFullscreenCamera(UIComponent):
         if hasattr(frame, 'shape'):
             import cv2
             import numpy as np
-            # Resize frame to fullscreen
-            frame = cv2.resize(frame, (self.rect.width, self.rect.height))
-            # Convert to pygame surface
-            frame_surface = pygame.surfarray.make_surface(frame.swapaxes(0, 1))
-            self.camera_surface = frame_surface
+            try:
+                # Resize frame to fullscreen
+                frame_resized = cv2.resize(frame, (self.rect.width, self.rect.height))
+                
+                # Camera manager already provides RGB format, but pygame expects different axis order
+                # Convert RGB to pygame format
+                frame_surface = pygame.surfarray.make_surface(frame_resized.swapaxes(0, 1))
+                self.camera_surface = frame_surface
+                
+            except Exception as e:
+                # Log error but don't crash
+                print(f"Error converting camera frame: {e}")
+                self.camera_surface = None
         else:
             # Already a pygame surface
-            # Scale to fullscreen
+            # Scale to fullscreen  
             self.camera_surface = pygame.transform.scale(frame, (self.rect.width, self.rect.height))
     
     def set_face_detections(self, face_boxes: list) -> None:

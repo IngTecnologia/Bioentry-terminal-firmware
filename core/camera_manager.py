@@ -192,8 +192,8 @@ class CameraManager:
                 # Start mock preview loop in background
                 asyncio.create_task(self._mock_preview_loop())
             else:
-                # Real camera is already streaming
-                pass
+                # Start real camera preview loop in background
+                asyncio.create_task(self._real_preview_loop())
             
             self.logger.info("Camera preview started")
             return True
@@ -227,6 +227,78 @@ class CameraManager:
             except Exception as e:
                 self.logger.error(f"Mock preview loop error: {str(e)}")
                 break
+    
+    async def _real_preview_loop(self):
+        """Background loop for real camera frames."""
+        self.logger.info("Starting real camera preview loop")
+        try:
+            # Camera should already be started from initialize()
+            if not self.camera:
+                self.logger.error("Camera not available")
+                return
+            
+            self.logger.info(f"Real camera preview loop ready with camera: {type(self.camera)}")
+            
+            while self.is_recording:
+                try:
+                    # Capture frame from real camera
+                    if self.camera and hasattr(self.camera, 'capture_array'):
+                        frame = self.camera.capture_array()
+                        
+                        # Convert RGB to BGR for consistency with capture_frame
+                        frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
+                        
+                        # Convert BGR to RGB (final output format)
+                        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+                        
+                        # Detect faces in the frame
+                        try:
+                            faces = self.detect_faces(frame)
+                            if faces:
+                                # Draw face detection boxes on the frame
+                                frame = self._draw_face_boxes(frame, faces)
+                                
+                                # Log face detection
+                                if not hasattr(self, '_face_detected_logged'):
+                                    self.logger.info(f"Face detection working: {len(faces)} faces detected")
+                                    self._face_detected_logged = True
+                        except Exception as e:
+                            self.logger.error(f"Face detection error: {str(e)}")
+                        
+                        with self.frame_lock:
+                            self.current_frame = frame
+                        
+                        # Log first frame capture
+                        if not hasattr(self, '_first_frame_logged'):
+                            self.logger.info(f"First real camera frame captured: {frame.shape}")
+                            self._first_frame_logged = True
+                    else:
+                        self.logger.error(f"Cannot capture array from camera: {self.camera}")
+                    
+                    # Update FPS tracking
+                    self.frame_count += 1
+                    current_time = time.time()
+                    if current_time - self.last_fps_check >= 1.0:
+                        self.actual_fps = self.frame_count / (current_time - self.last_fps_check)
+                        self.frame_count = 0
+                        self.last_fps_check = current_time
+                    
+                    # Sleep to maintain target FPS
+                    await asyncio.sleep(1.0 / self.fps)
+                    
+                except Exception as e:
+                    self.logger.error(f"Error capturing real camera frame: {str(e)}")
+                    await asyncio.sleep(1)
+                    
+        except Exception as e:
+            self.logger.error(f"Error in real preview loop: {str(e)}")
+        finally:
+            # Stop camera when loop ends
+            if self.camera and hasattr(self.camera, 'stop'):
+                try:
+                    self.camera.stop()
+                except:
+                    pass
     
     def stop_preview(self) -> None:
         """Stop camera preview/streaming."""
@@ -411,6 +483,60 @@ class CameraManager:
             })
         
         return detected_faces
+    
+    def _draw_face_boxes(self, frame: np.ndarray, faces: List[Dict[str, Any]]) -> np.ndarray:
+        """Draw face detection boxes on frame, similar to terminal_app.py"""
+        for face in faces:
+            # Extract bounding box coordinates
+            x, y, w, h = int(face['x']), int(face['y']), int(face['width']), int(face['height'])
+            
+            # Main green rectangle
+            cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 3)
+            
+            # Semi-transparent overlay
+            overlay = frame.copy()
+            cv2.rectangle(overlay, (x, y), (x+w, y+h), (0, 255, 0), -1)
+            cv2.addWeighted(overlay, 0.1, frame, 0.9, 0, frame)
+            
+            # Text label
+            font_scale = 1.0
+            thickness = 2
+            text = 'CARA DETECTADA'
+            
+            # Calculate centered text position
+            text_size = cv2.getTextSize(text, cv2.FONT_HERSHEY_SIMPLEX, font_scale, thickness)[0]
+            text_x = x + (w - text_size[0]) // 2
+            text_y = y - 15 if y > 30 else y + h + 25
+            
+            # Text background
+            cv2.rectangle(frame, (text_x - 5, text_y - text_size[1] - 5), 
+                         (text_x + text_size[0] + 5, text_y + 5), (0, 0, 0), -1)
+            
+            # Text
+            cv2.putText(frame, text, (text_x, text_y), 
+                       cv2.FONT_HERSHEY_SIMPLEX, font_scale, (0, 255, 0), thickness)
+            
+            # Focus corners
+            corner_length = 20
+            corner_thickness = 4
+            
+            # Top-left corner
+            cv2.line(frame, (x, y), (x + corner_length, y), (0, 255, 0), corner_thickness)
+            cv2.line(frame, (x, y), (x, y + corner_length), (0, 255, 0), corner_thickness)
+            
+            # Top-right corner
+            cv2.line(frame, (x + w, y), (x + w - corner_length, y), (0, 255, 0), corner_thickness)
+            cv2.line(frame, (x + w, y), (x + w, y + corner_length), (0, 255, 0), corner_thickness)
+            
+            # Bottom-left corner
+            cv2.line(frame, (x, y + h), (x + corner_length, y + h), (0, 255, 0), corner_thickness)
+            cv2.line(frame, (x, y + h), (x, y + h - corner_length), (0, 255, 0), corner_thickness)
+            
+            # Bottom-right corner
+            cv2.line(frame, (x + w, y + h), (x + w - corner_length, y + h), (0, 255, 0), corner_thickness)
+            cv2.line(frame, (x + w, y + h), (x + w, y + h - corner_length), (0, 255, 0), corner_thickness)
+        
+        return frame
     
     def get_camera_info(self) -> Dict[str, Any]:
         """

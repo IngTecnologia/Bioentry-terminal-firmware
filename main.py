@@ -25,13 +25,13 @@ from utils.logger import get_logger
 from utils.state_manager import get_state_manager, SystemState, StateData
 
 # Hardware managers
-from core.camera_manager import get_camera_manager
-from core.fingerprint_manager import get_fingerprint_manager
-from core.proximity_manager import get_proximity_manager
+from core.camera_manager_simple import get_simple_camera_manager
+from core.fingerprint_manager import FingerprintManager
+from core.proximity_manager import ProximityManager
 from core.database_manager import get_database_manager
 
 # Services
-from services.api_client import get_api_client
+from services.api_client import APIClient
 from services.verification_service import get_verification_service, VerificationRequest
 from services.sync_service import get_sync_service
 
@@ -62,15 +62,15 @@ class BioEntryTerminal:
         
         # System managers
         self.state_manager = get_state_manager()
-        self.db_manager = get_database_manager()
+        self.db_manager = None  # Will be initialized in initialize() method
         
         # Hardware managers
-        self.camera_manager = get_camera_manager()
-        self.fingerprint_manager = get_fingerprint_manager()
-        self.proximity_manager = get_proximity_manager()
+        self.camera_manager = get_simple_camera_manager()
+        self.fingerprint_manager = FingerprintManager()
+        self.proximity_manager = ProximityManager()
         
         # Services
-        self.api_client = get_api_client()
+        self.api_client = APIClient()
         self.verification_service = get_verification_service()
         self.sync_service = get_sync_service()
         
@@ -89,6 +89,10 @@ class BioEntryTerminal:
         
         self.logger.info("BioEntry Terminal initialized")
     
+    async def _set_state(self, new_state: SystemState, data: Optional[StateData] = None, trigger: str = "system"):
+        """Helper method to transition to a new state"""
+        await self.state_manager.transition_to(new_state, trigger, data)
+    
     async def initialize(self) -> bool:
         """
         Initialize all system components.
@@ -101,16 +105,23 @@ class BioEntryTerminal:
             
             # Step 1: Initialize database
             self.logger.info("Initializing database...")
-            if not await self.db_manager.initialize():
-                self.logger.error("Database initialization failed")
+            try:
+                self.db_manager = await get_database_manager()
+                self.logger.info("Database initialization successful")
+            except Exception as e:
+                self.logger.error(f"Database initialization failed: {str(e)}")
                 return False
             
             # Step 2: Initialize hardware managers
             self.logger.info("Initializing hardware managers...")
             
-            # Camera manager
-            if not await self.camera_manager.initialize():
-                self.logger.warning("Camera initialization failed - continuing in mock mode")
+            # Simple camera manager (already initialized, just start it)
+            try:
+                self.camera_manager.start()
+                self.logger.info("Simple camera manager started successfully")
+            except Exception as e:
+                self.logger.error(f"Camera initialization failed: {str(e)}")
+                return False
             
             # Fingerprint manager
             if not await self.fingerprint_manager.initialize():
@@ -140,9 +151,9 @@ class BioEntryTerminal:
             await self._setup_event_handlers()
             
             # Step 6: Set initial state
-            self.state_manager.set_state(SystemState.IDLE, StateData({
+            await self._set_state(SystemState.IDLE, StateData(metadata={
                 'message': 'Terminal listo - Acerquese al sensor'
-            }))
+            }), "initialization")
             
             self.logger.info("BioEntry Terminal initialization completed successfully")
             return True
@@ -165,13 +176,13 @@ class BioEntryTerminal:
             admin_screen = AdminScreen()
             
             # Register screens
-            self.ui_manager.add_screen('main', main_screen)
-            self.ui_manager.add_screen('success', success_screen)
-            self.ui_manager.add_screen('manual', manual_screen)
-            self.ui_manager.add_screen('admin', admin_screen)
+            self.ui_manager.register_screen(main_screen)
+            self.ui_manager.register_screen(success_screen)
+            self.ui_manager.register_screen(manual_screen)
+            self.ui_manager.register_screen(admin_screen)
             
             # Set initial screen
-            self.ui_manager.set_current_screen('main')
+            self.ui_manager.show_screen('main')
             self.current_screen = 'main'
             
             return True
@@ -196,11 +207,14 @@ class BioEntryTerminal:
         )
         
         # State change handler
-        def on_state_change(new_state: SystemState, state_data: StateData):
+        def on_state_change(transition_record: dict):
+            new_state = transition_record.get('to_state')
+            state_data = transition_record.get('data')
             self.logger.debug(f"State changed to: {new_state}")
-            asyncio.create_task(self._handle_state_change(new_state, state_data))
+            if new_state:
+                asyncio.create_task(self._handle_state_change(new_state, state_data))
         
-        self.state_manager.add_state_change_callback(on_state_change)
+        self.state_manager.on_transition(on_state_change)
     
     async def _handle_state_change(self, new_state: SystemState, state_data: StateData):
         """Handle system state changes."""
@@ -208,7 +222,7 @@ class BioEntryTerminal:
             if new_state == SystemState.IDLE:
                 # Return to main screen
                 if self.current_screen != 'main':
-                    self.ui_manager.set_current_screen('main')
+                    self.ui_manager.show_screen('main')
                     self.current_screen = 'main'
             
             elif new_state == SystemState.DETECTING:
@@ -222,7 +236,7 @@ class BioEntryTerminal:
             
             elif new_state == SystemState.ACCESS_GRANTED:
                 # Show success screen
-                self.ui_manager.set_current_screen('success')
+                self.ui_manager.show_screen('success')
                 self.current_screen = 'success'
                 
                 # Auto return to idle after delay
@@ -236,12 +250,12 @@ class BioEntryTerminal:
             
             elif new_state == SystemState.MANUAL_ENTRY:
                 # Switch to manual entry screen
-                self.ui_manager.set_current_screen('manual')
+                self.ui_manager.show_screen('manual')
                 self.current_screen = 'manual'
             
             elif new_state == SystemState.ADMIN_MODE:
                 # Switch to admin screen
-                self.ui_manager.set_current_screen('admin')
+                self.ui_manager.show_screen('admin')
                 self.current_screen = 'admin'
             
         except Exception as e:
@@ -319,28 +333,57 @@ class BioEntryTerminal:
             
             self.logger.info("Starting BioEntry Terminal main loop")
             
-            # Start camera preview
-            await self.camera_manager.start_preview()
+            # Camera is already started during initialization
             
-            # Main event loop
+            # Import pygame for event handling
+            import pygame
+            
+            # Main event loop with pygame integration
             while self.running:
                 try:
-                    # Process UI events
-                    if self.ui_manager:
-                        events = self.ui_manager.get_events()
-                        await self._process_ui_events(events)
+                    # Process pygame events
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:
+                            self.running = False
+                        elif event.type == pygame.KEYDOWN:
+                            await self._handle_keyboard_event(event)
+                    
+                    # Update UI if available
+                    if self.ui_manager and self.ui_manager.current_screen:
+                        # Get camera frame from simple camera manager
+                        if self.camera_manager and self.camera_manager.is_running:
+                            current_frame = self.camera_manager.get_current_frame()
+                            if current_frame is not None:
+                                # Update camera in main screen if it's active
+                                if (hasattr(self.ui_manager.current_screen, 'fullscreen_camera') and 
+                                    self.ui_manager.current_screen.fullscreen_camera):
+                                    try:
+                                        self.ui_manager.current_screen.fullscreen_camera.set_camera_frame(current_frame)
+                                    except Exception as e:
+                                        self.logger.error(f"Error setting camera frame: {str(e)}")
+                            else:
+                                # Log when we don't get frames
+                                if hasattr(self.ui_manager.current_screen, 'fullscreen_camera'):
+                                    if not hasattr(self, '_no_frame_logged'):
+                                        self.logger.warning("No camera frame available from simple manager")
+                                        self._no_frame_logged = True
                         
-                        # Update and render UI
-                        self.ui_manager.update()
-                        self.ui_manager.render()
+                        # Update current screen
+                        self.ui_manager.current_screen.update()
+                        
+                        # Clear and draw
+                        self.ui_manager.screen.fill((245, 245, 245))  # UIColors.BACKGROUND
+                        self.ui_manager.current_screen.draw(self.ui_manager.screen)
+                        
+                        # Update display
+                        pygame.display.flip()
+                        self.ui_manager.clock.tick(30)
                     
-                    # Check for manual activation (touch screen)
+                    # Background tasks
                     await self._check_manual_activation()
-                    
-                    # Perform periodic maintenance
                     await self._periodic_maintenance()
                     
-                    # Small delay to prevent high CPU usage
+                    # Small delay
                     await asyncio.sleep(0.033)  # ~30 FPS
                     
                 except KeyboardInterrupt:
@@ -348,13 +391,30 @@ class BioEntryTerminal:
                     break
                 except Exception as e:
                     self.logger.error(f"Error in main loop: {str(e)}")
-                    await asyncio.sleep(1)  # Prevent tight error loop
+                    await asyncio.sleep(1)
             
         except Exception as e:
             self.logger.error(f"Critical error in main loop: {str(e)}")
             self.logger.error(traceback.format_exc())
         finally:
             await self.shutdown()
+    
+    async def _background_tasks(self):
+        """Background tasks that run alongside the UI"""
+        while self.running:
+            try:
+                # Check for manual activation (touch screen)
+                await self._check_manual_activation()
+                
+                # Perform periodic maintenance
+                await self._periodic_maintenance()
+                
+                # Small delay to prevent high CPU usage
+                await asyncio.sleep(1)  # Check every second
+                
+            except Exception as e:
+                self.logger.error(f"Error in background tasks: {str(e)}")
+                await asyncio.sleep(1)
     
     async def _process_ui_events(self, events):
         """Process UI events from pygame."""
@@ -374,31 +434,33 @@ class BioEntryTerminal:
     
     async def _handle_keyboard_event(self, event):
         """Handle keyboard events for development and testing."""
+        import pygame
         key = event.key
         
-        if key == 'F1':  # Manual activation
-            if self.state_manager.current_state == SystemState.IDLE:
-                self.state_manager.set_state(SystemState.DETECTING)
+        if key == pygame.K_F1:  # Manual activation
+            self.logger.info("F1 pressed - Manual activation")
         
-        elif key == 'F2':  # Manual entry mode
-            self.state_manager.set_state(SystemState.MANUAL_ENTRY)
+        elif key == pygame.K_F2:  # Manual entry mode
+            self.logger.info("F2 pressed - Manual entry mode")
+            if self.ui_manager:
+                self.ui_manager.show_screen("manual_entry")
         
-        elif key == 'F3':  # Admin mode
-            self.state_manager.set_state(SystemState.ADMIN_MODE)
+        elif key == pygame.K_F3:  # Admin mode
+            self.logger.info("F3 pressed - Admin mode")
+            if self.ui_manager:
+                self.ui_manager.show_screen("admin")
         
-        elif key == 'F4':  # Simulate verification success
-            if self.state_manager.current_state == SystemState.VERIFYING:
-                self.state_manager.set_state(SystemState.ACCESS_GRANTED, StateData({
-                    'user_name': 'Usuario Test',
-                    'access_type': 'entrada',
-                    'method': 'manual',
-                    'confidence': 1.0
-                }))
+        elif key == pygame.K_F4:  # Simulate verification success
+            self.logger.info("F4 pressed - Simulate success")
+            if self.ui_manager:
+                self.ui_manager.show_screen("success")
         
-        elif key == 'F5':  # Return to main
-            self.state_manager.set_state(SystemState.IDLE)
+        elif key == pygame.K_F5:  # Return to main
+            self.logger.info("F5 pressed - Return to main")
+            if self.ui_manager:
+                self.ui_manager.show_screen("main")
         
-        elif key == 'ESCAPE':  # Exit application
+        elif key == pygame.K_ESCAPE:  # Exit application
             self.logger.info("Exit requested via ESC key")
             self.running = False
     
@@ -457,11 +519,11 @@ class BioEntryTerminal:
             await self.sync_service.stop_auto_sync()
             
             # Stop hardware managers
-            self.camera_manager.stop_preview()
+            if self.camera_manager:
+                self.camera_manager.stop()
             self.proximity_manager.stop_monitoring()
             
             # Cleanup hardware
-            self.camera_manager.cleanup()
             self.fingerprint_manager.cleanup()
             self.proximity_manager.cleanup()
             
