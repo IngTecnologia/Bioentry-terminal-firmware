@@ -303,10 +303,25 @@ class UIScreen:
     
     def handle_event(self, event: pygame.event.Event) -> bool:
         """Handle pygame event"""
+        # Handle touch screen activation for main screen
+        if event.type == pygame.MOUSEBUTTONDOWN and self.name == "main":
+            self._handle_touch_activation()
+        
         for component in reversed(self.components):  # Top to bottom
             if component.handle_event(event):
                 return True
         return False
+    
+    def _handle_touch_activation(self) -> None:
+        """Handle touch screen activation to start recognition"""
+        current_state = self.state_manager.get_current_state()
+        if current_state == SystemState.IDLE:
+            # Activate recognition mode on touch
+            import asyncio
+            asyncio.create_task(
+                self.state_manager.transition_to(SystemState.ACTIVATION, "touch_activation")
+            )
+            self.logger.info("Touch activation triggered")
     
     def on_activate(self) -> None:
         """Called when screen becomes active"""
@@ -334,8 +349,8 @@ class UIManager:
         # Initialize pygame
         pygame.init()
         
-        # Screen setup
-        self.screen_width = 400
+        # Screen setup for 480x800 vertical display
+        self.screen_width = 480
         self.screen_height = 800
         self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
         pygame.display.set_caption("BioEntry Terminal")
@@ -475,7 +490,7 @@ def get_ui_manager() -> UIManager:
 
 
 def create_centered_rect(width: int, height: int, 
-                        screen_width: int = 400, screen_height: int = 800,
+                        screen_width: int = 480, screen_height: int = 800,
                         y_offset: int = 0) -> UIRect:
     """Create a centered rectangle"""
     x = (screen_width - width) // 2
@@ -484,7 +499,7 @@ def create_centered_rect(width: int, height: int,
 
 
 def create_grid_rect(col: int, row: int, cols: int, rows: int,
-                    margin: int = 10, screen_width: int = 400, screen_height: int = 800) -> UIRect:
+                    margin: int = 10, screen_width: int = 480, screen_height: int = 800) -> UIRect:
     """Create a rectangle in a grid layout"""
     cell_width = (screen_width - margin * (cols + 1)) // cols
     cell_height = (screen_height - margin * (rows + 1)) // rows
@@ -493,6 +508,157 @@ def create_grid_rect(col: int, row: int, cols: int, rows: int,
     y = margin + row * (cell_height + margin)
     
     return UIRect(x, y, cell_width, cell_height)
+
+
+class UIFullscreenCamera(UIComponent):
+    """Fullscreen camera preview component with overlays"""
+    
+    def __init__(self, rect: UIRect):
+        super().__init__(rect)
+        self.camera_surface = None
+        self.no_camera_text = "Cámara no disponible"
+        self.face_detection_enabled = False
+        self.face_boxes = []  # List of face detection boxes
+        
+    def set_camera_frame(self, frame) -> None:
+        """Set camera frame from numpy array or pygame surface"""
+        if frame is None:
+            self.camera_surface = None
+            return
+        
+        # If it's a numpy array, convert to pygame surface
+        if hasattr(frame, 'shape'):
+            import cv2
+            import numpy as np
+            # Resize frame to fullscreen
+            frame = cv2.resize(frame, (self.rect.width, self.rect.height))
+            # Convert to pygame surface
+            frame_surface = pygame.surfarray.make_surface(frame.swapaxes(0, 1))
+            self.camera_surface = frame_surface
+        else:
+            # Already a pygame surface
+            # Scale to fullscreen
+            self.camera_surface = pygame.transform.scale(frame, (self.rect.width, self.rect.height))
+    
+    def set_face_detections(self, face_boxes: list) -> None:
+        """Set face detection boxes"""
+        self.face_boxes = face_boxes or []
+        self.face_detection_enabled = True
+    
+    def draw(self, surface: pygame.Surface) -> None:
+        if not self.visible:
+            return
+        
+        # Draw camera preview fullscreen or placeholder
+        if self.camera_surface:
+            surface.blit(self.camera_surface, (self.rect.x, self.rect.y))
+        else:
+            # Draw black background as placeholder
+            pygame.draw.rect(surface, (0, 0, 0), self.rect.get_pygame_rect())
+            
+            # Draw "no camera" text
+            font = pygame.font.Font(None, UIFonts.SUBTITLE)
+            text_surface = font.render(self.no_camera_text, True, UIColors.TEXT_SECONDARY)
+            text_rect = text_surface.get_rect(center=(self.rect.center_x(), self.rect.center_y()))
+            surface.blit(text_surface, text_rect)
+        
+        # Draw face detection boxes
+        if self.face_detection_enabled and self.face_boxes:
+            for box in self.face_boxes:
+                # box format: (x, y, width, height) in normalized coordinates
+                x, y, w, h = box
+                # Scale to fullscreen size
+                scaled_x = self.rect.x + int(x * self.rect.width)
+                scaled_y = self.rect.y + int(y * self.rect.height)
+                scaled_w = int(w * self.rect.width)
+                scaled_h = int(h * self.rect.height)
+                
+                # Draw green box for face detection
+                pygame.draw.rect(surface, UIColors.SUCCESS, 
+                               (scaled_x, scaled_y, scaled_w, scaled_h), 3)
+                
+                # Draw corner indicators
+                corner_size = 25
+                corner_thickness = 4
+                
+                # Top-left corner
+                pygame.draw.line(surface, UIColors.SUCCESS, 
+                               (scaled_x, scaled_y + corner_size), (scaled_x, scaled_y), corner_thickness)
+                pygame.draw.line(surface, UIColors.SUCCESS, 
+                               (scaled_x, scaled_y), (scaled_x + corner_size, scaled_y), corner_thickness)
+                
+                # Top-right corner
+                pygame.draw.line(surface, UIColors.SUCCESS, 
+                               (scaled_x + scaled_w - corner_size, scaled_y), (scaled_x + scaled_w, scaled_y), corner_thickness)
+                pygame.draw.line(surface, UIColors.SUCCESS, 
+                               (scaled_x + scaled_w, scaled_y), (scaled_x + scaled_w, scaled_y + corner_size), corner_thickness)
+                
+                # Bottom-left corner
+                pygame.draw.line(surface, UIColors.SUCCESS, 
+                               (scaled_x, scaled_y + scaled_h - corner_size), (scaled_x, scaled_y + scaled_h), corner_thickness)
+                pygame.draw.line(surface, UIColors.SUCCESS, 
+                               (scaled_x, scaled_y + scaled_h), (scaled_x + corner_size, scaled_y + scaled_h), corner_thickness)
+                
+                # Bottom-right corner
+                pygame.draw.line(surface, UIColors.SUCCESS, 
+                               (scaled_x + scaled_w - corner_size, scaled_y + scaled_h), (scaled_x + scaled_w, scaled_y + scaled_h), corner_thickness)
+                pygame.draw.line(surface, UIColors.SUCCESS, 
+                               (scaled_x + scaled_w, scaled_y + scaled_h), (scaled_x + scaled_w, scaled_y + scaled_h - corner_size), corner_thickness)
+                
+                # Draw "CARA DETECTADA" text
+                font = pygame.font.Font(None, UIFonts.SUBTITLE)
+                text = "CARA DETECTADA"
+                text_surface = font.render(text, True, UIColors.SUCCESS)
+                
+                # Position text above the detection box
+                text_x = scaled_x + (scaled_w - text_surface.get_width()) // 2
+                text_y = scaled_y - 35 if scaled_y > 40 else scaled_y + scaled_h + 10
+                
+                # Draw text background
+                text_bg_rect = pygame.Rect(text_x - 10, text_y - 5, 
+                                          text_surface.get_width() + 20, text_surface.get_height() + 10)
+                pygame.draw.rect(surface, (0, 0, 0, 180), text_bg_rect, border_radius=5)
+                
+                # Draw text
+                surface.blit(text_surface, (text_x, text_y))
+
+
+class UIOverlay(UIComponent):
+    """Semi-transparent overlay component for fullscreen elements"""
+    
+    def __init__(self, rect: UIRect, background_color: tuple = (0, 0, 0), alpha: int = 120):
+        super().__init__(rect)
+        self.background_color = background_color
+        self.alpha = alpha
+        self.child_components: List[UIComponent] = []
+        
+    def add_component(self, component: UIComponent) -> None:
+        """Add a child component to this overlay"""
+        self.child_components.append(component)
+        
+    def draw(self, surface: pygame.Surface) -> None:
+        if not self.visible:
+            return
+        
+        # Draw semi-transparent background
+        overlay_surface = pygame.Surface((self.rect.width, self.rect.height))
+        overlay_surface.set_alpha(self.alpha)
+        overlay_surface.fill(self.background_color)
+        surface.blit(overlay_surface, (self.rect.x, self.rect.y))
+        
+        # Draw child components
+        for component in self.child_components:
+            component.draw(surface)
+    
+    def handle_event(self, event: pygame.event.Event) -> bool:
+        """Handle events for child components"""
+        if not self.visible or not self.enabled:
+            return False
+        
+        for component in reversed(self.child_components):
+            if component.handle_event(event):
+                return True
+        return False
 
 
 if __name__ == "__main__":

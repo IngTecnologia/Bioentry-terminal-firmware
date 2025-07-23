@@ -1,6 +1,6 @@
 """
 Main screen UI for the biometric terminal.
-Displays camera preview, user instructions, and handles primary user interactions.
+Displays fullscreen camera preview with overlayed UI elements, similar to terminal_app.py approach.
 """
 
 import pygame
@@ -8,167 +8,39 @@ import numpy as np
 from typing import Optional, Dict, Any
 from datetime import datetime
 import asyncio
-import threading
-from pathlib import Path
 
 from .base_ui import (UIScreen, UIComponent, UIButton, UILabel, UIImage, UIProgressBar,
-                      UIRect, UIColors, UIFonts, create_centered_rect, create_grid_rect)
+                      UIRect, UIColors, UIFonts, create_centered_rect, create_grid_rect,
+                      UIFullscreenCamera, UIOverlay)
 from utils.config import get_config
 from utils.logger import get_logger
 from utils.state_manager import get_state_manager, SystemState, StateData
 
 
-class CameraPreviewComponent(UIComponent):
-    """Component for displaying camera preview"""
-    
-    def __init__(self, rect: UIRect):
-        super().__init__(rect)
-        self.camera_surface = None
-        self.no_camera_text = "Camera not available"
-        self.face_detection_enabled = False
-        self.face_boxes = []  # List of face detection boxes
-        
-    def set_camera_frame(self, frame: np.ndarray) -> None:
-        """Set camera frame from numpy array"""
-        if frame is None:
-            self.camera_surface = None
-            return
-        
-        # Convert numpy array to pygame surface
-        # Assuming frame is in RGB format
-        if len(frame.shape) == 3 and frame.shape[2] == 3:
-            # Resize frame to fit component
-            import cv2
-            frame = cv2.resize(frame, (self.rect.width, self.rect.height))
-            
-            # Convert to pygame surface
-            frame_surface = pygame.surfarray.make_surface(frame.swapaxes(0, 1))
-            self.camera_surface = frame_surface
-        else:
-            self.camera_surface = None
-    
-    def set_face_detections(self, face_boxes: list) -> None:
-        """Set face detection boxes"""
-        self.face_boxes = face_boxes or []
-        self.face_detection_enabled = True
-    
-    def draw(self, surface: pygame.Surface) -> None:
-        if not self.visible:
-            return
-        
-        # Draw camera preview or placeholder
-        if self.camera_surface:
-            surface.blit(self.camera_surface, (self.rect.x, self.rect.y))
-        else:
-            # Draw placeholder
-            pygame.draw.rect(surface, UIColors.BORDER, self.rect.get_pygame_rect())
-            
-            # Draw "no camera" text
-            font = pygame.font.Font(None, UIFonts.BODY)
-            text_surface = font.render(self.no_camera_text, True, UIColors.TEXT_SECONDARY)
-            text_rect = text_surface.get_rect(center=(self.rect.center_x(), self.rect.center_y()))
-            surface.blit(text_surface, text_rect)
-        
-        # Draw face detection boxes
-        if self.face_detection_enabled and self.face_boxes:
-            for box in self.face_boxes:
-                # box format: (x, y, width, height)
-                x, y, w, h = box
-                # Scale to component size
-                scaled_x = self.rect.x + int(x * self.rect.width)
-                scaled_y = self.rect.y + int(y * self.rect.height)
-                scaled_w = int(w * self.rect.width)
-                scaled_h = int(h * self.rect.height)
-                
-                # Draw green box for face detection
-                pygame.draw.rect(surface, UIColors.SUCCESS, 
-                               (scaled_x, scaled_y, scaled_w, scaled_h), 3)
-                
-                # Draw corner indicators
-                corner_size = 20
-                pygame.draw.lines(surface, UIColors.SUCCESS, False, [
-                    (scaled_x, scaled_y + corner_size),
-                    (scaled_x, scaled_y),
-                    (scaled_x + corner_size, scaled_y)
-                ], 3)
-                
-                pygame.draw.lines(surface, UIColors.SUCCESS, False, [
-                    (scaled_x + scaled_w - corner_size, scaled_y),
-                    (scaled_x + scaled_w, scaled_y),
-                    (scaled_x + scaled_w, scaled_y + corner_size)
-                ], 3)
-                
-                pygame.draw.lines(surface, UIColors.SUCCESS, False, [
-                    (scaled_x + scaled_w, scaled_y + scaled_h - corner_size),
-                    (scaled_x + scaled_w, scaled_y + scaled_h),
-                    (scaled_x + scaled_w - corner_size, scaled_y + scaled_h)
-                ], 3)
-                
-                pygame.draw.lines(surface, UIColors.SUCCESS, False, [
-                    (scaled_x + corner_size, scaled_y + scaled_h),
-                    (scaled_x, scaled_y + scaled_h),
-                    (scaled_x, scaled_y + scaled_h - corner_size)
-                ], 3)
-
-
-class StatusIndicator(UIComponent):
-    """Component for showing system status"""
-    
-    def __init__(self, rect: UIRect):
-        super().__init__(rect)
-        self.status = "idle"
-        self.message = "Approach the terminal"
-        self.color = UIColors.TEXT_SECONDARY
-        self.icon = None
-        
-    def set_status(self, status: str, message: str, color: tuple = UIColors.TEXT_SECONDARY) -> None:
-        """Update status display"""
-        self.status = status
-        self.message = message
-        self.color = color
-        
-    def draw(self, surface: pygame.Surface) -> None:
-        if not self.visible:
-            return
-        
-        # Draw status message
-        font = pygame.font.Font(None, UIFonts.SUBTITLE)
-        text_surface = font.render(self.message, True, self.color)
-        text_rect = text_surface.get_rect(center=(self.rect.center_x(), self.rect.center_y()))
-        surface.blit(text_surface, text_rect)
-        
-        # Draw status indicator dot
-        dot_x = self.rect.x + 10
-        dot_y = self.rect.center_y()
-        pygame.draw.circle(surface, self.color, (dot_x, dot_y), 8)
-
-
 class MainScreen(UIScreen):
-    """Main screen for the biometric terminal"""
+    """Main screen for the biometric terminal with fullscreen camera and overlays"""
     
     def __init__(self):
         super().__init__("main")
         
-        # Screen layout constants
-        self.SCREEN_WIDTH = 400
+        # Screen layout constants for 480x800 vertical display
+        self.SCREEN_WIDTH = 480
         self.SCREEN_HEIGHT = 800
-        self.HEADER_HEIGHT = 80
-        self.FOOTER_HEIGHT = 120
-        self.CAMERA_HEIGHT = 400
+        # Fullscreen camera with overlays
+        self.OVERLAY_HEIGHT = 120
         
         # Components
-        self.camera_preview = None
-        self.status_indicator = None
-        self.instruction_label = None
+        self.fullscreen_camera = None
+        self.top_overlay = None
+        self.bottom_overlay = None
         self.time_label = None
         self.terminal_label = None
-        self.manual_entry_button = None
+        self.online_status = None
+        self.instruction_label = None
         self.admin_button = None
-        self.progress_bar = None
         
         # State
-        self.current_instruction = "Approach the terminal"
-        self.verification_progress = 0.0
+        self.current_instruction = "COLÓQUESE FRENTE A LA CÁMARA"
         self.last_frame_time = datetime.now()
         
         # Setup UI
@@ -185,247 +57,188 @@ class MainScreen(UIScreen):
         self.logger.info("Main screen initialized")
     
     def _setup_ui(self) -> None:
-        """Setup all UI components"""
+        """Setup all UI components with fullscreen camera and overlays"""
         
-        # Header section
-        header_rect = UIRect(0, 0, self.SCREEN_WIDTH, self.HEADER_HEIGHT)
+        # Fullscreen camera background
+        self.fullscreen_camera = UIFullscreenCamera(
+            UIRect(0, 0, self.SCREEN_WIDTH, self.SCREEN_HEIGHT)
+        )
+        
+        # Top overlay with title and status
+        self.top_overlay = UIOverlay(
+            UIRect(0, 0, self.SCREEN_WIDTH, self.OVERLAY_HEIGHT),
+            background_color=(0, 0, 0),
+            alpha=120
+        )
         
         # Terminal title
         self.terminal_label = UILabel(
-            UIRect(20, 10, 280, 30),
-            "BioEntry Terminal",
+            UIRect(20, 15, 300, 35),
+            "TERMINAL\nDE ACCESO",
             UIFonts.TITLE,
-            UIColors.PRIMARY,
+            UIColors.SURFACE,  # White text for better contrast
             "left"
         )
         
         # Current time
         self.time_label = UILabel(
-            UIRect(20, 45, 280, 25),
+            UIRect(self.SCREEN_WIDTH//2 - 50, 85, 100, 25),
             self._get_current_time(),
             UIFonts.BODY,
-            UIColors.TEXT_SECONDARY,
-            "left"
+            UIColors.SURFACE,
+            "center"
         )
         
-        # Admin button (top right)
+        # Online status (top right)
+        self.online_status = UILabel(
+            UIRect(self.SCREEN_WIDTH - 120, 15, 100, 25),
+            "● OFFLINE",
+            UIFonts.BODY,
+            UIColors.ERROR,
+            "center"
+        )
+        
+        # Admin button (small, top right corner)
         self.admin_button = UIButton(
-            UIRect(320, 15, 60, 50),
-            "Admin",
+            UIRect(self.SCREEN_WIDTH - 50, self.SCREEN_HEIGHT - 50, 40, 40),
+            "⚙",
             self._on_admin_button_click,
             "outline"
         )
         
-        # Camera preview section
-        camera_y = self.HEADER_HEIGHT + 10
-        self.camera_preview = CameraPreviewComponent(
-            UIRect(20, camera_y, self.SCREEN_WIDTH - 40, self.CAMERA_HEIGHT)
+        # Bottom overlay with instructions
+        self.bottom_overlay = UIOverlay(
+            UIRect(0, self.SCREEN_HEIGHT - self.OVERLAY_HEIGHT, self.SCREEN_WIDTH, self.OVERLAY_HEIGHT),
+            background_color=(0, 0, 0),
+            alpha=120
         )
         
-        # Status section
-        status_y = camera_y + self.CAMERA_HEIGHT + 20
-        self.status_indicator = StatusIndicator(
-            UIRect(20, status_y, self.SCREEN_WIDTH - 40, 40)
-        )
-        
-        # Instruction section
-        instruction_y = status_y + 60
+        # Instruction message
         self.instruction_label = UILabel(
-            UIRect(20, instruction_y, self.SCREEN_WIDTH - 40, 80),
-            self.current_instruction,
-            UIFonts.BODY,
-            UIColors.TEXT_PRIMARY,
+            UIRect(20, self.SCREEN_HEIGHT - 90, self.SCREEN_WIDTH - 40, 80),
+            "COLÓQUESE FRENTE\nA LA CÁMARA",
+            UIFonts.SUBTITLE,
+            UIColors.SUCCESS,
             "center"
         )
         
-        # Progress bar (initially hidden)
-        progress_y = instruction_y + 100
-        self.progress_bar = UIProgressBar(
-            UIRect(50, progress_y, self.SCREEN_WIDTH - 100, 8)
-        )
-        self.progress_bar.set_visible(False)
+        # Add components to overlays
+        self.top_overlay.add_component(self.terminal_label)
+        self.top_overlay.add_component(self.time_label)
+        self.top_overlay.add_component(self.online_status)
         
-        # Footer buttons
-        footer_y = self.SCREEN_HEIGHT - self.FOOTER_HEIGHT + 20
+        self.bottom_overlay.add_component(self.instruction_label)
         
-        self.manual_entry_button = UIButton(
-            UIRect(50, footer_y, self.SCREEN_WIDTH - 100, 50),
-            "Manual Entry",
-            self._on_manual_entry_button_click,
-            "secondary"
-        )
-        
-        # Add components to screen
-        self.add_component(self.terminal_label)
-        self.add_component(self.time_label)
-        self.add_component(self.admin_button)
-        self.add_component(self.camera_preview)
-        self.add_component(self.status_indicator)
-        self.add_component(self.instruction_label)
-        self.add_component(self.progress_bar)
-        self.add_component(self.manual_entry_button)
+        # Add main components to screen
+        self.add_component(self.fullscreen_camera)  # Background
+        self.add_component(self.top_overlay)        # Top overlay
+        self.add_component(self.bottom_overlay)      # Bottom overlay
+        self.add_component(self.admin_button)        # Admin button (on top)
     
     def _get_current_time(self) -> str:
         """Get formatted current time"""
         now = datetime.now()
-        return now.strftime("%H:%M:%S - %d/%m/%Y")
+        return now.strftime("%H:%M\n%d/%m")
     
     def _on_admin_button_click(self) -> None:
         """Handle admin button click"""
         self.logger.info("Admin button clicked")
-        # TODO: Show admin authentication screen
-        # For now, just log the event
-        
-    def _on_manual_entry_button_click(self) -> None:
-        """Handle manual entry button click"""
-        self.logger.info("Manual entry button clicked")
         asyncio.create_task(
-            self.state_manager.transition_to(SystemState.MANUAL_ENTRY, "manual_button_click")
+            self.state_manager.transition_to(SystemState.ADMINISTRATION, "admin_button_click")
         )
     
     def _on_idle_state(self, state: SystemState, data: StateData) -> None:
         """Handle idle state"""
-        self.status_indicator.set_status("idle", "Approach the terminal", UIColors.TEXT_SECONDARY)
-        self.instruction_label.set_text("Approach the terminal to begin")
-        self.progress_bar.set_visible(False)
-        self.manual_entry_button.set_enabled(True)
+        self.instruction_label.set_text("COLÓQUESE FRENTE\nA LA CÁMARA")
+        self.instruction_label.color = UIColors.SUCCESS
         self.admin_button.set_enabled(True)
         
         # Disable face detection in idle
-        self.camera_preview.face_detection_enabled = False
+        self.fullscreen_camera.face_detection_enabled = False
         
     def _on_activation_state(self, state: SystemState, data: StateData) -> None:
         """Handle activation state"""
-        self.status_indicator.set_status("activating", "Activating...", UIColors.WARNING)
-        self.instruction_label.set_text("Detecting user...")
-        self.progress_bar.set_visible(True)
-        self.progress_bar.set_value(0.1)
-        self.manual_entry_button.set_enabled(False)
+        self.instruction_label.set_text("DETECTANDO\nUSUARIO...")
+        self.instruction_label.color = UIColors.WARNING
         
         # Enable face detection
-        self.camera_preview.face_detection_enabled = True
+        self.fullscreen_camera.face_detection_enabled = True
     
     def _on_facial_recognition_state(self, state: SystemState, data: StateData) -> None:
         """Handle facial recognition state"""
-        self.status_indicator.set_status("facial_recognition", "Facial recognition", UIColors.PRIMARY)
-        self.instruction_label.set_text("Look at the camera\nKeep your face visible")
-        self.progress_bar.set_visible(True)
-        self.progress_bar.set_value(0.3)
-        self.manual_entry_button.set_enabled(True)
+        self.instruction_label.set_text("MIRE HACIA LA CÁMARA\nMANTENGA SU ROSTRO VISIBLE")
+        self.instruction_label.color = UIColors.PRIMARY
         
         # Enable face detection
-        self.camera_preview.face_detection_enabled = True
+        self.fullscreen_camera.face_detection_enabled = True
     
     def _on_fingerprint_verification_state(self, state: SystemState, data: StateData) -> None:
         """Handle fingerprint verification state"""
-        self.status_indicator.set_status("fingerprint_verification", "Fingerprint verification", UIColors.ACCENT)
-        self.instruction_label.set_text("Place your finger on the\nfingerprint sensor")
-        self.progress_bar.set_visible(True)
-        self.progress_bar.set_value(0.6)
-        self.manual_entry_button.set_enabled(True)
+        self.instruction_label.set_text("COLOQUE SU DEDO EN EL SENSOR\nDE HUELLAS DACTILARES")
+        self.instruction_label.color = UIColors.ACCENT
         
         # Disable face detection during fingerprint
-        self.camera_preview.face_detection_enabled = False
+        self.fullscreen_camera.face_detection_enabled = False
     
     def _on_manual_entry_state(self, state: SystemState, data: StateData) -> None:
         """Handle manual entry state"""
-        self.status_indicator.set_status("manual_entry", "Manual entry", UIColors.SECONDARY)
-        self.instruction_label.set_text("Enter your document number")
-        self.progress_bar.set_visible(False)
-        self.manual_entry_button.set_enabled(False)
+        self.instruction_label.set_text("INGRESE SU NÚMERO\nDE DOCUMENTO")
+        self.instruction_label.color = UIColors.SECONDARY
         
         # Disable face detection
-        self.camera_preview.face_detection_enabled = False
+        self.fullscreen_camera.face_detection_enabled = False
     
     def _on_error_state(self, state: SystemState, data: StateData) -> None:
         """Handle error state"""
-        error_message = "System error"
+        error_message = "ERROR DEL SISTEMA"
         if data and data.error_info:
             error_message = data.error_info.get("message", error_message)
         
-        self.status_indicator.set_status("error", error_message, UIColors.ERROR)
-        self.instruction_label.set_text("An error occurred\nPlease try again")
-        self.progress_bar.set_visible(False)
-        self.manual_entry_button.set_enabled(True)
+        self.instruction_label.set_text(f"{error_message}\nINTENTE NUEVAMENTE")
+        self.instruction_label.color = UIColors.ERROR
         self.admin_button.set_enabled(True)
         
         # Disable face detection
-        self.camera_preview.face_detection_enabled = False
+        self.fullscreen_camera.face_detection_enabled = False
     
     def update(self) -> None:
         """Update screen state"""
         # Update time display
         self.time_label.set_text(self._get_current_time())
-        
-        # Update verification progress based on state
-        current_state = self.state_manager.get_current_state()
-        if current_state == SystemState.FACIAL_RECOGNITION:
-            # Simulate progress during facial recognition
-            duration = self.state_manager.get_state_duration()
-            progress = min(0.8, 0.3 + (duration / 10) * 0.5)  # 30% to 80% over 10 seconds
-            self.progress_bar.set_value(progress)
-        
-        elif current_state == SystemState.FINGERPRINT_VERIFICATION:
-            # Simulate progress during fingerprint verification
-            duration = self.state_manager.get_state_duration()
-            progress = min(0.9, 0.6 + (duration / 5) * 0.3)  # 60% to 90% over 5 seconds
-            self.progress_bar.set_value(progress)
     
     def set_camera_frame(self, frame: np.ndarray) -> None:
         """Update camera preview with new frame"""
-        if self.camera_preview:
-            self.camera_preview.set_camera_frame(frame)
+        if self.fullscreen_camera:
+            self.fullscreen_camera.set_camera_frame(frame)
     
     def set_face_detections(self, face_boxes: list) -> None:
         """Update face detection boxes"""
-        if self.camera_preview:
-            self.camera_preview.set_face_detections(face_boxes)
+        if self.fullscreen_camera:
+            self.fullscreen_camera.set_face_detections(face_boxes)
     
     def show_verification_feedback(self, success: bool, confidence: float = 0.0, 
                                  user_name: str = "") -> None:
         """Show verification feedback"""
         if success:
-            self.status_indicator.set_status("success", f"Access granted - {user_name}", UIColors.SUCCESS)
-            self.instruction_label.set_text("Access granted\nWelcome")
-            self.progress_bar.set_value(1.0)
+            self.instruction_label.set_text(f"ACCESO CONCEDIDO\nBIENVENIDO {user_name}")
+            self.instruction_label.color = UIColors.SUCCESS
         else:
-            self.status_indicator.set_status("failed", "Verification failed", UIColors.ERROR)
-            self.instruction_label.set_text("Verification failed\nPlease try again")
-            self.progress_bar.set_value(0.0)
+            self.instruction_label.set_text("VERIFICACIÓN FALLIDA\nINTENTE NUEVAMENTE")
+            self.instruction_label.color = UIColors.ERROR
     
     def show_connection_status(self, connected: bool) -> None:
         """Show connection status"""
-        if not connected:
-            # Show offline indicator
-            self.status_indicator.set_status("offline", "Offline mode", UIColors.WARNING)
+        if connected:
+            self.online_status.set_text("● ONLINE")
+            self.online_status.color = UIColors.SUCCESS
+        else:
+            self.online_status.set_text("● OFFLINE")
+            self.online_status.color = UIColors.ERROR
     
     def draw(self, surface: pygame.Surface) -> None:
-        """Draw the main screen"""
-        # Draw header background
-        header_rect = pygame.Rect(0, 0, self.SCREEN_WIDTH, self.HEADER_HEIGHT)
-        pygame.draw.rect(surface, UIColors.SURFACE, header_rect)
-        pygame.draw.line(surface, UIColors.BORDER, (0, self.HEADER_HEIGHT), 
-                        (self.SCREEN_WIDTH, self.HEADER_HEIGHT), 2)
-        
-        # Draw footer background
-        footer_rect = pygame.Rect(0, self.SCREEN_HEIGHT - self.FOOTER_HEIGHT, 
-                                self.SCREEN_WIDTH, self.FOOTER_HEIGHT)
-        pygame.draw.rect(surface, UIColors.SURFACE, footer_rect)
-        pygame.draw.line(surface, UIColors.BORDER, (0, self.SCREEN_HEIGHT - self.FOOTER_HEIGHT), 
-                        (self.SCREEN_WIDTH, self.SCREEN_HEIGHT - self.FOOTER_HEIGHT), 2)
-        
-        # Draw all components
+        """Draw the main screen with fullscreen camera and overlays"""
+        # Draw all components (camera fullscreen + overlays)
         super().draw(surface)
-        
-        # Draw loading overlay if in certain states
-        current_state = self.state_manager.get_current_state()
-        if current_state in [SystemState.ACTIVATION, SystemState.FACIAL_RECOGNITION, 
-                           SystemState.FINGERPRINT_VERIFICATION]:
-            # Draw semi-transparent overlay
-            overlay = pygame.Surface((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
-            overlay.set_alpha(30)
-            overlay.fill(UIColors.PRIMARY)
-            surface.blit(overlay, (0, 0))
 
 
 # Mock camera integration for testing
@@ -444,6 +257,7 @@ class MockCameraManager:
         self.face_callback = face_callback
         
         # Start mock frame generation
+        import threading
         threading.Thread(target=self._generate_frames, daemon=True).start()
     
     def stop(self):
