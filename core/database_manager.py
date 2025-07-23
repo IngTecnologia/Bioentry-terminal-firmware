@@ -15,7 +15,7 @@ from utils.logger import get_logger, get_error_logger
 class DatabaseManager:
     """
     Gestor de base de datos SQLite local para el terminal.
-    Implementa el patrón Local-First con sincronización posterior.
+    Implementa el patron Local-First con sincronizacion posterior.
     """
     
     def __init__(self):
@@ -38,10 +38,10 @@ class DatabaseManager:
                 # Crear tablas
                 await self._create_tables(db)
                 
-                # Crear índices
+                # Crear ï¿½ndices
                 await self._create_indexes(db)
                 
-                # Configurar pragmas para optimización
+                # Configurar pragmas para optimizaciï¿½n
                 await self._configure_pragmas(db)
                 
                 await db.commit()
@@ -90,7 +90,7 @@ class DatabaseManager:
                 device_id TEXT NOT NULL,
                 location_name TEXT,
                 
-                -- Campos de sincronización
+                -- Campos de sincronizaciï¿½n
                 is_synced BOOLEAN DEFAULT 0,
                 sync_attempts INTEGER DEFAULT 0,
                 last_sync_attempt TIMESTAMP,
@@ -101,7 +101,7 @@ class DatabaseManager:
             )
         """)
         
-        # Tabla de cola de sincronización
+        # Tabla de cola de sincronizaciï¿½n
         await db.execute("""
             CREATE TABLE IF NOT EXISTS sync_queue (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -119,7 +119,7 @@ class DatabaseManager:
             )
         """)
         
-        # Tabla de configuración terminal
+        # Tabla de configuraciï¿½n terminal
         await db.execute("""
             CREATE TABLE IF NOT EXISTS terminal_config (
                 key TEXT PRIMARY KEY,
@@ -128,7 +128,7 @@ class DatabaseManager:
             )
         """)
         
-        # Tabla de métricas de rendimiento
+        # Tabla de mï¿½tricas de rendimiento
         await db.execute("""
             CREATE TABLE IF NOT EXISTS performance_metrics (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -141,7 +141,7 @@ class DatabaseManager:
         """)
     
     async def _create_indexes(self, db: aiosqlite.Connection) -> None:
-        """Crea índices para optimizar consultas"""
+        """Crea ï¿½ndices para optimizar consultas"""
         indexes = [
             "CREATE INDEX IF NOT EXISTS idx_users_document ON users(document_id)",
             "CREATE INDEX IF NOT EXISTS idx_users_fingerprint ON users(fingerprint_template_id)",
@@ -164,7 +164,7 @@ class DatabaseManager:
             await db.execute(index_sql)
     
     async def _configure_pragmas(self, db: aiosqlite.Connection) -> None:
-        """Configura pragmas de SQLite para optimización"""
+        """Configura pragmas de SQLite para optimizaciï¿½n"""
         pragmas = [
             "PRAGMA journal_mode = WAL",
             "PRAGMA synchronous = NORMAL",
@@ -179,7 +179,7 @@ class DatabaseManager:
     
     @asynccontextmanager
     async def get_connection(self):
-        """Context manager para obtener conexión a la base de datos"""
+        """Context manager para obtener conexiï¿½n a la base de datos"""
         if not self._initialized:
             await self.initialize()
         
@@ -187,7 +187,7 @@ class DatabaseManager:
             db.row_factory = aiosqlite.Row
             yield db
     
-    # ==================== GESTIÓN DE USUARIOS ====================
+    # ==================== GESTIï¿½N DE USUARIOS ====================
     
     async def create_user(self, user_data: Dict[str, Any]) -> int:
         """Crea un nuevo usuario en la base de datos local"""
@@ -228,7 +228,7 @@ class DatabaseManager:
             raise
     
     async def get_user_by_document_id(self, document_id: str) -> Optional[Dict[str, Any]]:
-        """Obtiene un usuario por su número de documento"""
+        """Obtiene un usuario por su nï¿½mero de documento"""
         try:
             async with self.get_connection() as db:
                 sql = """
@@ -249,8 +249,8 @@ class DatabaseManager:
     
     async def get_user_by_fingerprint_id(self, template_id: int) -> Optional[Dict[str, Any]]:
         """
-        CRÍTICO: Obtiene un usuario por su template_id del sensor AS608.
-        Esta función es clave para el modo offline.
+        CRï¿½TICO: Obtiene un usuario por su template_id del sensor AS608.
+        Esta funciï¿½n es clave para el modo offline.
         """
         try:
             async with self.get_connection() as db:
@@ -328,12 +328,12 @@ class DatabaseManager:
             self.error_logger.log_database_error("get_all_users", e)
             raise
     
-    # ==================== GESTIÓN DE REGISTROS DE ACCESO ====================
+    # ==================== GESTIï¿½N DE REGISTROS DE ACCESO ====================
     
     async def create_access_record(self, record_data: Dict[str, Any]) -> int:
         """
-        CRÍTICO: Crea un registro de acceso - SIEMPRE local primero.
-        Esta es la función más importante para el patrón Local-First.
+        CRï¿½TICO: Crea un registro de acceso - SIEMPRE local primero.
+        Esta es la funciï¿½n mï¿½s importante para el patrï¿½n Local-First.
         """
         try:
             async with self.get_connection() as db:
@@ -376,7 +376,7 @@ class DatabaseManager:
             raise
     
     async def get_last_record_by_user(self, document_id: str) -> Optional[Dict[str, Any]]:
-        """Obtiene el último registro de un usuario específico"""
+        """Obtiene el ï¿½ltimo registro de un usuario especï¿½fico"""
         try:
             async with self.get_connection() as db:
                 sql = """
@@ -398,7 +398,7 @@ class DatabaseManager:
             raise
     
     async def get_pending_sync_records(self, limit: int = 50) -> List[Dict[str, Any]]:
-        """Obtiene registros pendientes de sincronización"""
+        """Obtiene registros pendientes de sincronizaciï¿½n"""
         try:
             async with self.get_connection() as db:
                 sql = """
@@ -447,7 +447,7 @@ class DatabaseManager:
             raise
     
     async def increment_sync_attempts(self, record_id: int, error_message: Optional[str] = None) -> bool:
-        """Incrementa el contador de intentos de sincronización"""
+        """Incrementa el contador de intentos de sincronizaciï¿½n"""
         try:
             async with self.get_connection() as db:
                 sql = """
@@ -463,7 +463,7 @@ class DatabaseManager:
                 
                 if cursor.rowcount > 0:
                     self.logger.debug(
-                        "Intentos de sincronización incrementados",
+                        "Intentos de sincronizaciï¿½n incrementados",
                         record_id=record_id,
                         error_message=error_message
                     )
@@ -494,10 +494,10 @@ class DatabaseManager:
             self.error_logger.log_database_error("get_records_by_date_range", e)
             raise
     
-    # ==================== GESTIÓN DE COLA DE SINCRONIZACIÓN ====================
+    # ==================== GESTIï¿½N DE COLA DE SINCRONIZACIï¿½N ====================
     
     async def add_to_sync_queue(self, record_id: int, record_type: str, action: str, payload: Dict[str, Any]) -> int:
-        """Agrega un elemento a la cola de sincronización"""
+        """Agrega un elemento a la cola de sincronizaciï¿½n"""
         try:
             async with self.get_connection() as db:
                 sql = """
@@ -516,7 +516,7 @@ class DatabaseManager:
                 queue_id = cursor.lastrowid
                 
                 self.logger.debug(
-                    "Elemento añadido a cola de sincronización",
+                    "Elemento aï¿½adido a cola de sincronizaciï¿½n",
                     queue_id=queue_id,
                     record_id=record_id,
                     record_type=record_type,
@@ -530,7 +530,7 @@ class DatabaseManager:
             raise
     
     async def get_pending_sync_queue_items(self, limit: int = 20) -> List[Dict[str, Any]]:
-        """Obtiene elementos pendientes de la cola de sincronización"""
+        """Obtiene elementos pendientes de la cola de sincronizaciï¿½n"""
         try:
             async with self.get_connection() as db:
                 sql = """
@@ -591,7 +591,7 @@ class DatabaseManager:
     # ==================== UTILIDADES Y MANTENIMIENTO ====================
     
     async def get_database_stats(self) -> Dict[str, Any]:
-        """Obtiene estadísticas de la base de datos"""
+        """Obtiene estadï¿½sticas de la base de datos"""
         try:
             async with self.get_connection() as db:
                 stats = {}
@@ -627,7 +627,7 @@ class DatabaseManager:
             raise
     
     async def cleanup_old_records(self, days: int = 30) -> int:
-        """Limpia registros antiguos según la configuración"""
+        """Limpia registros antiguos segï¿½n la configuraciï¿½n"""
         try:
             cutoff_date = datetime.now() - timedelta(days=days)
             
@@ -687,9 +687,9 @@ class DatabaseManager:
             raise
     
     async def close(self) -> None:
-        """Cierra la conexión a la base de datos"""
-        self.logger.info("Cerrando conexión a la base de datos")
-        # En aiosqlite no hay conexión persistente que cerrar
+        """Cierra la conexiï¿½n a la base de datos"""
+        self.logger.info("Cerrando conexiï¿½n a la base de datos")
+        # En aiosqlite no hay conexiï¿½n persistente que cerrar
         pass
 
 
@@ -707,13 +707,13 @@ async def get_database_manager() -> DatabaseManager:
 
 
 if __name__ == "__main__":
-    # Test básico del database manager
+    # Test bï¿½sico del database manager
     async def test_database():
         db = await get_database_manager()
         
-        # Test estadísticas
+        # Test estadï¿½sticas
         stats = await db.get_database_stats()
-        print("Estadísticas de la base de datos:")
+        print("Estadï¿½sticas de la base de datos:")
         for key, value in stats.items():
             print(f"  {key}: {value}")
         
@@ -751,9 +751,9 @@ if __name__ == "__main__":
         record_id = await db.create_access_record(record_data)
         print(f"Registro creado con ID: {record_id}")
         
-        # Test estadísticas actualizadas
+        # Test estadï¿½sticas actualizadas
         stats = await db.get_database_stats()
-        print("\nEstadísticas actualizadas:")
+        print("\nEstadï¿½sticas actualizadas:")
         for key, value in stats.items():
             print(f"  {key}: {value}")
     
