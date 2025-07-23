@@ -37,7 +37,27 @@ class ApiConfig:
     api_key: str = "terminal_key_001"
     timeout: int = 30
     max_retries: int = 3
-    retry_delay: int = 1
+    retry_delay: int = 2
+    
+    # Health check configuration
+    health_check_interval: int = 30  # seconds
+    connection_timeout: int = 5  # seconds for connectivity checks
+    
+    # API endpoints (for documentation)
+    endpoints: Dict[str, str] = None
+    
+    def __post_init__(self):
+        if self.endpoints is None:
+            self.endpoints = {
+                "health": f"/terminal-health/{self.terminal_id}",
+                "config": f"/terminal-config/{self.terminal_id}",
+                "verify_manual": "/verify-terminal",
+                "verify_auto": "/verify-terminal/auto",
+                "sync_users": f"/terminal-sync/{self.terminal_id}",
+                "sync_check": f"/terminal-sync/{self.terminal_id}/check",
+                "bulk_records": "/terminal-records/bulk",
+                "records_status": f"/terminal-records/status/{self.terminal_id}"
+            }
 
 
 @dataclass
@@ -55,8 +75,8 @@ class OperationConfig:
     mode: str = "hybrid"  # hybrid, online_only, offline_only
     max_facial_attempts: int = 3
     max_fingerprint_attempts: int = 3
-    timeout_seconds: int = 30
-    auto_sync_interval: int = 300  # 5 minutes
+    max_manual_attempts: int = 3
+    verification_timeout_seconds: int = 30
     detection_interval: int = 3  # Detect every 3 frames
     
     # Location configuration
@@ -64,6 +84,22 @@ class OperationConfig:
     location_lat: Optional[float] = None
     location_lng: Optional[float] = None
     location_radius: int = 200
+    
+    # UI configuration
+    ui_timeout: int = 60  # seconds
+    auto_return_delay: int = 3  # seconds for success screen
+    instruction_display_time: int = 5  # seconds
+
+
+@dataclass
+class SyncConfig:
+    """Synchronization configuration"""
+    interval_minutes: int = 5  # Auto sync every 5 minutes
+    batch_size: int = 50  # Records per batch upload
+    max_retry_attempts: int = 5
+    retry_delay_seconds: int = 30
+    user_sync_enabled: bool = True
+    records_sync_enabled: bool = True
 
 
 @dataclass
@@ -92,6 +128,7 @@ class ConfigManager:
         self.database = DatabaseConfig()
         self.operation = OperationConfig()
         self.logging = LoggingConfig()
+        self.sync = SyncConfig()
         
         # Load configuration from file
         self.load_config()
@@ -124,6 +161,9 @@ class ConfigManager:
             
             if 'logging' in config_data:
                 self._update_dataclass(self.logging, config_data['logging'])
+            
+            if 'sync' in config_data:
+                self._update_dataclass(self.sync, config_data['sync'])
                 
         except (json.JSONDecodeError, FileNotFoundError, KeyError) as e:
             print(f"Error loading configuration: {e}")
