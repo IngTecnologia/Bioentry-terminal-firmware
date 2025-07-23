@@ -141,7 +141,7 @@ class BioEntryTerminal:
             
             # Step 6: Set initial state
             self.state_manager.set_state(SystemState.IDLE, StateData({
-                'message': 'Terminal listo - Acérquese al sensor'
+                'message': 'Terminal listo - Acerquese al sensor'
             }))
             
             self.logger.info("BioEntry Terminal initialization completed successfully")
@@ -187,7 +187,7 @@ class BioEntryTerminal:
             if detected and self.state_manager.current_state == SystemState.IDLE:
                 self.logger.info("User detected by proximity sensor")
                 self.state_manager.set_state(SystemState.DETECTING, StateData({
-                    'message': 'Usuario detectado - Preparando verificación...'
+                    'message': 'Usuario detectado - Preparando verificacion...'
                 }))
         
         # Start proximity monitoring
@@ -257,7 +257,7 @@ class BioEntryTerminal:
             if not image_data:
                 self.logger.error("Failed to capture image for verification")
                 self.state_manager.set_state(SystemState.ACCESS_DENIED, StateData({
-                    'error': 'Error de cámara - Intente nuevamente'
+                    'error': 'Error de camara - Intente nuevamente'
                 }))
                 return
             
@@ -287,7 +287,7 @@ class BioEntryTerminal:
                 
             else:
                 # Verification failed
-                error_message = response.error_message or 'Verificación fallida'
+                error_message = response.error_message or 'Verificacion fallida'
                 
                 self.state_manager.set_state(SystemState.ACCESS_DENIED, StateData({
                     'error': error_message,
@@ -364,7 +364,7 @@ class BioEntryTerminal:
                 # Manual activation via touch
                 if self.state_manager.current_state == SystemState.IDLE:
                     self.state_manager.set_state(SystemState.DETECTING, StateData({
-                        'message': 'Activación manual - Preparando verificación...',
+                        'message': 'Activacion manual - Preparando verificacion...',
                         'activation_method': 'touch'
                     }))
             

@@ -277,7 +277,7 @@ if __name__ == "__main__":
     print(f"User from dict: {user_from_dict}")
     
     # Test API sync data
-    sync_data = {'c': '87654321', 'n': 'Juan Pérez', 'e': 'empresa_abc', 's': 5}
+    sync_data = {'c': '87654321', 'n': 'Juan Prez', 'e': 'empresa_abc', 's': 5}
     user_from_sync = User.from_api_sync_data(sync_data)
     print(f"User from sync: {user_from_sync}")
     

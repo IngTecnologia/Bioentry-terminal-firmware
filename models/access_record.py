@@ -434,8 +434,8 @@ if __name__ == "__main__":
     print(f"Display info: {display_info}")
     
     # Test entry/exit creation
-    entry = create_entry_record("87654321", "Juan Pérez", "facial")
-    exit_record = create_exit_record("87654321", "Juan Pérez", "fingerprint")
+    entry = create_entry_record("87654321", "Juan Prez", "facial")
+    exit_record = create_exit_record("87654321", "Juan Prez", "fingerprint")
     print(f"Entry record: {entry}")
     print(f"Exit record: {exit_record}")
     
