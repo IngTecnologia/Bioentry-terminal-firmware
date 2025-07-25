@@ -13,12 +13,17 @@ class SystemState(Enum):
     """Terminal system states"""
     IDLE = "idle"
     ACTIVATION = "activation"
+    DETECTING = "detecting"
+    VERIFYING = "verifying"
     FACIAL_RECOGNITION = "facial_recognition"
     FINGERPRINT_VERIFICATION = "fingerprint_verification"
     MANUAL_ENTRY = "manual_entry"
+    ACCESS_GRANTED = "access_granted"
+    ACCESS_DENIED = "access_denied"
     CONFIRMATION = "confirmation"
     ERROR = "error"
     MAINTENANCE = "maintenance"
+    ADMIN_MODE = "admin_mode"
     SHUTDOWN = "shutdown"
 
 

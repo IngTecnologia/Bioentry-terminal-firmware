@@ -150,10 +150,14 @@ class BioEntryTerminal:
             # Step 5: Set up event handlers
             await self._setup_event_handlers()
             
-            # Step 6: Set initial state
-            await self._set_state(SystemState.IDLE, StateData(metadata={
-                'message': 'Terminal listo - Acerquese al sensor'
-            }), "initialization")
+            # Step 6: Set initial state (only if not already idle)
+            current_state = self.state_manager.get_current_state()
+            if current_state != SystemState.IDLE:
+                await self._set_state(SystemState.IDLE, StateData(metadata={
+                    'message': 'Terminal listo - Acerquese al sensor'
+                }), "initialization")
+            else:
+                self.logger.info("System already in IDLE state, skipping transition")
             
             self.logger.info("BioEntry Terminal initialization completed successfully")
             return True
@@ -176,10 +180,17 @@ class BioEntryTerminal:
             admin_screen = AdminScreen()
             
             # Register screens
+            self.logger.info(f"Registering main screen: {main_screen.name}")
             self.ui_manager.register_screen(main_screen)
+            self.logger.info(f"Registering success screen: {success_screen.name}")
             self.ui_manager.register_screen(success_screen)
+            self.logger.info(f"Registering manual screen: {manual_screen.name}")
             self.ui_manager.register_screen(manual_screen)
+            self.logger.info(f"Registering admin screen: {admin_screen.name}")
             self.ui_manager.register_screen(admin_screen)
+            
+            # Debug: List all registered screens
+            self.logger.info(f"All registered screens: {list(self.ui_manager.screens.keys())}")
             
             # Set initial screen
             self.ui_manager.show_screen('main')
@@ -342,13 +353,34 @@ class BioEntryTerminal:
             while self.running:
                 try:
                     # Process pygame events
-                    for event in pygame.event.get():
+                    events = pygame.event.get()
+                    
+                    for event in events:
+                        
+                        # Handle system events first
                         if event.type == pygame.QUIT:
                             self.running = False
+                            break
                         elif event.type == pygame.KEYDOWN:
-                            await self._handle_keyboard_event(event)
+                            if event.key == pygame.K_ESCAPE:
+                                self.logger.info("Exit requested via ESC key")
+                                self.running = False
+                                break
+                            else:
+                                await self._handle_keyboard_event(event)
+                        elif event.type == pygame.USEREVENT + 1:
+                            # Handle custom UI events (like admin button)
+                            if hasattr(event, 'action') and event.action == "show_screen":
+                                screen_name = getattr(event, 'screen', None)
+                                if screen_name and self.ui_manager:
+                                    self.ui_manager.show_screen(screen_name)
+                                    self.current_screen = screen_name
+                        
+                        # Pass ALL events to UI manager (including mouse events)
+                        if self.ui_manager and self.ui_manager.current_screen:
+                            self.ui_manager.current_screen.handle_event(event)
                     
-                    # Update UI if available
+                    # Update and draw UI if available
                     if self.ui_manager and self.ui_manager.current_screen:
                         # Get camera frame from simple camera manager
                         if self.camera_manager and self.camera_manager.is_running:

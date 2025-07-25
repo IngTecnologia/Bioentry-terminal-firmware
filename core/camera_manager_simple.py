@@ -129,6 +129,12 @@ class SimpleCameraManager:
         # Frame queue for UI
         self.frame_queue = queue.Queue(maxsize=2)
         
+        # Performance monitoring
+        self.last_performance_check = time.time()
+        self.frame_processing_times = []
+        self.adaptive_fps = 30
+        self.target_processing_time = 0.033  # 30 FPS target
+        
         # Setup camera - copied from terminal_app.py
         self.setup_camera()
         
@@ -171,7 +177,11 @@ class SimpleCameraManager:
         self.logger.info("Simple camera manager stopped")
     
     def _camera_loop(self):
-        """Main camera loop - copied from terminal_app.py"""
+        """Main camera loop with improved error handling and recovery"""
+        consecutive_errors = 0
+        max_consecutive_errors = 5
+        last_frame_time = time.time()
+        
         try:
             self.picam2.start()
             time.sleep(2)  # Let camera warm up
@@ -180,15 +190,51 @@ class SimpleCameraManager:
             
             while self.is_running:
                 try:
-                    # Capture frame
-                    frame = self.picam2.capture_array()
-                    frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
+                    current_time = time.time()
                     
-                    # Detect faces
-                    faces = self.face_detector.detect_faces(frame)
+                    # Check for camera timeout (no frames for 5 seconds)
+                    if current_time - last_frame_time > 5.0:
+                        self.logger.warning("Camera timeout detected, attempting recovery")
+                        self._attempt_camera_recovery()
+                        last_frame_time = current_time
+                        continue
+                    
+                    # Performance monitoring start
+                    processing_start = time.time()
+                    
+                    # Capture frame with timeout
+                    frame = self.picam2.capture_array()
+                    if frame is None:
+                        raise Exception("Camera returned None frame")
+                    
+                    frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
+                    last_frame_time = current_time
+                    
+                    # Adaptive face detection (skip some frames if system is slow)
+                    faces = []
+                    if len(self.frame_processing_times) == 0 or self.frame_processing_times[-1] < self.target_processing_time * 1.5:
+                        faces = self.face_detector.detect_faces(frame)
                     
                     # Draw detected faces
                     frame_with_faces = self.face_detector.draw_faces(frame, faces)
+                    
+                    # Performance monitoring end
+                    processing_time = time.time() - processing_start
+                    self.frame_processing_times.append(processing_time)
+                    
+                    # Keep only last 30 measurements
+                    if len(self.frame_processing_times) > 30:
+                        self.frame_processing_times.pop(0)
+                    
+                    # Adaptive FPS based on processing time
+                    if len(self.frame_processing_times) >= 10:
+                        avg_processing_time = sum(self.frame_processing_times[-10:]) / 10
+                        if avg_processing_time > self.target_processing_time * 1.2:
+                            # System is struggling, reduce FPS
+                            self.adaptive_fps = max(15, self.adaptive_fps - 1)
+                        elif avg_processing_time < self.target_processing_time * 0.8:
+                            # System is doing well, can increase FPS
+                            self.adaptive_fps = min(30, self.adaptive_fps + 1)
                     
                     # Store current frame
                     with self.frame_lock:
@@ -199,17 +245,43 @@ class SimpleCameraManager:
                         if not self.frame_queue.full():
                             self.frame_queue.put(frame_with_faces, block=False)
                     except queue.Full:
-                        pass
+                        # Clear old frames if queue is full
+                        try:
+                            self.frame_queue.get_nowait()
+                            self.frame_queue.put(frame_with_faces, block=False)
+                        except queue.Empty:
+                            pass
                     
                     # Log face detection
                     if len(faces) > 0:
                         self.logger.debug(f"Detected {len(faces)} face(s)")
                     
-                    time.sleep(0.033)  # ~30 FPS
+                    # Reset error counter on successful frame
+                    consecutive_errors = 0
+                    
+                    # Adaptive sleep based on measured performance
+                    sleep_time = max(0.01, 1.0 / self.adaptive_fps - processing_time)
+                    time.sleep(sleep_time)
                     
                 except Exception as e:
-                    self.logger.error(f"Error in camera loop: {e}")
-                    time.sleep(1)
+                    consecutive_errors += 1
+                    self.logger.error(f"Error in camera loop (#{consecutive_errors}): {e}")
+                    
+                    # Progressive backoff for consecutive errors
+                    if consecutive_errors >= max_consecutive_errors:
+                        self.logger.error("Too many consecutive camera errors, attempting full recovery")
+                        if not self._attempt_camera_recovery():
+                            self.logger.error("Camera recovery failed, stopping camera loop")
+                            break
+                        consecutive_errors = 0
+                        
+                        # Log performance stats periodically
+                        if current_time - self.last_performance_check > 10.0:  # Every 10 seconds
+                            self._log_performance_stats()
+                            self.last_performance_check = current_time
+                    else:
+                        # Short delay before retry
+                        time.sleep(min(consecutive_errors * 0.5, 2.0))
                     
         except Exception as e:
             self.logger.error(f"Critical camera loop error: {e}")
@@ -225,6 +297,77 @@ class SimpleCameraManager:
             if self.current_frame is not None:
                 return self.current_frame.copy()
         return None
+    
+    def _attempt_camera_recovery(self) -> bool:
+        """Attempt to recover from camera errors"""
+        try:
+            self.logger.info("Attempting camera recovery...")
+            
+            # Stop current camera
+            try:
+                self.picam2.stop()
+                time.sleep(1)
+            except:
+                pass
+            
+            # Reinitialize camera
+            try:
+                self.setup_camera()
+                self.picam2.start()
+                time.sleep(2)
+                
+                # Test with a frame capture
+                test_frame = self.picam2.capture_array()
+                if test_frame is not None:
+                    self.logger.info("Camera recovery successful")
+                    return True
+                else:
+                    self.logger.error("Camera recovery failed - test frame is None")
+                    return False
+                    
+            except Exception as e:
+                self.logger.error(f"Camera recovery failed: {e}")
+                return False
+                
+        except Exception as e:
+            self.logger.error(f"Critical error during camera recovery: {e}")
+            return False
+    
+    def _log_performance_stats(self):
+        """Log camera performance statistics"""
+        try:
+            if len(self.frame_processing_times) > 0:
+                avg_time = sum(self.frame_processing_times) / len(self.frame_processing_times)
+                max_time = max(self.frame_processing_times)
+                min_time = min(self.frame_processing_times)
+                
+                self.logger.info(
+                    f"Camera performance: avg={avg_time:.3f}s, max={max_time:.3f}s, "
+                    f"min={min_time:.3f}s, adaptive_fps={self.adaptive_fps}"
+                )
+            
+            # Check system temperature if available (Raspberry Pi)
+            try:
+                with open('/sys/class/thermal/thermal_zone0/temp', 'r') as f:
+                    temp_millidegrees = int(f.read().strip())
+                    temp_celsius = temp_millidegrees / 1000.0
+                    
+                    if temp_celsius > 70.0:  # High temperature warning
+                        self.logger.warning(f"High system temperature: {temp_celsius:.1f}°C")
+                        # Reduce FPS to lower CPU load
+                        self.adaptive_fps = max(10, self.adaptive_fps - 5)
+                    elif temp_celsius > 80.0:  # Critical temperature
+                        self.logger.error(f"Critical system temperature: {temp_celsius:.1f}°C")
+                        self.adaptive_fps = 10  # Minimum FPS
+                    else:
+                        self.logger.debug(f"System temperature: {temp_celsius:.1f}°C")
+                        
+            except (FileNotFoundError, ValueError):
+                # Temperature monitoring not available
+                pass
+                
+        except Exception as e:
+            self.logger.error(f"Error logging performance stats: {e}")
     
     def get_frame_from_queue(self) -> Optional[np.ndarray]:
         """Get frame from queue (for UI updates)"""

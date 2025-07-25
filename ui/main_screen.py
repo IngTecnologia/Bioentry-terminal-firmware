@@ -73,16 +73,16 @@ class MainScreen(UIScreen):
         
         # Terminal title
         self.terminal_label = UILabel(
-            UIRect(20, 15, 300, 35),
+            UIRect(20, 20, 300, 60),
             "TERMINAL\nDE ACCESO",
-            UIFonts.TITLE,
+            UIFonts.SUBTITLE,  # Smaller than new TITLE size
             UIColors.SURFACE,  # White text for better contrast
             "left"
         )
         
         # Current time
         self.time_label = UILabel(
-            UIRect(self.SCREEN_WIDTH//2 - 50, 85, 100, 25),
+            UIRect(self.SCREEN_WIDTH//2 - 60, 90, 120, 40),
             self._get_current_time(),
             UIFonts.BODY,
             UIColors.SURFACE,
@@ -91,16 +91,16 @@ class MainScreen(UIScreen):
         
         # Online status (top right)
         self.online_status = UILabel(
-            UIRect(self.SCREEN_WIDTH - 120, 15, 100, 25),
+            UIRect(self.SCREEN_WIDTH - 130, 20, 110, 30),
             "● OFFLINE",
             UIFonts.BODY,
             UIColors.ERROR,
             "center"
         )
         
-        # Admin button (small, top right corner)
+        # Admin button (larger for touch, bottom right corner)
         self.admin_button = UIButton(
-            UIRect(self.SCREEN_WIDTH - 50, self.SCREEN_HEIGHT - 50, 40, 40),
+            UIRect(self.SCREEN_WIDTH - 80, self.SCREEN_HEIGHT - 80, 60, 60),
             "⚙",
             self._on_admin_button_click,
             "outline"
@@ -115,10 +115,10 @@ class MainScreen(UIScreen):
         
         # Instruction message
         self.instruction_label = UILabel(
-            UIRect(20, self.SCREEN_HEIGHT - 90, self.SCREEN_WIDTH - 40, 80),
+            UIRect(20, self.SCREEN_HEIGHT - 100, self.SCREEN_WIDTH - 40, 80),
             "COLÓQUESE FRENTE\nA LA CÁMARA",
             UIFonts.SUBTITLE,
-            UIColors.SUCCESS,
+            UIColors.PRIMARY,  # Use primary blue color
             "center"
         )
         
@@ -143,9 +143,13 @@ class MainScreen(UIScreen):
     def _on_admin_button_click(self) -> None:
         """Handle admin button click"""
         self.logger.info("Admin button clicked")
-        asyncio.create_task(
-            self.state_manager.transition_to(SystemState.ADMINISTRATION, "admin_button_click")
-        )
+        # Create a custom event that main.py can handle to switch screens
+        # This is safer than trying to access UI manager from here
+        import pygame
+        # Send a custom event with admin screen request
+        admin_event = pygame.event.Event(pygame.USEREVENT + 1, {"action": "show_screen", "screen": "admin"})
+        pygame.event.post(admin_event)
+    
     
     def _on_idle_state(self, state: SystemState, data: StateData) -> None:
         """Handle idle state"""

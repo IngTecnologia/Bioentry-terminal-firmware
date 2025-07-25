@@ -2986,3 +2986,1116 @@ AttributeError: 'StateManager' object has no attribute 'set_state'
 2025-07-25 11:44:57 - terminal - INFO - Cerrando conexi�n a la base de datos | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:57.737165
 2025-07-25 11:44:57 - terminal - INFO - UI Manager stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:57.825997
 2025-07-25 11:44:57 - terminal - INFO - Graceful shutdown completed | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:57.826341
+2025-07-25 11:50:12 - terminal - INFO - State Manager initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:12.317758 | initial_state=idle
+2025-07-25 11:50:12 - terminal - INFO - Face cascade loaded from: /usr/share/opencv4/haarcascades/haarcascade_frontalface_default.xml | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:12.378970
+2025-07-25 11:50:12 - terminal - INFO - Camera configured: 480x640 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:12.385255
+2025-07-25 11:50:12 - terminal - INFO - Simple camera manager initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:12.385547
+2025-07-25 11:50:12 - terminal - INFO - Fingerprint manager initialized - Mock mode: False | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:12.385692
+2025-07-25 11:50:12 - terminal - INFO - Proximity manager initialized - Mock mode: False | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:12.385801
+2025-07-25 11:50:12 - terminal - INFO - API Client initialized for terminal TERMINAL_001 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:12.385897
+2025-07-25 11:50:12 - terminal - INFO - API Client initialized for terminal TERMINAL_001 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:12.385990
+2025-07-25 11:50:12 - terminal - INFO - Verification service initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:12.386096
+2025-07-25 11:50:12 - terminal - INFO - Sync service initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:12.386185
+2025-07-25 11:50:12 - terminal - INFO - BioEntry Terminal initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:12.386269
+2025-07-25 11:50:12 - terminal - INFO - Starting BioEntry Terminal initialization... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:12.386451
+2025-07-25 11:50:12 - terminal - INFO - Initializing database... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:12.386537
+2025-07-25 11:50:12 - terminal - INFO - Base de datos inicializada exitosamente | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:12.389654 | db_path=/home/jesus/App/Bioentry-terminal-firmware/data/database.db
+2025-07-25 11:50:12 - terminal - INFO - Database initialization successful | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:12.389812
+2025-07-25 11:50:12 - terminal - INFO - Initializing hardware managers... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:12.389898
+2025-07-25 11:50:12 - terminal - INFO - Simple camera manager started | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:12.390275
+2025-07-25 11:50:12 - terminal - INFO - Simple camera manager started successfully | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:12.396266
+2025-07-25 11:50:12 - terminal - ERROR - PyFingerprint library not available | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:12.396647
+2025-07-25 11:50:12 - terminal - WARNING - Fingerprint sensor initialization failed - continuing without fingerprint support | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:12.396764
+2025-07-25 11:50:12 - terminal - ERROR - APDS-9930 library not available | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:12.396970
+2025-07-25 11:50:12 - terminal - WARNING - Proximity sensor initialization failed - manual activation only | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:12.397053
+2025-07-25 11:50:12 - terminal - INFO - Initializing UI system... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:12.397129
+2025-07-25 11:50:13 - terminal - INFO - UI Manager initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:13.088640
+2025-07-25 11:50:13 - terminal - INFO - Main screen initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:13.089030
+2025-07-25 11:50:13 - terminal - INFO - Success screen initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:13.089227
+2025-07-25 11:50:13 - terminal - INFO - Manual entry screen initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:13.089437
+2025-07-25 11:50:13 - terminal - INFO - Admin screen initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:13.089770
+2025-07-25 11:50:13 - terminal - INFO - Screen activated: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:13.090025
+2025-07-25 11:50:13 - terminal - INFO - Screen changed to: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:13.090107
+2025-07-25 11:50:13 - terminal - INFO - Initializing services... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:13.090173
+2025-07-25 11:50:13 - terminal - INFO - Auto sync started with 300s interval | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:13.090286
+2025-07-25 11:50:13 - terminal - WARNING - Connection error (attempt 1/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:13.093947
+2025-07-25 11:50:13 - terminal - WARNING - Connection error (attempt 1/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:13.095854
+2025-07-25 11:50:14 - terminal - INFO - Camera loop started | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:14.396306
+2025-07-25 11:50:15 - terminal - WARNING - Connection error (attempt 2/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:15.098183
+2025-07-25 11:50:15 - terminal - WARNING - Connection error (attempt 2/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:15.100012
+2025-07-25 11:50:19 - terminal - WARNING - Connection error (attempt 3/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:19.102599
+2025-07-25 11:50:19 - terminal - WARNING - Connection error (attempt 3/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:19.104646
+2025-07-25 11:50:25 - terminal - INFO - API connectivity: Offline | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:25.105126
+2025-07-25 11:50:25 - terminal - ERROR - APDS-9930 library not available | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:25.105598
+2025-07-25 11:50:25 - terminal - ERROR - Error in state transition: Invalid transition: idle -> idle | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:25.105763 | from_state=idle | to_state=idle | trigger=initialization
+2025-07-25 11:50:25 - terminal - ERROR - Emergency transition to error state | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:25.106021 | error_message=Invalid transition: idle -> idle | previous_state=idle
+2025-07-25 11:50:25 - terminal - INFO - BioEntry Terminal initialization completed successfully | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:25.106152
+2025-07-25 11:50:25 - terminal - INFO - Starting BioEntry Terminal main loop | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:25.106266
+2025-07-25 11:50:55 - terminal - WARNING - Connection error (attempt 1/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:55.150523
+2025-07-25 11:50:57 - terminal - WARNING - Connection error (attempt 2/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:50:57.155719
+2025-07-25 11:51:01 - terminal - WARNING - Connection error (attempt 3/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:51:01.162156
+2025-07-25 11:51:25 - terminal - WARNING - Connection error (attempt 1/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:51:25.163630
+2025-07-25 11:51:27 - terminal - WARNING - Connection error (attempt 2/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:51:27.167539
+2025-07-25 11:51:27 - terminal - INFO - Received signal 2 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:51:27.838063
+2025-07-25 11:51:31 - terminal - WARNING - Connection error (attempt 3/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:51:31.173184
+2025-07-25 11:51:37 - terminal - INFO - Starting graceful shutdown... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:51:37.217423
+2025-07-25 11:51:37 - terminal - INFO - Auto sync loop terminated | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:51:37.217785
+2025-07-25 11:51:37 - terminal - INFO - Auto sync stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:51:37.217965
+2025-07-25 11:51:37 - terminal - INFO - Simple camera manager stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:51:37.221908
+2025-07-25 11:51:37 - terminal - INFO - Proximity monitoring stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:51:37.222050
+2025-07-25 11:51:37 - terminal - INFO - Fingerprint sensor cleanup completed | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:51:37.222143
+2025-07-25 11:51:37 - terminal - INFO - Proximity monitoring stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:51:37.222219
+2025-07-25 11:51:37 - terminal - INFO - Proximity sensor cleanup completed | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:51:37.222291
+2025-07-25 11:51:37 - terminal - INFO - Cerrando conexi�n a la base de datos | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:51:37.222362
+2025-07-25 11:51:37 - terminal - INFO - UI Manager stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:51:37.297509
+2025-07-25 11:51:37 - terminal - INFO - Graceful shutdown completed | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:51:37.298104
+2025-07-25 12:04:47 - terminal - INFO - State Manager initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:04:47.673353 | initial_state=idle
+2025-07-25 12:04:47 - terminal - INFO - Face cascade loaded from: /usr/share/opencv4/haarcascades/haarcascade_frontalface_default.xml | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:04:47.734277
+2025-07-25 12:04:47 - terminal - INFO - Camera configured: 480x640 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:04:47.740651
+2025-07-25 12:04:47 - terminal - INFO - Simple camera manager initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:04:47.740938
+2025-07-25 12:04:47 - terminal - INFO - Fingerprint manager initialized - Mock mode: False | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:04:47.741116
+2025-07-25 12:04:47 - terminal - INFO - Proximity manager initialized - Mock mode: False | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:04:47.741245
+2025-07-25 12:04:47 - terminal - INFO - API Client initialized for terminal TERMINAL_001 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:04:47.741349
+2025-07-25 12:04:47 - terminal - INFO - API Client initialized for terminal TERMINAL_001 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:04:47.741448
+2025-07-25 12:04:47 - terminal - INFO - Verification service initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:04:47.741553
+2025-07-25 12:04:47 - terminal - INFO - Sync service initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:04:47.741644
+2025-07-25 12:04:47 - terminal - INFO - BioEntry Terminal initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:04:47.741727
+2025-07-25 12:04:47 - terminal - INFO - Starting BioEntry Terminal initialization... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:04:47.741924
+2025-07-25 12:04:47 - terminal - INFO - Initializing database... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:04:47.742014
+2025-07-25 12:04:47 - terminal - INFO - Base de datos inicializada exitosamente | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:04:47.745060 | db_path=/home/jesus/App/Bioentry-terminal-firmware/data/database.db
+2025-07-25 12:04:47 - terminal - INFO - Database initialization successful | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:04:47.745214
+2025-07-25 12:04:47 - terminal - INFO - Initializing hardware managers... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:04:47.745301
+2025-07-25 12:04:47 - terminal - INFO - Simple camera manager started | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:04:47.745678
+2025-07-25 12:04:47 - terminal - INFO - Simple camera manager started successfully | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:04:47.751670
+2025-07-25 12:04:47 - terminal - ERROR - PyFingerprint library not available | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:04:47.752099
+2025-07-25 12:04:47 - terminal - WARNING - Fingerprint sensor initialization failed - continuing without fingerprint support | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:04:47.752311
+2025-07-25 12:04:47 - terminal - ERROR - APDS-9930 library not available | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:04:47.752606
+2025-07-25 12:04:47 - terminal - WARNING - Proximity sensor initialization failed - manual activation only | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:04:47.752748
+2025-07-25 12:04:47 - terminal - INFO - Initializing UI system... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:04:47.752892
+2025-07-25 12:04:48 - terminal - INFO - UI Manager initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:04:48.316243
+2025-07-25 12:04:48 - terminal - INFO - Main screen initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:04:48.316697
+2025-07-25 12:04:48 - terminal - INFO - Success screen initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:04:48.317041
+2025-07-25 12:04:48 - terminal - INFO - Manual entry screen initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:04:48.317399
+2025-07-25 12:04:48 - terminal - INFO - Admin screen initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:04:48.317751
+2025-07-25 12:04:48 - terminal - INFO - Screen activated: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:04:48.317905
+2025-07-25 12:04:48 - terminal - INFO - Screen changed to: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:04:48.317984
+2025-07-25 12:04:48 - terminal - INFO - Initializing services... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:04:48.318059
+2025-07-25 12:04:48 - terminal - INFO - Auto sync started with 300s interval | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:04:48.318164
+2025-07-25 12:04:48 - terminal - WARNING - Connection error (attempt 1/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:04:48.321075
+2025-07-25 12:04:48 - terminal - WARNING - Connection error (attempt 1/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:04:48.322517
+2025-07-25 12:04:49 - terminal - INFO - Camera loop started | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:04:49.751707
+2025-07-25 12:04:50 - terminal - WARNING - Connection error (attempt 2/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:04:50.325484
+2025-07-25 12:04:50 - terminal - WARNING - Connection error (attempt 2/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:04:50.326910
+2025-07-25 12:04:54 - terminal - WARNING - Connection error (attempt 3/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:04:54.328924
+2025-07-25 12:04:54 - terminal - WARNING - Connection error (attempt 3/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:04:54.330626
+2025-07-25 12:05:00 - terminal - INFO - API connectivity: Offline | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:05:00.339060
+2025-07-25 12:05:00 - terminal - ERROR - APDS-9930 library not available | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:05:00.339553
+2025-07-25 12:05:00 - terminal - ERROR - Error in state transition: Invalid transition: idle -> idle | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:05:00.339714 | from_state=idle | to_state=idle | trigger=initialization
+2025-07-25 12:05:00 - terminal - ERROR - Emergency transition to error state | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:05:00.339844 | error_message=Invalid transition: idle -> idle | previous_state=idle
+2025-07-25 12:05:00 - terminal - INFO - BioEntry Terminal initialization completed successfully | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:05:00.339945
+2025-07-25 12:05:00 - terminal - INFO - Starting BioEntry Terminal main loop | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:05:00.340043
+2025-07-25 12:05:30 - terminal - WARNING - Connection error (attempt 1/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:05:30.370034
+2025-07-25 12:05:32 - terminal - WARNING - Connection error (attempt 2/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:05:32.374450
+2025-07-25 12:05:36 - terminal - WARNING - Connection error (attempt 3/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:05:36.377792
+2025-07-25 12:05:54 - terminal - INFO - Received signal 2 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:05:54.768347
+2025-07-25 12:05:54 - terminal - INFO - Starting graceful shutdown... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:05:54.778787
+2025-07-25 12:05:54 - terminal - INFO - Auto sync loop terminated | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:05:54.779003
+2025-07-25 12:05:54 - terminal - INFO - Auto sync stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:05:54.779122
+2025-07-25 12:05:54 - terminal - INFO - Simple camera manager stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:05:54.783250
+2025-07-25 12:05:54 - terminal - INFO - Proximity monitoring stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:05:54.783405
+2025-07-25 12:05:54 - terminal - INFO - Fingerprint sensor cleanup completed | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:05:54.783500
+2025-07-25 12:05:54 - terminal - INFO - Proximity monitoring stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:05:54.783583
+2025-07-25 12:05:54 - terminal - INFO - Proximity sensor cleanup completed | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:05:54.783694
+2025-07-25 12:05:54 - terminal - INFO - Cerrando conexi�n a la base de datos | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:05:54.783779
+2025-07-25 12:05:54 - terminal - INFO - UI Manager stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:05:54.869214
+2025-07-25 12:05:54 - terminal - INFO - Graceful shutdown completed | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:05:54.869579
+2025-07-25 12:10:03 - terminal - INFO - State Manager initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:03.552852 | initial_state=idle
+2025-07-25 12:10:03 - terminal - INFO - Face cascade loaded from: /usr/share/opencv4/haarcascades/haarcascade_frontalface_default.xml | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:03.613519
+2025-07-25 12:10:03 - terminal - INFO - Camera configured: 480x640 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:03.619695
+2025-07-25 12:10:03 - terminal - INFO - Simple camera manager initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:03.620001
+2025-07-25 12:10:03 - terminal - INFO - Fingerprint manager initialized - Mock mode: False | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:03.620167
+2025-07-25 12:10:03 - terminal - INFO - Proximity manager initialized - Mock mode: False | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:03.620282
+2025-07-25 12:10:03 - terminal - INFO - API Client initialized for terminal TERMINAL_001 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:03.620381
+2025-07-25 12:10:03 - terminal - INFO - API Client initialized for terminal TERMINAL_001 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:03.620477
+2025-07-25 12:10:03 - terminal - INFO - Verification service initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:03.620583
+2025-07-25 12:10:03 - terminal - INFO - Sync service initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:03.620675
+2025-07-25 12:10:03 - terminal - INFO - BioEntry Terminal initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:03.620768
+2025-07-25 12:10:03 - terminal - INFO - Starting BioEntry Terminal initialization... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:03.620952
+2025-07-25 12:10:03 - terminal - INFO - Initializing database... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:03.621038
+2025-07-25 12:10:03 - terminal - INFO - Base de datos inicializada exitosamente | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:03.624033 | db_path=/home/jesus/App/Bioentry-terminal-firmware/data/database.db
+2025-07-25 12:10:03 - terminal - INFO - Database initialization successful | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:03.624191
+2025-07-25 12:10:03 - terminal - INFO - Initializing hardware managers... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:03.624298
+2025-07-25 12:10:03 - terminal - INFO - Simple camera manager started | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:03.624675
+2025-07-25 12:10:03 - terminal - INFO - Simple camera manager started successfully | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:03.624858
+2025-07-25 12:10:03 - terminal - ERROR - PyFingerprint library not available | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:03.631057
+2025-07-25 12:10:03 - terminal - WARNING - Fingerprint sensor initialization failed - continuing without fingerprint support | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:03.631193
+2025-07-25 12:10:03 - terminal - ERROR - APDS-9930 library not available | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:03.631411
+2025-07-25 12:10:03 - terminal - WARNING - Proximity sensor initialization failed - manual activation only | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:03.631495
+2025-07-25 12:10:03 - terminal - INFO - Initializing UI system... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:03.631569
+2025-07-25 12:10:04 - terminal - INFO - UI Manager initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:04.216182
+2025-07-25 12:10:04 - terminal - INFO - Main screen initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:04.216914
+2025-07-25 12:10:04 - terminal - INFO - Success screen initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:04.217186
+2025-07-25 12:10:04 - terminal - INFO - Manual entry screen initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:04.217348
+2025-07-25 12:10:04 - terminal - INFO - Admin screen initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:04.217495
+2025-07-25 12:10:04 - terminal - INFO - Screen activated: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:04.217603
+2025-07-25 12:10:04 - terminal - INFO - Screen changed to: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:04.217664
+2025-07-25 12:10:04 - terminal - INFO - Initializing services... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:04.217724
+2025-07-25 12:10:04 - terminal - INFO - Auto sync started with 300s interval | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:04.217818
+2025-07-25 12:10:04 - terminal - WARNING - Connection error (attempt 1/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:04.220721
+2025-07-25 12:10:04 - terminal - WARNING - Connection error (attempt 1/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:04.222237
+2025-07-25 12:10:05 - terminal - INFO - Camera loop started | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:05.630879
+2025-07-25 12:10:06 - terminal - WARNING - Connection error (attempt 2/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:06.225392
+2025-07-25 12:10:06 - terminal - WARNING - Connection error (attempt 2/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:06.227278
+2025-07-25 12:10:10 - terminal - WARNING - Connection error (attempt 3/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:10.234009
+2025-07-25 12:10:10 - terminal - WARNING - Connection error (attempt 3/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:10.235955
+2025-07-25 12:10:16 - terminal - INFO - API connectivity: Offline | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:16.242456
+2025-07-25 12:10:16 - terminal - ERROR - APDS-9930 library not available | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:16.243012
+2025-07-25 12:10:16 - terminal - ERROR - Error in state transition: Invalid transition: idle -> idle | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:16.243212 | from_state=idle | to_state=idle | trigger=initialization
+2025-07-25 12:10:16 - terminal - ERROR - Emergency transition to error state | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:16.243371 | error_message=Invalid transition: idle -> idle | previous_state=idle
+2025-07-25 12:10:16 - terminal - INFO - BioEntry Terminal initialization completed successfully | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:16.243490
+2025-07-25 12:10:16 - terminal - INFO - Starting BioEntry Terminal main loop | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:16.243622
+2025-07-25 12:10:30 - terminal - INFO - Received signal 2 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:30.760331
+2025-07-25 12:10:30 - terminal - INFO - Starting graceful shutdown... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:30.790714
+2025-07-25 12:10:30 - terminal - INFO - Auto sync loop terminated | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:30.790988
+2025-07-25 12:10:30 - terminal - INFO - Auto sync stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:30.791118
+2025-07-25 12:10:30 - terminal - INFO - Simple camera manager stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:30.795088
+2025-07-25 12:10:30 - terminal - INFO - Proximity monitoring stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:30.795223
+2025-07-25 12:10:30 - terminal - INFO - Fingerprint sensor cleanup completed | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:30.795309
+2025-07-25 12:10:30 - terminal - INFO - Proximity monitoring stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:30.795385
+2025-07-25 12:10:30 - terminal - INFO - Proximity sensor cleanup completed | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:30.795454
+2025-07-25 12:10:30 - terminal - INFO - Cerrando conexi�n a la base de datos | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:30.795525
+2025-07-25 12:10:30 - terminal - INFO - UI Manager stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:30.882011
+2025-07-25 12:10:30 - terminal - INFO - Graceful shutdown completed | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:10:30.882545
+2025-07-25 12:14:35 - terminal - INFO - State Manager initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:35.786749 | initial_state=idle
+2025-07-25 12:14:35 - terminal - INFO - Face cascade loaded from: /usr/share/opencv4/haarcascades/haarcascade_frontalface_default.xml | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:35.847899
+2025-07-25 12:14:35 - terminal - INFO - Camera configured: 480x640 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:35.854463
+2025-07-25 12:14:35 - terminal - INFO - Simple camera manager initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:35.854741
+2025-07-25 12:14:35 - terminal - INFO - Fingerprint manager initialized - Mock mode: False | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:35.854915
+2025-07-25 12:14:35 - terminal - INFO - Proximity manager initialized - Mock mode: False | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:35.855039
+2025-07-25 12:14:35 - terminal - INFO - API Client initialized for terminal TERMINAL_001 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:35.855141
+2025-07-25 12:14:35 - terminal - INFO - API Client initialized for terminal TERMINAL_001 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:35.855238
+2025-07-25 12:14:35 - terminal - INFO - Verification service initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:35.855345
+2025-07-25 12:14:35 - terminal - INFO - Sync service initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:35.855434
+2025-07-25 12:14:35 - terminal - INFO - BioEntry Terminal initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:35.855516
+2025-07-25 12:14:35 - terminal - INFO - Starting BioEntry Terminal initialization... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:35.855702
+2025-07-25 12:14:35 - terminal - INFO - Initializing database... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:35.855789
+2025-07-25 12:14:35 - terminal - INFO - Base de datos inicializada exitosamente | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:35.858937 | db_path=/home/jesus/App/Bioentry-terminal-firmware/data/database.db
+2025-07-25 12:14:35 - terminal - INFO - Database initialization successful | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:35.859099
+2025-07-25 12:14:35 - terminal - INFO - Initializing hardware managers... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:35.859209
+2025-07-25 12:14:35 - terminal - INFO - Simple camera manager started | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:35.859582
+2025-07-25 12:14:35 - terminal - INFO - Simple camera manager started successfully | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:35.859789
+2025-07-25 12:14:35 - terminal - ERROR - PyFingerprint library not available | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:35.866181
+2025-07-25 12:14:35 - terminal - WARNING - Fingerprint sensor initialization failed - continuing without fingerprint support | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:35.866320
+2025-07-25 12:14:35 - terminal - ERROR - APDS-9930 library not available | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:35.866538
+2025-07-25 12:14:35 - terminal - WARNING - Proximity sensor initialization failed - manual activation only | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:35.866621
+2025-07-25 12:14:35 - terminal - INFO - Initializing UI system... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:35.866693
+2025-07-25 12:14:36 - terminal - ERROR - UI initialization failed: module 'pygame.mouse' has no attribute 'init' | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:36.062182
+2025-07-25 12:14:36 - terminal - ERROR - UI initialization failed | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:36.062773
+2025-07-25 12:14:55 - terminal - INFO - State Manager initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:55.862400 | initial_state=idle
+2025-07-25 12:14:55 - terminal - INFO - Face cascade loaded from: /usr/share/opencv4/haarcascades/haarcascade_frontalface_default.xml | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:55.923583
+2025-07-25 12:14:55 - terminal - INFO - Camera configured: 480x640 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:55.929893
+2025-07-25 12:14:55 - terminal - INFO - Simple camera manager initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:55.930208
+2025-07-25 12:14:55 - terminal - INFO - Fingerprint manager initialized - Mock mode: False | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:55.930360
+2025-07-25 12:14:55 - terminal - INFO - Proximity manager initialized - Mock mode: False | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:55.930468
+2025-07-25 12:14:55 - terminal - INFO - API Client initialized for terminal TERMINAL_001 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:55.930565
+2025-07-25 12:14:55 - terminal - INFO - API Client initialized for terminal TERMINAL_001 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:55.930659
+2025-07-25 12:14:55 - terminal - INFO - Verification service initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:55.930767
+2025-07-25 12:14:55 - terminal - INFO - Sync service initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:55.930858
+2025-07-25 12:14:55 - terminal - INFO - BioEntry Terminal initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:55.930942
+2025-07-25 12:14:55 - terminal - INFO - Starting BioEntry Terminal initialization... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:55.931127
+2025-07-25 12:14:55 - terminal - INFO - Initializing database... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:55.931221
+2025-07-25 12:14:55 - terminal - INFO - Base de datos inicializada exitosamente | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:55.934361 | db_path=/home/jesus/App/Bioentry-terminal-firmware/data/database.db
+2025-07-25 12:14:55 - terminal - INFO - Database initialization successful | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:55.934519
+2025-07-25 12:14:55 - terminal - INFO - Initializing hardware managers... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:55.934602
+2025-07-25 12:14:55 - terminal - INFO - Simple camera manager started | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:55.934987
+2025-07-25 12:14:55 - terminal - INFO - Simple camera manager started successfully | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:55.941430
+2025-07-25 12:14:55 - terminal - ERROR - PyFingerprint library not available | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:55.941798
+2025-07-25 12:14:55 - terminal - WARNING - Fingerprint sensor initialization failed - continuing without fingerprint support | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:55.941902
+2025-07-25 12:14:55 - terminal - ERROR - APDS-9930 library not available | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:55.942097
+2025-07-25 12:14:55 - terminal - WARNING - Proximity sensor initialization failed - manual activation only | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:55.942175
+2025-07-25 12:14:55 - terminal - INFO - Initializing UI system... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:55.942249
+2025-07-25 12:14:56 - terminal - ERROR - UI initialization failed: module 'pygame.mouse' has no attribute 'init' | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:56.137395
+2025-07-25 12:14:56 - terminal - ERROR - UI initialization failed | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:14:56.137623
+2025-07-25 12:17:28 - terminal - INFO - State Manager initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:28.662671 | initial_state=idle
+2025-07-25 12:17:28 - terminal - INFO - Face cascade loaded from: /usr/share/opencv4/haarcascades/haarcascade_frontalface_default.xml | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:28.723291
+2025-07-25 12:17:28 - terminal - INFO - Camera configured: 480x640 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:28.729551
+2025-07-25 12:17:28 - terminal - INFO - Simple camera manager initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:28.729821
+2025-07-25 12:17:28 - terminal - INFO - Fingerprint manager initialized - Mock mode: False | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:28.729996
+2025-07-25 12:17:28 - terminal - INFO - Proximity manager initialized - Mock mode: False | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:28.730117
+2025-07-25 12:17:28 - terminal - INFO - API Client initialized for terminal TERMINAL_001 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:28.730219
+2025-07-25 12:17:28 - terminal - INFO - API Client initialized for terminal TERMINAL_001 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:28.730315
+2025-07-25 12:17:28 - terminal - INFO - Verification service initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:28.730423
+2025-07-25 12:17:28 - terminal - INFO - Sync service initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:28.730513
+2025-07-25 12:17:28 - terminal - INFO - BioEntry Terminal initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:28.730599
+2025-07-25 12:17:28 - terminal - INFO - Starting BioEntry Terminal initialization... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:28.730780
+2025-07-25 12:17:28 - terminal - INFO - Initializing database... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:28.730868
+2025-07-25 12:17:28 - terminal - INFO - Base de datos inicializada exitosamente | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:28.733920 | db_path=/home/jesus/App/Bioentry-terminal-firmware/data/database.db
+2025-07-25 12:17:28 - terminal - INFO - Database initialization successful | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:28.734080
+2025-07-25 12:17:28 - terminal - INFO - Initializing hardware managers... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:28.734169
+2025-07-25 12:17:28 - terminal - INFO - Simple camera manager started | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:28.734537
+2025-07-25 12:17:28 - terminal - INFO - Simple camera manager started successfully | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:28.734722
+2025-07-25 12:17:28 - terminal - ERROR - PyFingerprint library not available | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:28.740887
+2025-07-25 12:17:28 - terminal - WARNING - Fingerprint sensor initialization failed - continuing without fingerprint support | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:28.741167
+2025-07-25 12:17:28 - terminal - ERROR - APDS-9930 library not available | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:28.741511
+2025-07-25 12:17:28 - terminal - WARNING - Proximity sensor initialization failed - manual activation only | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:28.741673
+2025-07-25 12:17:28 - terminal - INFO - Initializing UI system... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:28.741827
+2025-07-25 12:17:29 - terminal - INFO - UI Manager initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:29.304883
+2025-07-25 12:17:29 - terminal - INFO - Main screen initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:29.305234
+2025-07-25 12:17:29 - terminal - INFO - Success screen initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:29.305390
+2025-07-25 12:17:29 - terminal - INFO - Manual entry screen initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:29.305548
+2025-07-25 12:17:29 - terminal - INFO - Admin screen initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:29.305696
+2025-07-25 12:17:29 - terminal - INFO - Screen activated: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:29.305804
+2025-07-25 12:17:29 - terminal - INFO - Screen changed to: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:29.305867
+2025-07-25 12:17:29 - terminal - INFO - Initializing services... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:29.305927
+2025-07-25 12:17:29 - terminal - INFO - Auto sync started with 300s interval | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:29.306018
+2025-07-25 12:17:29 - terminal - WARNING - Connection error (attempt 1/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:29.308878
+2025-07-25 12:17:29 - terminal - WARNING - Connection error (attempt 1/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:29.310304
+2025-07-25 12:17:30 - terminal - INFO - Camera loop started | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:30.740712
+2025-07-25 12:17:31 - terminal - WARNING - Connection error (attempt 2/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:31.313128
+2025-07-25 12:17:31 - terminal - WARNING - Connection error (attempt 2/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:31.314623
+2025-07-25 12:17:35 - terminal - WARNING - Connection error (attempt 3/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:35.320716
+2025-07-25 12:17:35 - terminal - WARNING - Connection error (attempt 3/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:35.322325
+2025-07-25 12:17:41 - terminal - INFO - API connectivity: Offline | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:41.330127
+2025-07-25 12:17:41 - terminal - ERROR - APDS-9930 library not available | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:41.330527
+2025-07-25 12:17:41 - terminal - ERROR - Error in state transition: Invalid transition: idle -> idle | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:41.330662 | from_state=idle | to_state=idle | trigger=initialization
+2025-07-25 12:17:41 - terminal - ERROR - Emergency transition to error state | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:41.330769 | error_message=Invalid transition: idle -> idle | previous_state=idle
+2025-07-25 12:17:41 - terminal - INFO - BioEntry Terminal initialization completed successfully | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:41.330850
+2025-07-25 12:17:41 - terminal - INFO - Starting BioEntry Terminal main loop | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:41.330931
+2025-07-25 12:17:41 - terminal - INFO - Touch event detected: pos=(176, 345), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:41.332478
+2025-07-25 12:17:41 - terminal - INFO - Touch activation triggered - no component handled the event | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:41.332775
+2025-07-25 12:17:43 - terminal - INFO - Touch event detected: pos=(148, 524), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:43.220172
+2025-07-25 12:17:43 - terminal - INFO - Touch activation triggered - no component handled the event | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:43.220476
+2025-07-25 12:17:43 - terminal - INFO - Touch event detected: pos=(104, 500), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:43.643799
+2025-07-25 12:17:43 - terminal - INFO - Touch activation triggered - no component handled the event | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:43.644093
+2025-07-25 12:17:43 - terminal - INFO - Touch event detected: pos=(92, 488), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:43.845617
+2025-07-25 12:17:43 - terminal - INFO - Touch activation triggered - no component handled the event | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:43.845931
+2025-07-25 12:17:44 - terminal - INFO - Touch event detected: pos=(210, 387), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:44.557714
+2025-07-25 12:17:44 - terminal - INFO - TEST BUTTON CLICKED - Touch events are working! | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:44.558049
+2025-07-25 12:17:44 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:44.558414
+2025-07-25 12:17:48 - terminal - INFO - Touch event detected: pos=(267, 390), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:48.018103
+2025-07-25 12:17:48 - terminal - INFO - TEST BUTTON CLICKED - Touch events are working! | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:48.018356
+2025-07-25 12:17:48 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:48.018753
+2025-07-25 12:17:50 - terminal - INFO - Touch event detected: pos=(449, 767), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:50.255772
+2025-07-25 12:17:50 - terminal - INFO - Admin button clicked | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:50.256385
+2025-07-25 12:17:50 - terminal - INFO - UI Manager initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:50.521859
+2025-07-25 12:17:50 - terminal - ERROR - Screen not found: admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:50.522399
+2025-07-25 12:17:50 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:50.522598
+2025-07-25 12:17:51 - terminal - INFO - Touch event detected: pos=(439, 764), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:51.467954
+2025-07-25 12:17:51 - terminal - INFO - Admin button clicked | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:51.468230
+2025-07-25 12:17:51 - terminal - ERROR - Screen not found: admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:51.468349
+2025-07-25 12:17:51 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:51.468429
+2025-07-25 12:17:52 - terminal - INFO - Touch event detected: pos=(440, 762), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:52.393880
+2025-07-25 12:17:52 - terminal - INFO - Admin button clicked | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:52.394301
+2025-07-25 12:17:52 - terminal - ERROR - Screen not found: admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:52.394591
+2025-07-25 12:17:52 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:52.394778
+2025-07-25 12:17:52 - terminal - INFO - Touch event detected: pos=(438, 764), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:52.772136
+2025-07-25 12:17:52 - terminal - INFO - Admin button clicked | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:52.772413
+2025-07-25 12:17:52 - terminal - ERROR - Screen not found: admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:52.772533
+2025-07-25 12:17:52 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:52.772614
+2025-07-25 12:17:53 - terminal - INFO - Touch event detected: pos=(443, 761), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:53.199381
+2025-07-25 12:17:53 - terminal - INFO - Admin button clicked | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:53.199645
+2025-07-25 12:17:53 - terminal - ERROR - Screen not found: admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:53.199755
+2025-07-25 12:17:53 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:53.199833
+2025-07-25 12:17:54 - terminal - INFO - Touch event detected: pos=(245, 372), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:54.262264
+2025-07-25 12:17:54 - terminal - INFO - TEST BUTTON CLICKED - Touch events are working! | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:54.262493
+2025-07-25 12:17:54 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:54.262753
+2025-07-25 12:17:55 - terminal - INFO - Touch event detected: pos=(440, 767), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:55.465614
+2025-07-25 12:17:55 - terminal - INFO - Admin button clicked | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:55.465980
+2025-07-25 12:17:55 - terminal - ERROR - Screen not found: admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:55.466121
+2025-07-25 12:17:55 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:55.466204
+2025-07-25 12:17:56 - terminal - INFO - Touch event detected: pos=(442, 766), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:56.526314
+2025-07-25 12:17:56 - terminal - INFO - Admin button clicked | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:56.526590
+2025-07-25 12:17:56 - terminal - ERROR - Screen not found: admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:56.526714
+2025-07-25 12:17:56 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:56.526804
+2025-07-25 12:17:57 - terminal - INFO - Touch event detected: pos=(433, 756), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:57.172637
+2025-07-25 12:17:57 - terminal - INFO - Admin button clicked | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:57.172948
+2025-07-25 12:17:57 - terminal - ERROR - Screen not found: admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:57.173098
+2025-07-25 12:17:57 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:57.173213
+2025-07-25 12:17:57 - terminal - INFO - Touch event detected: pos=(425, 753), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:57.889323
+2025-07-25 12:17:57 - terminal - INFO - Touch activation triggered - no component handled the event | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:57.889738
+2025-07-25 12:17:58 - terminal - INFO - Touch event detected: pos=(438, 760), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:58.389537
+2025-07-25 12:17:58 - terminal - INFO - Admin button clicked | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:58.389975
+2025-07-25 12:17:58 - terminal - ERROR - Screen not found: admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:58.390179
+2025-07-25 12:17:58 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:58.390357
+2025-07-25 12:17:59 - terminal - INFO - Touch event detected: pos=(424, 753), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:59.038432
+2025-07-25 12:17:59 - terminal - INFO - Touch activation triggered - no component handled the event | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:17:59.038790
+2025-07-25 12:18:00 - terminal - INFO - Touch event detected: pos=(434, 758), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:00.279865
+2025-07-25 12:18:00 - terminal - INFO - Admin button clicked | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:00.280252
+2025-07-25 12:18:00 - terminal - ERROR - Screen not found: admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:00.280424
+2025-07-25 12:18:00 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:00.280567
+2025-07-25 12:18:05 - terminal - INFO - Touch event detected: pos=(244, 410), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:05.271575
+2025-07-25 12:18:05 - terminal - INFO - TEST BUTTON CLICKED - Touch events are working! | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:05.271910
+2025-07-25 12:18:05 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:05.272315
+2025-07-25 12:18:07 - terminal - INFO - Touch event detected: pos=(193, 410), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:07.376553
+2025-07-25 12:18:07 - terminal - INFO - TEST BUTTON CLICKED - Touch events are working! | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:07.377137
+2025-07-25 12:18:07 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:07.377567
+2025-07-25 12:18:11 - terminal - INFO - Touch event detected: pos=(308, 398), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:11.046354
+2025-07-25 12:18:11 - terminal - INFO - TEST BUTTON CLICKED - Touch events are working! | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:11.047116
+2025-07-25 12:18:11 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:11.047493
+2025-07-25 12:18:11 - terminal - WARNING - Connection error (attempt 1/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:11.368224
+2025-07-25 12:18:13 - terminal - WARNING - Connection error (attempt 2/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:13.372417
+2025-07-25 12:18:17 - terminal - WARNING - Connection error (attempt 3/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:17.378564
+2025-07-25 12:18:21 - terminal - INFO - Received signal 2 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:21.102285
+2025-07-25 12:18:23 - terminal - INFO - Starting graceful shutdown... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:23.416772
+2025-07-25 12:18:23 - terminal - INFO - Auto sync loop terminated | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:23.417043
+2025-07-25 12:18:23 - terminal - INFO - Auto sync stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:23.417158
+2025-07-25 12:18:23 - terminal - INFO - Simple camera manager stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:23.421259
+2025-07-25 12:18:23 - terminal - INFO - Proximity monitoring stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:23.421518
+2025-07-25 12:18:23 - terminal - INFO - Fingerprint sensor cleanup completed | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:23.421712
+2025-07-25 12:18:23 - terminal - INFO - Proximity monitoring stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:23.421882
+2025-07-25 12:18:23 - terminal - INFO - Proximity sensor cleanup completed | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:23.422056
+2025-07-25 12:18:23 - terminal - INFO - Cerrando conexi�n a la base de datos | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:23.422223
+2025-07-25 12:18:23 - terminal - INFO - UI Manager stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:23.506294
+2025-07-25 12:18:23 - terminal - INFO - Graceful shutdown completed | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:23.506735
+2025-07-25 12:18:39 - terminal - INFO - State Manager initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:39.249191 | initial_state=idle
+2025-07-25 12:18:39 - terminal - INFO - Face cascade loaded from: /usr/share/opencv4/haarcascades/haarcascade_frontalface_default.xml | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:39.310118
+2025-07-25 12:18:39 - terminal - INFO - Camera configured: 480x640 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:39.316691
+2025-07-25 12:18:39 - terminal - INFO - Simple camera manager initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:39.317000
+2025-07-25 12:18:39 - terminal - INFO - Fingerprint manager initialized - Mock mode: False | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:39.317151
+2025-07-25 12:18:39 - terminal - INFO - Proximity manager initialized - Mock mode: False | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:39.317258
+2025-07-25 12:18:39 - terminal - INFO - API Client initialized for terminal TERMINAL_001 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:39.317353
+2025-07-25 12:18:39 - terminal - INFO - API Client initialized for terminal TERMINAL_001 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:39.317448
+2025-07-25 12:18:39 - terminal - INFO - Verification service initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:39.317553
+2025-07-25 12:18:39 - terminal - INFO - Sync service initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:39.317643
+2025-07-25 12:18:39 - terminal - INFO - BioEntry Terminal initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:39.317725
+2025-07-25 12:18:39 - terminal - INFO - Starting BioEntry Terminal initialization... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:39.317908
+2025-07-25 12:18:39 - terminal - INFO - Initializing database... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:39.318003
+2025-07-25 12:18:39 - terminal - INFO - Base de datos inicializada exitosamente | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:39.321217 | db_path=/home/jesus/App/Bioentry-terminal-firmware/data/database.db
+2025-07-25 12:18:39 - terminal - INFO - Database initialization successful | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:39.321379
+2025-07-25 12:18:39 - terminal - INFO - Initializing hardware managers... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:39.321465
+2025-07-25 12:18:39 - terminal - INFO - Simple camera manager started | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:39.321837
+2025-07-25 12:18:39 - terminal - INFO - Simple camera manager started successfully | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:39.327812
+2025-07-25 12:18:39 - terminal - ERROR - PyFingerprint library not available | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:39.328330
+2025-07-25 12:18:39 - terminal - WARNING - Fingerprint sensor initialization failed - continuing without fingerprint support | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:39.328446
+2025-07-25 12:18:39 - terminal - ERROR - APDS-9930 library not available | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:39.328650
+2025-07-25 12:18:39 - terminal - WARNING - Proximity sensor initialization failed - manual activation only | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:39.328732
+2025-07-25 12:18:39 - terminal - INFO - Initializing UI system... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:39.328807
+2025-07-25 12:18:39 - terminal - INFO - UI Manager initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:39.905014
+2025-07-25 12:18:39 - terminal - INFO - Main screen initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:39.905370
+2025-07-25 12:18:39 - terminal - INFO - Success screen initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:39.905521
+2025-07-25 12:18:39 - terminal - INFO - Manual entry screen initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:39.905698
+2025-07-25 12:18:39 - terminal - INFO - Admin screen initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:39.905877
+2025-07-25 12:18:39 - terminal - INFO - Screen activated: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:39.905996
+2025-07-25 12:18:39 - terminal - INFO - Screen changed to: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:39.906070
+2025-07-25 12:18:39 - terminal - INFO - Initializing services... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:39.906140
+2025-07-25 12:18:39 - terminal - INFO - Auto sync started with 300s interval | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:39.906246
+2025-07-25 12:18:39 - terminal - WARNING - Connection error (attempt 1/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:39.909292
+2025-07-25 12:18:39 - terminal - WARNING - Connection error (attempt 1/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:39.911350
+2025-07-25 12:18:41 - terminal - INFO - Camera loop started | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:41.328063
+2025-07-25 12:18:41 - terminal - WARNING - Connection error (attempt 2/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:41.913073
+2025-07-25 12:18:41 - terminal - WARNING - Connection error (attempt 2/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:41.914874
+2025-07-25 12:18:45 - terminal - WARNING - Connection error (attempt 3/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:45.918219
+2025-07-25 12:18:45 - terminal - WARNING - Connection error (attempt 3/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:45.919789
+2025-07-25 12:18:51 - terminal - INFO - API connectivity: Offline | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:51.923509
+2025-07-25 12:18:51 - terminal - ERROR - APDS-9930 library not available | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:51.923991
+2025-07-25 12:18:51 - terminal - ERROR - Error in state transition: Invalid transition: idle -> idle | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:51.924165 | from_state=idle | to_state=idle | trigger=initialization
+2025-07-25 12:18:51 - terminal - ERROR - Emergency transition to error state | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:51.924433 | error_message=Invalid transition: idle -> idle | previous_state=idle
+2025-07-25 12:18:51 - terminal - INFO - BioEntry Terminal initialization completed successfully | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:51.924555
+2025-07-25 12:18:51 - terminal - INFO - Starting BioEntry Terminal main loop | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:51.924662
+2025-07-25 12:18:51 - terminal - INFO - Touch event detected: pos=(275, 173), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:51.925881
+2025-07-25 12:18:51 - terminal - INFO - Touch activation triggered - no component handled the event | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:51.926074
+2025-07-25 12:18:53 - terminal - INFO - Touch event detected: pos=(444, 766), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:53.926162
+2025-07-25 12:18:53 - terminal - INFO - Admin button clicked | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:53.926393
+2025-07-25 12:18:54 - terminal - INFO - UI Manager initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:54.355132
+2025-07-25 12:18:54 - terminal - ERROR - Screen not found: admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:54.355533
+2025-07-25 12:18:54 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:54.355843
+2025-07-25 12:18:56 - terminal - INFO - Touch event detected: pos=(442, 761), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:56.418638
+2025-07-25 12:18:56 - terminal - INFO - Admin button clicked | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:56.418868
+2025-07-25 12:18:56 - terminal - ERROR - Screen not found: admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:56.418961
+2025-07-25 12:18:56 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:56.419042
+2025-07-25 12:18:57 - terminal - INFO - Touch event detected: pos=(452, 758), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:57.025531
+2025-07-25 12:18:57 - terminal - INFO - Admin button clicked | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:57.025971
+2025-07-25 12:18:57 - terminal - ERROR - Screen not found: admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:57.026174
+2025-07-25 12:18:57 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:57.026308
+2025-07-25 12:18:57 - terminal - INFO - Touch event detected: pos=(440, 763), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:57.538396
+2025-07-25 12:18:57 - terminal - INFO - Admin button clicked | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:57.538660
+2025-07-25 12:18:57 - terminal - ERROR - Screen not found: admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:57.538771
+2025-07-25 12:18:57 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:57.538855
+2025-07-25 12:18:58 - terminal - INFO - Touch event detected: pos=(450, 755), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:58.093586
+2025-07-25 12:18:58 - terminal - INFO - Admin button clicked | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:58.094367
+2025-07-25 12:18:58 - terminal - ERROR - Screen not found: admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:58.094842
+2025-07-25 12:18:58 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:18:58.095042
+2025-07-25 12:19:08 - terminal - INFO - Received signal 2 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:08.277680
+2025-07-25 12:19:08 - terminal - INFO - Starting graceful shutdown... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:08.323333
+2025-07-25 12:19:08 - terminal - INFO - Auto sync loop terminated | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:08.326040
+2025-07-25 12:19:08 - terminal - INFO - Auto sync stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:08.326261
+2025-07-25 12:19:08 - terminal - INFO - Simple camera manager stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:08.332169
+2025-07-25 12:19:08 - terminal - INFO - Proximity monitoring stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:08.332420
+2025-07-25 12:19:08 - terminal - INFO - Fingerprint sensor cleanup completed | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:08.332524
+2025-07-25 12:19:08 - terminal - INFO - Proximity monitoring stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:08.332609
+2025-07-25 12:19:08 - terminal - INFO - Proximity sensor cleanup completed | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:08.332688
+2025-07-25 12:19:08 - terminal - INFO - Cerrando conexi�n a la base de datos | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:08.332766
+2025-07-25 12:19:08 - terminal - INFO - UI Manager stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:08.414351
+2025-07-25 12:19:08 - terminal - INFO - Graceful shutdown completed | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:08.414662
+2025-07-25 12:19:34 - terminal - INFO - State Manager initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:34.914272 | initial_state=idle
+2025-07-25 12:19:34 - terminal - INFO - Face cascade loaded from: /usr/share/opencv4/haarcascades/haarcascade_frontalface_default.xml | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:34.975167
+2025-07-25 12:19:34 - terminal - INFO - Camera configured: 480x640 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:34.981605
+2025-07-25 12:19:34 - terminal - INFO - Simple camera manager initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:34.981918
+2025-07-25 12:19:34 - terminal - INFO - Fingerprint manager initialized - Mock mode: False | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:34.982073
+2025-07-25 12:19:34 - terminal - INFO - Proximity manager initialized - Mock mode: False | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:34.982172
+2025-07-25 12:19:34 - terminal - INFO - API Client initialized for terminal TERMINAL_001 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:34.982254
+2025-07-25 12:19:34 - terminal - INFO - API Client initialized for terminal TERMINAL_001 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:34.982336
+2025-07-25 12:19:34 - terminal - INFO - Verification service initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:34.982428
+2025-07-25 12:19:34 - terminal - INFO - Sync service initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:34.982505
+2025-07-25 12:19:34 - terminal - INFO - BioEntry Terminal initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:34.982574
+2025-07-25 12:19:34 - terminal - INFO - Starting BioEntry Terminal initialization... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:34.982743
+2025-07-25 12:19:34 - terminal - INFO - Initializing database... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:34.982822
+2025-07-25 12:19:34 - terminal - INFO - Base de datos inicializada exitosamente | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:34.985931 | db_path=/home/jesus/App/Bioentry-terminal-firmware/data/database.db
+2025-07-25 12:19:34 - terminal - INFO - Database initialization successful | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:34.986093
+2025-07-25 12:19:34 - terminal - INFO - Initializing hardware managers... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:34.986211
+2025-07-25 12:19:34 - terminal - INFO - Simple camera manager started | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:34.986588
+2025-07-25 12:19:34 - terminal - INFO - Simple camera manager started successfully | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:34.986778
+2025-07-25 12:19:34 - terminal - ERROR - PyFingerprint library not available | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:34.993000
+2025-07-25 12:19:34 - terminal - WARNING - Fingerprint sensor initialization failed - continuing without fingerprint support | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:34.993203
+2025-07-25 12:19:34 - terminal - ERROR - APDS-9930 library not available | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:34.993484
+2025-07-25 12:19:34 - terminal - WARNING - Proximity sensor initialization failed - manual activation only | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:34.993626
+2025-07-25 12:19:34 - terminal - INFO - Initializing UI system... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:34.993894
+2025-07-25 12:19:35 - terminal - INFO - UI Manager initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:35.590313
+2025-07-25 12:19:35 - terminal - INFO - Main screen initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:35.590735
+2025-07-25 12:19:35 - terminal - INFO - Success screen initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:35.590991
+2025-07-25 12:19:35 - terminal - INFO - Manual entry screen initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:35.591263
+2025-07-25 12:19:35 - terminal - INFO - Admin screen initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:35.591605
+2025-07-25 12:19:35 - terminal - INFO - Screen activated: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:35.591809
+2025-07-25 12:19:35 - terminal - INFO - Screen changed to: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:35.591950
+2025-07-25 12:19:35 - terminal - INFO - Initializing services... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:35.592113
+2025-07-25 12:19:35 - terminal - INFO - Auto sync started with 300s interval | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:35.592334
+2025-07-25 12:19:35 - terminal - WARNING - Connection error (attempt 1/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:35.595623
+2025-07-25 12:19:35 - terminal - WARNING - Connection error (attempt 1/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:35.597657
+2025-07-25 12:19:36 - terminal - INFO - Camera loop started | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:36.992782
+2025-07-25 12:19:37 - terminal - WARNING - Connection error (attempt 2/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:37.599620
+2025-07-25 12:19:37 - terminal - WARNING - Connection error (attempt 2/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:37.601274
+2025-07-25 12:19:41 - terminal - WARNING - Connection error (attempt 3/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:41.602975
+2025-07-25 12:19:41 - terminal - WARNING - Connection error (attempt 3/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:41.606501
+2025-07-25 12:19:47 - terminal - INFO - API connectivity: Offline | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:47.607508
+2025-07-25 12:19:47 - terminal - ERROR - APDS-9930 library not available | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:47.608017
+2025-07-25 12:19:47 - terminal - ERROR - Error in state transition: Invalid transition: idle -> idle | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:47.608282 | from_state=idle | to_state=idle | trigger=initialization
+2025-07-25 12:19:47 - terminal - ERROR - Emergency transition to error state | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:47.609151 | error_message=Invalid transition: idle -> idle | previous_state=idle
+2025-07-25 12:19:47 - terminal - INFO - BioEntry Terminal initialization completed successfully | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:47.609321
+2025-07-25 12:19:47 - terminal - INFO - Starting BioEntry Terminal main loop | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:47.609449
+2025-07-25 12:19:47 - terminal - INFO - Touch event detected: pos=(202, 318), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:47.611566
+2025-07-25 12:19:47 - terminal - INFO - Touch activation triggered - no component handled the event | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:47.613272
+2025-07-25 12:19:59 - terminal - INFO - Touch event detected: pos=(451, 763), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:59.315098
+2025-07-25 12:19:59 - terminal - INFO - Admin button clicked | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:59.315378
+2025-07-25 12:19:59 - terminal - INFO - UI Manager initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:59.586816
+2025-07-25 12:19:59 - terminal - ERROR - Screen not found: admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:59.587646
+2025-07-25 12:19:59 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:19:59.587912
+2025-07-25 12:20:07 - terminal - INFO - Received signal 2 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:20:07.631571
+2025-07-25 12:20:07 - terminal - INFO - Starting graceful shutdown... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:20:07.664048
+2025-07-25 12:20:07 - terminal - INFO - Auto sync loop terminated | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:20:07.664402
+2025-07-25 12:20:07 - terminal - INFO - Auto sync stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:20:07.664560
+2025-07-25 12:20:07 - terminal - INFO - Simple camera manager stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:20:07.668783
+2025-07-25 12:20:07 - terminal - INFO - Proximity monitoring stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:20:07.669047
+2025-07-25 12:20:07 - terminal - INFO - Fingerprint sensor cleanup completed | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:20:07.669195
+2025-07-25 12:20:07 - terminal - INFO - Proximity monitoring stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:20:07.669292
+2025-07-25 12:20:07 - terminal - INFO - Proximity sensor cleanup completed | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:20:07.669373
+2025-07-25 12:20:07 - terminal - INFO - Cerrando conexi�n a la base de datos | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:20:07.669473
+2025-07-25 12:20:07 - terminal - INFO - UI Manager stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:20:07.755334
+2025-07-25 12:20:07 - terminal - INFO - Graceful shutdown completed | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:20:07.755757
+2025-07-25 12:23:12 - terminal - INFO - State Manager initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:12.490792 | initial_state=idle
+2025-07-25 12:23:12 - terminal - INFO - Face cascade loaded from: /usr/share/opencv4/haarcascades/haarcascade_frontalface_default.xml | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:12.551789
+2025-07-25 12:23:12 - terminal - INFO - Camera configured: 480x640 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:12.558401
+2025-07-25 12:23:12 - terminal - INFO - Simple camera manager initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:12.558720
+2025-07-25 12:23:12 - terminal - INFO - Fingerprint manager initialized - Mock mode: False | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:12.558873
+2025-07-25 12:23:12 - terminal - INFO - Proximity manager initialized - Mock mode: False | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:12.558984
+2025-07-25 12:23:12 - terminal - INFO - API Client initialized for terminal TERMINAL_001 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:12.559082
+2025-07-25 12:23:12 - terminal - INFO - API Client initialized for terminal TERMINAL_001 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:12.559178
+2025-07-25 12:23:12 - terminal - INFO - Verification service initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:12.559284
+2025-07-25 12:23:12 - terminal - INFO - Sync service initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:12.559375
+2025-07-25 12:23:12 - terminal - INFO - BioEntry Terminal initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:12.559458
+2025-07-25 12:23:12 - terminal - INFO - Starting BioEntry Terminal initialization... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:12.559639
+2025-07-25 12:23:12 - terminal - INFO - Initializing database... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:12.559723
+2025-07-25 12:23:12 - terminal - INFO - Base de datos inicializada exitosamente | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:12.562831 | db_path=/home/jesus/App/Bioentry-terminal-firmware/data/database.db
+2025-07-25 12:23:12 - terminal - INFO - Database initialization successful | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:12.562990
+2025-07-25 12:23:12 - terminal - INFO - Initializing hardware managers... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:12.563077
+2025-07-25 12:23:12 - terminal - INFO - Simple camera manager started | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:12.563456
+2025-07-25 12:23:12 - terminal - INFO - Simple camera manager started successfully | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:12.563646
+2025-07-25 12:23:12 - terminal - ERROR - PyFingerprint library not available | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:12.570005
+2025-07-25 12:23:12 - terminal - WARNING - Fingerprint sensor initialization failed - continuing without fingerprint support | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:12.570141
+2025-07-25 12:23:12 - terminal - ERROR - APDS-9930 library not available | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:12.570348
+2025-07-25 12:23:12 - terminal - WARNING - Proximity sensor initialization failed - manual activation only | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:12.570430
+2025-07-25 12:23:12 - terminal - INFO - Initializing UI system... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:12.570505
+2025-07-25 12:23:13 - terminal - INFO - UI Manager initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:13.129517
+2025-07-25 12:23:13 - terminal - INFO - Main screen initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:13.129956
+2025-07-25 12:23:13 - terminal - INFO - Success screen initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:13.130209
+2025-07-25 12:23:13 - terminal - INFO - Manual entry screen initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:13.130472
+2025-07-25 12:23:13 - terminal - INFO - Admin screen initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:13.130715
+2025-07-25 12:23:13 - terminal - INFO - Registering main screen: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:13.130861
+2025-07-25 12:23:13 - terminal - INFO - Registering success screen: success | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:13.131022
+2025-07-25 12:23:13 - terminal - INFO - Registering manual screen: manual_entry | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:13.131228
+2025-07-25 12:23:13 - terminal - INFO - Registering admin screen: admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:13.131393
+2025-07-25 12:23:13 - terminal - INFO - All registered screens: ['main', 'success', 'manual_entry', 'admin'] | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:13.131557
+2025-07-25 12:23:13 - terminal - INFO - Screen activated: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:13.131715
+2025-07-25 12:23:13 - terminal - INFO - Screen changed to: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:13.131867
+2025-07-25 12:23:13 - terminal - INFO - Initializing services... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:13.132022
+2025-07-25 12:23:13 - terminal - INFO - Auto sync started with 300s interval | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:13.132255
+2025-07-25 12:23:13 - terminal - WARNING - Connection error (attempt 1/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:13.135891
+2025-07-25 12:23:13 - terminal - WARNING - Connection error (attempt 1/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:13.137728
+2025-07-25 12:23:14 - terminal - INFO - Camera loop started | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:14.569737
+2025-07-25 12:23:15 - terminal - WARNING - Connection error (attempt 2/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:15.140661
+2025-07-25 12:23:15 - terminal - WARNING - Connection error (attempt 2/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:15.142157
+2025-07-25 12:23:19 - terminal - WARNING - Connection error (attempt 3/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:19.146914
+2025-07-25 12:23:19 - terminal - WARNING - Connection error (attempt 3/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:19.148466
+2025-07-25 12:23:25 - terminal - INFO - API connectivity: Offline | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:25.156789
+2025-07-25 12:23:25 - terminal - ERROR - APDS-9930 library not available | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:25.157285
+2025-07-25 12:23:25 - terminal - ERROR - Error in state transition: Invalid transition: idle -> idle | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:25.157442 | from_state=idle | to_state=idle | trigger=initialization
+2025-07-25 12:23:25 - terminal - ERROR - Emergency transition to error state | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:25.157569 | error_message=Invalid transition: idle -> idle | previous_state=idle
+2025-07-25 12:23:25 - terminal - INFO - BioEntry Terminal initialization completed successfully | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:25.157770
+2025-07-25 12:23:25 - terminal - INFO - Starting BioEntry Terminal main loop | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:25.158019
+2025-07-25 12:23:25 - terminal - INFO - Touch event detected: pos=(242, 373), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:25.164366
+2025-07-25 12:23:25 - terminal - INFO - TEST BUTTON CLICKED - Touch events are working! | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:25.164817
+2025-07-25 12:23:25 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:25.165349
+2025-07-25 12:23:25 - terminal - INFO - Touch event detected: pos=(153, 291), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:25.170773
+2025-07-25 12:23:25 - terminal - INFO - Touch activation triggered - no component handled the event | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:25.171188
+2025-07-25 12:23:25 - terminal - INFO - Touch event detected: pos=(266, 462), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:25.199223
+2025-07-25 12:23:25 - terminal - INFO - Touch activation triggered - no component handled the event | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:25.199657
+2025-07-25 12:23:25 - terminal - INFO - Touch event detected: pos=(274, 471), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:25.201086
+2025-07-25 12:23:25 - terminal - INFO - Touch activation triggered - no component handled the event | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:25.201403
+2025-07-25 12:23:25 - terminal - INFO - Touch event detected: pos=(302, 431), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:25.264519
+2025-07-25 12:23:25 - terminal - INFO - Touch activation triggered - no component handled the event | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:25.264817
+2025-07-25 12:23:25 - terminal - INFO - Touch event detected: pos=(262, 366), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:25.317350
+2025-07-25 12:23:25 - terminal - INFO - Touch activation triggered - no component handled the event | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:25.317673
+2025-07-25 12:23:25 - terminal - INFO - Touch event detected: pos=(212, 319), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:25.424195
+2025-07-25 12:23:25 - terminal - INFO - Touch activation triggered - no component handled the event | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:25.424488
+2025-07-25 12:23:27 - terminal - INFO - Touch event detected: pos=(442, 745), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:27.325477
+2025-07-25 12:23:27 - terminal - INFO - Touch activation triggered - no component handled the event | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:27.326139
+2025-07-25 12:23:28 - terminal - INFO - Touch event detected: pos=(446, 759), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:28.294330
+2025-07-25 12:23:28 - terminal - INFO - Admin button clicked | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:28.294608
+2025-07-25 12:23:28 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:28.294724
+2025-07-25 12:23:28 - terminal - INFO - Screen deactivated: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:28.346078
+2025-07-25 12:23:28 - terminal - INFO - Screen activated: admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:28.346351
+2025-07-25 12:23:28 - terminal - INFO - Switched to admin section: system_status | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:28.346475
+2025-07-25 12:23:28 - terminal - INFO - Screen changed to: admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:28.346617
+2025-07-25 12:23:41 - terminal - INFO - Touch event detected: pos=(145, 79), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:41.445737
+2025-07-25 12:23:46 - terminal - INFO - Touch event detected: pos=(62, 98), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:46.164575
+2025-07-25 12:23:46 - terminal - INFO - Switched to admin section: system_status | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:46.164836
+2025-07-25 12:23:46 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:46.164964
+2025-07-25 12:23:47 - terminal - INFO - Touch event detected: pos=(157, 94), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:47.004387
+2025-07-25 12:23:47 - terminal - INFO - Switched to admin section: user_management | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:47.004655
+2025-07-25 12:23:47 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:47.004785
+2025-07-25 12:23:48 - terminal - INFO - Touch event detected: pos=(77, 93), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:48.135010
+2025-07-25 12:23:48 - terminal - INFO - Switched to admin section: system_status | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:48.135390
+2025-07-25 12:23:48 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:48.135566
+2025-07-25 12:23:48 - terminal - INFO - Touch event detected: pos=(165, 91), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:48.916577
+2025-07-25 12:23:48 - terminal - INFO - Switched to admin section: user_management | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:48.916836
+2025-07-25 12:23:48 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:48.916950
+2025-07-25 12:23:55 - terminal - WARNING - Connection error (attempt 1/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:55.254236
+2025-07-25 12:23:57 - terminal - WARNING - Connection error (attempt 2/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:23:57.258373
+2025-07-25 12:24:01 - terminal - WARNING - Connection error (attempt 3/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:01.266568
+2025-07-25 12:24:07 - terminal - INFO - Touch event detected: pos=(250, 87), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.313676
+2025-07-25 12:24:07 - terminal - INFO - Switched to admin section: configuration | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.313916
+2025-07-25 12:24:07 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.314025
+2025-07-25 12:24:07 - terminal - INFO - Touch event detected: pos=(244, 92), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.314916
+2025-07-25 12:24:07 - terminal - INFO - Switched to admin section: configuration | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.315246
+2025-07-25 12:24:07 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.315575
+2025-07-25 12:24:07 - terminal - INFO - Touch event detected: pos=(254, 93), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.318167
+2025-07-25 12:24:07 - terminal - INFO - Switched to admin section: configuration | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.318367
+2025-07-25 12:24:07 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.318475
+2025-07-25 12:24:07 - terminal - INFO - Touch event detected: pos=(262, 98), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.319768
+2025-07-25 12:24:07 - terminal - INFO - Switched to admin section: configuration | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.319884
+2025-07-25 12:24:07 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.319976
+2025-07-25 12:24:07 - terminal - INFO - Touch event detected: pos=(260, 96), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.322142
+2025-07-25 12:24:07 - terminal - INFO - Switched to admin section: configuration | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.322261
+2025-07-25 12:24:07 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.322350
+2025-07-25 12:24:07 - terminal - INFO - Touch event detected: pos=(184, 88), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.324025
+2025-07-25 12:24:07 - terminal - INFO - Switched to admin section: user_management | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.324184
+2025-07-25 12:24:07 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.324308
+2025-07-25 12:24:07 - terminal - INFO - Touch event detected: pos=(250, 95), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.324987
+2025-07-25 12:24:07 - terminal - INFO - Switched to admin section: configuration | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.325103
+2025-07-25 12:24:07 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.325200
+2025-07-25 12:24:07 - terminal - INFO - Touch event detected: pos=(252, 85), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.327504
+2025-07-25 12:24:07 - terminal - INFO - Switched to admin section: configuration | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.327853
+2025-07-25 12:24:07 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.328192
+2025-07-25 12:24:07 - terminal - INFO - Touch event detected: pos=(351, 100), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.330103
+2025-07-25 12:24:07 - terminal - INFO - Switched to admin section: diagnostics | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.330296
+2025-07-25 12:24:07 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.330405
+2025-07-25 12:24:07 - terminal - INFO - Touch event detected: pos=(342, 96), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.333957
+2025-07-25 12:24:07 - terminal - INFO - Switched to admin section: diagnostics | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.334296
+2025-07-25 12:24:07 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.334509
+2025-07-25 12:24:07 - terminal - INFO - Touch event detected: pos=(344, 126), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.338450
+2025-07-25 12:24:07 - terminal - INFO - Touch event detected: pos=(67, 98), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.342203
+2025-07-25 12:24:07 - terminal - INFO - Switched to admin section: system_status | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.342533
+2025-07-25 12:24:07 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.342744
+2025-07-25 12:24:07 - terminal - INFO - Touch event detected: pos=(56, 96), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.344052
+2025-07-25 12:24:07 - terminal - INFO - Switched to admin section: system_status | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.344226
+2025-07-25 12:24:07 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.344337
+2025-07-25 12:24:07 - terminal - INFO - Touch event detected: pos=(60, 97), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.346042
+2025-07-25 12:24:07 - terminal - INFO - Switched to admin section: system_status | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.346184
+2025-07-25 12:24:07 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.346276
+2025-07-25 12:24:07 - terminal - INFO - Touch event detected: pos=(82, 88), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.349028
+2025-07-25 12:24:07 - terminal - INFO - Switched to admin section: system_status | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.349186
+2025-07-25 12:24:07 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.349304
+2025-07-25 12:24:07 - terminal - INFO - Touch event detected: pos=(353, 33), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.351136
+2025-07-25 12:24:07 - terminal - INFO - Admin screen back button clicked | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.351291
+2025-07-25 12:24:07 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.351416
+2025-07-25 12:24:07 - terminal - INFO - Touch event detected: pos=(350, 32), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.353054
+2025-07-25 12:24:07 - terminal - INFO - Admin screen back button clicked | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.353204
+2025-07-25 12:24:07 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.353314
+2025-07-25 12:24:07 - terminal - INFO - State Transition: error -> idle | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.378558 | from_state=error | to_state=idle | trigger=admin_back_clicked | duration_seconds=42.220964
+2025-07-25 12:24:07 - terminal - INFO - Screen deactivated: admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.378882
+2025-07-25 12:24:07 - terminal - INFO - Screen activated: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.379003
+2025-07-25 12:24:07 - terminal - INFO - Screen changed to: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.379079
+2025-07-25 12:24:07 - terminal - ERROR - Error in state transition: Invalid transition: idle -> idle | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.379273 | from_state=idle | to_state=idle | trigger=admin_back_clicked
+2025-07-25 12:24:07 - terminal - ERROR - Emergency transition to error state | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:07.379389 | error_message=Invalid transition: idle -> idle | previous_state=idle
+2025-07-25 12:24:08 - terminal - INFO - Touch event detected: pos=(451, 758), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:08.594173
+2025-07-25 12:24:08 - terminal - INFO - Admin button clicked | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:08.594547
+2025-07-25 12:24:08 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:08.594845
+2025-07-25 12:24:08 - terminal - INFO - Screen deactivated: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:08.649752
+2025-07-25 12:24:08 - terminal - INFO - Screen activated: admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:08.650004
+2025-07-25 12:24:08 - terminal - INFO - Switched to admin section: system_status | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:08.650120
+2025-07-25 12:24:08 - terminal - INFO - Screen changed to: admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:08.650246
+2025-07-25 12:24:10 - terminal - INFO - Touch event detected: pos=(141, 77), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:10.049391
+2025-07-25 12:24:10 - terminal - INFO - Touch event detected: pos=(146, 124), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:10.725271
+2025-07-25 12:24:11 - terminal - INFO - Touch event detected: pos=(157, 86), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:11.507441
+2025-07-25 12:24:11 - terminal - INFO - Switched to admin section: user_management | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:11.507698
+2025-07-25 12:24:11 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:11.507814
+2025-07-25 12:24:12 - terminal - INFO - Touch event detected: pos=(245, 108), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:12.190461
+2025-07-25 12:24:12 - terminal - INFO - Switched to admin section: configuration | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:12.190712
+2025-07-25 12:24:12 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:12.190842
+2025-07-25 12:24:13 - terminal - INFO - Touch event detected: pos=(349, 96), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:13.242316
+2025-07-25 12:24:13 - terminal - INFO - Switched to admin section: diagnostics | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:13.242557
+2025-07-25 12:24:13 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:13.242663
+2025-07-25 12:24:14 - terminal - INFO - Touch event detected: pos=(247, 79), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:14.305404
+2025-07-25 12:24:15 - terminal - INFO - Touch event detected: pos=(347, 81), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:15.650451
+2025-07-25 12:24:15 - terminal - INFO - Switched to admin section: diagnostics | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:15.650725
+2025-07-25 12:24:15 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:15.650860
+2025-07-25 12:24:16 - terminal - INFO - Touch event detected: pos=(251, 96), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:16.790000
+2025-07-25 12:24:16 - terminal - INFO - Switched to admin section: configuration | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:16.790258
+2025-07-25 12:24:16 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:16.790374
+2025-07-25 12:24:17 - terminal - INFO - Touch event detected: pos=(347, 97), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:17.436671
+2025-07-25 12:24:17 - terminal - INFO - Switched to admin section: diagnostics | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:17.436915
+2025-07-25 12:24:17 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:17.437023
+2025-07-25 12:24:19 - terminal - INFO - Touch event detected: pos=(191, 205), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:19.799372
+2025-07-25 12:24:19 - terminal - INFO - Touch event detected: pos=(200, 212), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:19.892790
+2025-07-25 12:24:19 - terminal - INFO - Touch event detected: pos=(207, 209), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:19.893193
+2025-07-25 12:24:20 - terminal - INFO - Touch event detected: pos=(191, 202), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:20.539210
+2025-07-25 12:24:25 - terminal - WARNING - Connection error (attempt 1/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:25.266351
+2025-07-25 12:24:27 - terminal - WARNING - Connection error (attempt 2/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:27.270756
+2025-07-25 12:24:31 - terminal - WARNING - Connection error (attempt 3/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:31.273550
+2025-07-25 12:24:37 - terminal - INFO - Touch event detected: pos=(153, 222), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:37.315880
+2025-07-25 12:24:37 - terminal - INFO - Touch event detected: pos=(193, 231), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:37.322880
+2025-07-25 12:24:37 - terminal - INFO - Touch event detected: pos=(303, 269), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:37.330627
+2025-07-25 12:24:37 - terminal - INFO - Touch event detected: pos=(202, 317), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:37.333982
+2025-07-25 12:24:37 - terminal - INFO - Touch event detected: pos=(200, 337), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:37.334754
+2025-07-25 12:24:37 - terminal - INFO - Touch event detected: pos=(339, 94), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:37.338179
+2025-07-25 12:24:37 - terminal - INFO - Switched to admin section: diagnostics | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:37.338353
+2025-07-25 12:24:37 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:37.338490
+2025-07-25 12:24:37 - terminal - INFO - Touch event detected: pos=(274, 100), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:37.340341
+2025-07-25 12:24:37 - terminal - INFO - Switched to admin section: configuration | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:37.340486
+2025-07-25 12:24:37 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:37.340604
+2025-07-25 12:24:37 - terminal - INFO - Touch event detected: pos=(250, 110), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:37.341713
+2025-07-25 12:24:37 - terminal - INFO - Switched to admin section: configuration | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:37.341827
+2025-07-25 12:24:37 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:37.341928
+2025-07-25 12:24:37 - terminal - INFO - Touch event detected: pos=(253, 96), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:37.344282
+2025-07-25 12:24:37 - terminal - INFO - Switched to admin section: configuration | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:37.344474
+2025-07-25 12:24:37 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:37.344600
+2025-07-25 12:24:37 - terminal - INFO - Touch event detected: pos=(252, 81), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:37.346652
+2025-07-25 12:24:37 - terminal - INFO - Switched to admin section: configuration | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:37.346792
+2025-07-25 12:24:37 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:37.346906
+2025-07-25 12:24:39 - terminal - INFO - Touch event detected: pos=(152, 91), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:39.986431
+2025-07-25 12:24:39 - terminal - INFO - Switched to admin section: user_management | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:39.986670
+2025-07-25 12:24:39 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:39.986776
+2025-07-25 12:24:40 - terminal - INFO - Touch event detected: pos=(71, 104), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:40.619929
+2025-07-25 12:24:40 - terminal - INFO - Switched to admin section: system_status | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:40.620201
+2025-07-25 12:24:40 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:40.620333
+2025-07-25 12:24:41 - terminal - INFO - Touch event detected: pos=(161, 92), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:41.250800
+2025-07-25 12:24:41 - terminal - INFO - Switched to admin section: user_management | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:41.251062
+2025-07-25 12:24:41 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:41.251181
+2025-07-25 12:24:41 - terminal - INFO - Touch event detected: pos=(72, 93), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:41.754502
+2025-07-25 12:24:41 - terminal - INFO - Switched to admin section: system_status | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:41.754785
+2025-07-25 12:24:41 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:41.754904
+2025-07-25 12:24:42 - terminal - INFO - Touch event detected: pos=(152, 92), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:42.270755
+2025-07-25 12:24:42 - terminal - INFO - Switched to admin section: user_management | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:42.271031
+2025-07-25 12:24:42 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:42.271140
+2025-07-25 12:24:42 - terminal - INFO - Touch event detected: pos=(244, 100), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:42.746538
+2025-07-25 12:24:42 - terminal - INFO - Switched to admin section: configuration | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:42.746837
+2025-07-25 12:24:42 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:42.746987
+2025-07-25 12:24:43 - terminal - INFO - Touch event detected: pos=(339, 100), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:43.444807
+2025-07-25 12:24:43 - terminal - INFO - Switched to admin section: diagnostics | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:43.445095
+2025-07-25 12:24:43 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:43.445231
+2025-07-25 12:24:44 - terminal - INFO - Touch event detected: pos=(346, 43), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:44.141344
+2025-07-25 12:24:44 - terminal - INFO - Admin screen back button clicked | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:44.141621
+2025-07-25 12:24:44 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:44.141766
+2025-07-25 12:24:44 - terminal - INFO - State Transition: error -> idle | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:44.156980 | from_state=error | to_state=idle | trigger=admin_back_clicked | duration_seconds=36.777557
+2025-07-25 12:24:44 - terminal - INFO - Screen deactivated: admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:44.157325
+2025-07-25 12:24:44 - terminal - INFO - Screen activated: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:44.157432
+2025-07-25 12:24:44 - terminal - INFO - Screen changed to: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:44.157516
+2025-07-25 12:24:45 - terminal - INFO - Touch event detected: pos=(194, 382), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:45.892292
+2025-07-25 12:24:45 - terminal - INFO - TEST BUTTON CLICKED - Touch events are working! | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:45.892624
+2025-07-25 12:24:45 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:45.892946
+2025-07-25 12:24:46 - terminal - INFO - Touch event detected: pos=(60, 229), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:46.581134
+2025-07-25 12:24:46 - terminal - INFO - Touch activation triggered - no component handled the event | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:46.581428
+2025-07-25 12:24:46 - terminal - INFO - Touch activation triggered | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:46.581585
+2025-07-25 12:24:46 - terminal - INFO - State Transition: idle -> activation | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:46.596382 | from_state=idle | to_state=activation | trigger=touch_activation | duration_seconds=2.439065
+2025-07-25 12:24:46 - terminal - INFO - Screen deactivated: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:46.597033
+2025-07-25 12:24:46 - terminal - INFO - Screen activated: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:46.597182
+2025-07-25 12:24:46 - terminal - INFO - Screen changed to: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:46.597263
+2025-07-25 12:24:47 - terminal - INFO - Touch event detected: pos=(100, 220), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:47.048825
+2025-07-25 12:24:47 - terminal - INFO - Touch activation triggered - no component handled the event | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:47.049116
+2025-07-25 12:24:47 - terminal - INFO - Touch event detected: pos=(121, 275), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:47.097525
+2025-07-25 12:24:47 - terminal - INFO - Touch activation triggered - no component handled the event | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:47.097775
+2025-07-25 12:24:55 - terminal - WARNING - Connection error (attempt 1/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:55.314900
+2025-07-25 12:24:57 - terminal - WARNING - Connection error (attempt 2/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:24:57.321597
+2025-07-25 12:25:01 - terminal - WARNING - Connection error (attempt 3/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:25:01.325987
+2025-07-25 12:25:16 - terminal - WARNING - Timeout in state activation | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:25:16.608499 | timeout_seconds=30
+2025-07-25 12:25:16 - terminal - INFO - State Transition: activation -> idle | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:25:16.608836 | from_state=activation | to_state=idle | trigger=timeout | duration_seconds=30.011854
+2025-07-25 12:25:16 - terminal - INFO - Screen deactivated: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:25:16.609096
+2025-07-25 12:25:16 - terminal - INFO - Screen activated: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:25:16.609210
+2025-07-25 12:25:16 - terminal - INFO - Screen changed to: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:25:16.609296
+2025-07-25 12:25:25 - terminal - WARNING - Connection error (attempt 1/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:25:25.325422
+2025-07-25 12:25:25 - terminal - INFO - Received signal 2 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:25:25.432242
+2025-07-25 12:25:27 - terminal - WARNING - Connection error (attempt 2/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:25:27.330091
+2025-07-25 12:25:31 - terminal - WARNING - Connection error (attempt 3/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:25:31.332975
+2025-07-25 12:25:34 - terminal - INFO - Received signal 2 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:25:34.979879
+2025-07-25 12:25:37 - terminal - INFO - Received signal 2 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:25:37.099961
+2025-07-25 12:25:37 - terminal - INFO - Starting graceful shutdown... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:25:37.369738
+2025-07-25 12:25:37 - terminal - INFO - Auto sync loop terminated | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:25:37.370149
+2025-07-25 12:25:37 - terminal - INFO - Auto sync stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:25:37.370338
+2025-07-25 12:25:37 - terminal - INFO - Simple camera manager stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:25:37.374458
+2025-07-25 12:25:37 - terminal - INFO - Proximity monitoring stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:25:37.374751
+2025-07-25 12:25:37 - terminal - INFO - Fingerprint sensor cleanup completed | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:25:37.374975
+2025-07-25 12:25:37 - terminal - INFO - Proximity monitoring stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:25:37.375135
+2025-07-25 12:25:37 - terminal - INFO - Proximity sensor cleanup completed | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:25:37.375338
+2025-07-25 12:25:37 - terminal - INFO - Cerrando conexi�n a la base de datos | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:25:37.375498
+2025-07-25 12:25:37 - terminal - INFO - UI Manager stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:25:37.453040
+2025-07-25 12:25:37 - terminal - INFO - Graceful shutdown completed | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:25:37.453564
+2025-07-25 12:36:17 - terminal - INFO - State Manager initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:17.739751 | initial_state=idle
+2025-07-25 12:36:17 - terminal - INFO - Face cascade loaded from: /usr/share/opencv4/haarcascades/haarcascade_frontalface_default.xml | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:17.801002
+2025-07-25 12:36:17 - terminal - INFO - Camera configured: 480x640 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:17.807556
+2025-07-25 12:36:17 - terminal - INFO - Simple camera manager initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:17.807878
+2025-07-25 12:36:17 - terminal - INFO - Fingerprint manager initialized - Mock mode: False | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:17.808028
+2025-07-25 12:36:17 - terminal - INFO - Proximity manager initialized - Mock mode: False | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:17.808140
+2025-07-25 12:36:17 - terminal - INFO - API Client initialized for terminal TERMINAL_001 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:17.808259
+2025-07-25 12:36:17 - terminal - INFO - API Client initialized for terminal TERMINAL_001 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:17.808357
+2025-07-25 12:36:17 - terminal - INFO - Verification service initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:17.808464
+2025-07-25 12:36:17 - terminal - INFO - Sync service initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:17.808555
+2025-07-25 12:36:17 - terminal - INFO - BioEntry Terminal initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:17.808641
+2025-07-25 12:36:17 - terminal - INFO - Starting BioEntry Terminal initialization... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:17.808826
+2025-07-25 12:36:17 - terminal - INFO - Initializing database... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:17.808910
+2025-07-25 12:36:17 - terminal - INFO - Base de datos inicializada exitosamente | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:17.811888 | db_path=/home/jesus/App/Bioentry-terminal-firmware/data/database.db
+2025-07-25 12:36:17 - terminal - INFO - Database initialization successful | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:17.812034
+2025-07-25 12:36:17 - terminal - INFO - Initializing hardware managers... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:17.812116
+2025-07-25 12:36:17 - terminal - INFO - Simple camera manager started | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:17.812503
+2025-07-25 12:36:17 - terminal - INFO - Simple camera manager started successfully | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:17.812690
+2025-07-25 12:36:17 - terminal - ERROR - PyFingerprint library not available | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:17.818926
+2025-07-25 12:36:17 - terminal - WARNING - Fingerprint sensor initialization failed - continuing without fingerprint support | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:17.819067
+2025-07-25 12:36:17 - terminal - ERROR - APDS-9930 library not available | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:17.819273
+2025-07-25 12:36:17 - terminal - WARNING - Proximity sensor initialization failed - manual activation only | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:17.819356
+2025-07-25 12:36:17 - terminal - INFO - Initializing UI system... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:17.819431
+2025-07-25 12:36:18 - terminal - INFO - UI Manager initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:18.395613
+2025-07-25 12:36:18 - terminal - INFO - Main screen initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:18.395999
+2025-07-25 12:36:18 - terminal - INFO - Success screen initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:18.396219
+2025-07-25 12:36:18 - terminal - INFO - Manual entry screen initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:18.396427
+2025-07-25 12:36:18 - terminal - INFO - Admin screen initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:18.396596
+2025-07-25 12:36:18 - terminal - INFO - Registering main screen: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:18.396690
+2025-07-25 12:36:18 - terminal - INFO - Registering success screen: success | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:18.396776
+2025-07-25 12:36:18 - terminal - INFO - Registering manual screen: manual_entry | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:18.396843
+2025-07-25 12:36:18 - terminal - INFO - Registering admin screen: admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:18.396908
+2025-07-25 12:36:18 - terminal - INFO - All registered screens: ['main', 'success', 'manual_entry', 'admin'] | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:18.396978
+2025-07-25 12:36:18 - terminal - INFO - Screen activated: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:18.397038
+2025-07-25 12:36:18 - terminal - INFO - Screen changed to: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:18.397095
+2025-07-25 12:36:18 - terminal - INFO - Initializing services... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:18.397151
+2025-07-25 12:36:18 - terminal - INFO - Auto sync started with 300s interval | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:18.397242
+2025-07-25 12:36:18 - terminal - WARNING - Connection error (attempt 1/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:18.400834
+2025-07-25 12:36:18 - terminal - WARNING - Connection error (attempt 1/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:18.403054
+2025-07-25 12:36:19 - terminal - INFO - Camera loop started | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:19.818725
+2025-07-25 12:36:20 - terminal - WARNING - Connection error (attempt 2/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:20.409123
+2025-07-25 12:36:20 - terminal - WARNING - Connection error (attempt 2/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:20.410727
+2025-07-25 12:36:24 - terminal - WARNING - Connection error (attempt 3/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:24.415739
+2025-07-25 12:36:24 - terminal - WARNING - Connection error (attempt 3/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:24.417384
+2025-07-25 12:36:30 - terminal - INFO - API connectivity: Offline | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:30.422291
+2025-07-25 12:36:30 - terminal - ERROR - APDS-9930 library not available | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:30.422965
+2025-07-25 12:36:30 - terminal - ERROR - Error in state transition: Invalid transition: idle -> idle | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:30.423254 | from_state=idle | to_state=idle | trigger=initialization
+2025-07-25 12:36:30 - terminal - ERROR - Emergency transition to error state | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:30.423496 | error_message=Invalid transition: idle -> idle | previous_state=idle
+2025-07-25 12:36:30 - terminal - INFO - BioEntry Terminal initialization completed successfully | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:30.423690
+2025-07-25 12:36:30 - terminal - INFO - Starting BioEntry Terminal main loop | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:30.423899
+2025-07-25 12:36:30 - terminal - INFO - Touch event detected: pos=(252, 396), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:30.426225
+2025-07-25 12:36:30 - terminal - INFO - TEST BUTTON CLICKED - Touch events are working! | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:30.426611
+2025-07-25 12:36:30 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:30.427100
+2025-07-25 12:36:32 - terminal - INFO - Touch event detected: pos=(438, 760), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:32.894201
+2025-07-25 12:36:32 - terminal - INFO - Admin button clicked | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:32.894735
+2025-07-25 12:36:32 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:32.894965
+2025-07-25 12:36:32 - terminal - INFO - Screen deactivated: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:32.954975
+2025-07-25 12:36:32 - terminal - INFO - Screen activated: admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:32.955373
+2025-07-25 12:36:32 - terminal - INFO - Switched to admin section: system_status | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:32.955509
+2025-07-25 12:36:32 - terminal - INFO - Screen changed to: admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:32.955636
+2025-07-25 12:36:37 - terminal - INFO - Touch event detected: pos=(353, 45), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:37.134568
+2025-07-25 12:36:37 - terminal - INFO - Admin screen back button clicked | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:37.134820
+2025-07-25 12:36:37 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:37.134936
+2025-07-25 12:36:37 - terminal - INFO - State Transition: error -> idle | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:37.156805 | from_state=error | to_state=idle | trigger=admin_back_clicked | duration_seconds=6.733275
+2025-07-25 12:36:37 - terminal - INFO - Screen deactivated: admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:37.157133
+2025-07-25 12:36:37 - terminal - INFO - Screen activated: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:37.157237
+2025-07-25 12:36:37 - terminal - INFO - Screen changed to: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:37.157306
+2025-07-25 12:36:38 - terminal - INFO - Touch event detected: pos=(428, 741), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:38.971013
+2025-07-25 12:36:38 - terminal - INFO - Admin button clicked | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:38.971259
+2025-07-25 12:36:38 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:38.971352
+2025-07-25 12:36:39 - terminal - INFO - Screen deactivated: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:39.017897
+2025-07-25 12:36:39 - terminal - INFO - Screen activated: admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:39.018303
+2025-07-25 12:36:39 - terminal - INFO - Switched to admin section: system_status | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:39.018498
+2025-07-25 12:36:39 - terminal - INFO - Screen changed to: admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:39.018686
+2025-07-25 12:36:41 - terminal - INFO - Touch event detected: pos=(177, 88), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:41.210281
+2025-07-25 12:36:41 - terminal - INFO - Switched to admin section: user_management | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:41.210517
+2025-07-25 12:36:41 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:41.210626
+2025-07-25 12:36:42 - terminal - INFO - Touch event detected: pos=(266, 73), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:42.278863
+2025-07-25 12:36:44 - terminal - INFO - Touch event detected: pos=(268, 74), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:44.265062
+2025-07-25 12:36:44 - terminal - INFO - Touch event detected: pos=(373, 81), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:44.773635
+2025-07-25 12:36:44 - terminal - INFO - Switched to admin section: diagnostics | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:44.773965
+2025-07-25 12:36:44 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:44.774094
+2025-07-25 12:36:46 - terminal - INFO - Touch event detected: pos=(168, 80), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:46.237133
+2025-07-25 12:36:46 - terminal - INFO - Switched to admin section: user_management | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:46.237444
+2025-07-25 12:36:46 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:46.237600
+2025-07-25 12:36:46 - terminal - INFO - Touch event detected: pos=(68, 82), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:46.810056
+2025-07-25 12:36:46 - terminal - INFO - Switched to admin section: system_status | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:46.810355
+2025-07-25 12:36:46 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:46.810499
+2025-07-25 12:36:51 - terminal - INFO - Touch event detected: pos=(364, 83), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:51.456898
+2025-07-25 12:36:51 - terminal - INFO - Switched to admin section: diagnostics | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:51.457147
+2025-07-25 12:36:51 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:51.457256
+2025-07-25 12:36:52 - terminal - INFO - Touch event detected: pos=(262, 68), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:52.677790
+2025-07-25 12:36:53 - terminal - INFO - Touch event detected: pos=(361, 34), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:53.784902
+2025-07-25 12:36:53 - terminal - INFO - Admin screen back button clicked | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:53.785136
+2025-07-25 12:36:53 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:53.785245
+2025-07-25 12:36:53 - terminal - ERROR - Error in state transition: Invalid transition: idle -> idle | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:53.798843 | from_state=idle | to_state=idle | trigger=admin_back_clicked
+2025-07-25 12:36:53 - terminal - ERROR - Emergency transition to error state | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:53.799276 | error_message=Invalid transition: idle -> idle | previous_state=idle
+2025-07-25 12:36:54 - terminal - INFO - Touch event detected: pos=(362, 38), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:54.678646
+2025-07-25 12:36:54 - terminal - INFO - Admin screen back button clicked | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:54.678906
+2025-07-25 12:36:54 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:54.679030
+2025-07-25 12:36:54 - terminal - INFO - State Transition: error -> idle | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:54.692792 | from_state=error | to_state=idle | trigger=admin_back_clicked | duration_seconds=0.893477
+2025-07-25 12:36:54 - terminal - INFO - Screen deactivated: admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:54.693279
+2025-07-25 12:36:54 - terminal - INFO - Screen activated: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:54.693418
+2025-07-25 12:36:54 - terminal - INFO - Screen changed to: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:36:54.693504
+2025-07-25 12:37:00 - terminal - WARNING - Connection error (attempt 1/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:37:00.498499
+2025-07-25 12:37:02 - terminal - WARNING - Connection error (attempt 2/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:37:02.502491
+2025-07-25 12:37:06 - terminal - WARNING - Connection error (attempt 3/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:37:06.508292
+2025-07-25 12:37:12 - terminal - INFO - Touch event detected: pos=(383, 213), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:37:12.551208
+2025-07-25 12:37:12 - terminal - INFO - Touch activation triggered - no component handled the event | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:37:12.551503
+2025-07-25 12:37:12 - terminal - INFO - Touch activation triggered | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:37:12.551647
+2025-07-25 12:37:12 - terminal - INFO - State Transition: idle -> activation | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:37:12.578434 | from_state=idle | to_state=activation | trigger=touch_activation | duration_seconds=17.885186
+2025-07-25 12:37:12 - terminal - INFO - Screen deactivated: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:37:12.578807
+2025-07-25 12:37:12 - terminal - INFO - Screen activated: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:37:12.578893
+2025-07-25 12:37:12 - terminal - INFO - Screen changed to: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:37:12.578957
+2025-07-25 12:37:30 - terminal - WARNING - Connection error (attempt 1/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:37:30.522348
+2025-07-25 12:37:31 - terminal - INFO - Received signal 2 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:37:31.335157
+2025-07-25 12:37:32 - terminal - WARNING - Connection error (attempt 2/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:37:32.525627
+2025-07-25 12:37:32 - terminal - INFO - Received signal 2 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:37:32.569292
+2025-07-25 12:37:33 - terminal - INFO - Received signal 2 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:37:33.170099
+2025-07-25 12:37:36 - terminal - INFO - Received signal 2 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:37:36.008644
+2025-07-25 12:37:36 - terminal - WARNING - Connection error (attempt 3/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:37:36.531620
+2025-07-25 12:37:36 - terminal - INFO - Received signal 2 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:37:36.712469
+2025-07-25 12:37:39 - terminal - INFO - Received signal 2 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:37:39.054720
+2025-07-25 12:37:39 - terminal - INFO - Received signal 2 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:37:39.567423
+2025-07-25 12:37:41 - terminal - INFO - Received signal 2 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:37:41.592549
+2025-07-25 12:37:42 - terminal - INFO - Starting graceful shutdown... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:37:42.568026
+2025-07-25 12:37:42 - terminal - INFO - Auto sync loop terminated | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:37:42.568336
+2025-07-25 12:37:42 - terminal - INFO - Auto sync stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:37:42.568475
+2025-07-25 12:37:42 - terminal - INFO - Simple camera manager stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:37:42.572521
+2025-07-25 12:37:42 - terminal - INFO - Proximity monitoring stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:37:42.572680
+2025-07-25 12:37:42 - terminal - INFO - Fingerprint sensor cleanup completed | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:37:42.572782
+2025-07-25 12:37:42 - terminal - INFO - Proximity monitoring stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:37:42.572868
+2025-07-25 12:37:42 - terminal - INFO - Proximity sensor cleanup completed | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:37:42.572946
+2025-07-25 12:37:42 - terminal - INFO - Cerrando conexi�n a la base de datos | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:37:42.573024
+2025-07-25 12:37:42 - terminal - INFO - UI Manager stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:37:42.643793
+2025-07-25 12:37:42 - terminal - INFO - Graceful shutdown completed | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:37:42.644364
+2025-07-25 12:40:26 - terminal - INFO - State Manager initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:26.190309 | initial_state=idle
+2025-07-25 12:40:26 - terminal - INFO - Face cascade loaded from: /usr/share/opencv4/haarcascades/haarcascade_frontalface_default.xml | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:26.249735
+2025-07-25 12:40:26 - terminal - INFO - Camera configured: 480x640 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:26.256292
+2025-07-25 12:40:26 - terminal - INFO - Simple camera manager initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:26.256588
+2025-07-25 12:40:26 - terminal - INFO - Fingerprint manager initialized - Mock mode: False | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:26.256763
+2025-07-25 12:40:26 - terminal - INFO - Proximity manager initialized - Mock mode: False | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:26.256883
+2025-07-25 12:40:26 - terminal - INFO - API Client initialized for terminal TERMINAL_001 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:26.256982
+2025-07-25 12:40:26 - terminal - INFO - API Client initialized for terminal TERMINAL_001 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:26.257076
+2025-07-25 12:40:26 - terminal - INFO - Verification service initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:26.257183
+2025-07-25 12:40:26 - terminal - INFO - Sync service initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:26.257272
+2025-07-25 12:40:26 - terminal - INFO - BioEntry Terminal initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:26.257363
+2025-07-25 12:40:26 - terminal - INFO - Starting BioEntry Terminal initialization... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:26.257550
+2025-07-25 12:40:26 - terminal - INFO - Initializing database... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:26.257634
+2025-07-25 12:40:26 - terminal - INFO - Base de datos inicializada exitosamente | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:26.260725 | db_path=/home/jesus/App/Bioentry-terminal-firmware/data/database.db
+2025-07-25 12:40:26 - terminal - INFO - Database initialization successful | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:26.260874
+2025-07-25 12:40:26 - terminal - INFO - Initializing hardware managers... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:26.260959
+2025-07-25 12:40:26 - terminal - INFO - Simple camera manager started | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:26.261341
+2025-07-25 12:40:26 - terminal - INFO - Simple camera manager started successfully | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:26.261540
+2025-07-25 12:40:26 - terminal - ERROR - PyFingerprint library not available | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:26.267973
+2025-07-25 12:40:26 - terminal - WARNING - Fingerprint sensor initialization failed - continuing without fingerprint support | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:26.268128
+2025-07-25 12:40:26 - terminal - ERROR - APDS-9930 library not available | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:26.268399
+2025-07-25 12:40:26 - terminal - WARNING - Proximity sensor initialization failed - manual activation only | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:26.268496
+2025-07-25 12:40:26 - terminal - INFO - Initializing UI system... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:26.268582
+2025-07-25 12:40:26 - terminal - INFO - UI Manager initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:26.830195
+2025-07-25 12:40:26 - terminal - INFO - Main screen initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:26.830529
+2025-07-25 12:40:26 - terminal - INFO - Success screen initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:26.830661
+2025-07-25 12:40:26 - terminal - INFO - Manual entry screen initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:26.830818
+2025-07-25 12:40:26 - terminal - INFO - Admin screen initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:26.830966
+2025-07-25 12:40:26 - terminal - INFO - Registering main screen: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:26.831106
+2025-07-25 12:40:26 - terminal - INFO - Registering success screen: success | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:26.831283
+2025-07-25 12:40:26 - terminal - INFO - Registering manual screen: manual_entry | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:26.831373
+2025-07-25 12:40:26 - terminal - INFO - Registering admin screen: admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:26.831466
+2025-07-25 12:40:26 - terminal - INFO - All registered screens: ['main', 'success', 'manual_entry', 'admin'] | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:26.831548
+2025-07-25 12:40:26 - terminal - INFO - Screen activated: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:26.831618
+2025-07-25 12:40:26 - terminal - INFO - Screen changed to: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:26.831685
+2025-07-25 12:40:26 - terminal - INFO - Initializing services... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:26.831752
+2025-07-25 12:40:26 - terminal - INFO - Auto sync started with 300s interval | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:26.831863
+2025-07-25 12:40:26 - terminal - WARNING - Connection error (attempt 1/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:26.835110
+2025-07-25 12:40:26 - terminal - WARNING - Connection error (attempt 1/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:26.836872
+2025-07-25 12:40:28 - terminal - INFO - Camera loop started | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:28.267811
+2025-07-25 12:40:28 - terminal - WARNING - Connection error (attempt 2/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:28.839436
+2025-07-25 12:40:28 - terminal - WARNING - Connection error (attempt 2/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:28.841070
+2025-07-25 12:40:32 - terminal - WARNING - Connection error (attempt 3/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:32.844615
+2025-07-25 12:40:32 - terminal - WARNING - Connection error (attempt 3/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:32.846864
+2025-07-25 12:40:38 - terminal - INFO - API connectivity: Offline | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:38.848063
+2025-07-25 12:40:38 - terminal - ERROR - APDS-9930 library not available | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:38.848576
+2025-07-25 12:40:38 - terminal - ERROR - Error in state transition: Invalid transition: idle -> idle | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:38.848799 | from_state=idle | to_state=idle | trigger=initialization
+2025-07-25 12:40:38 - terminal - ERROR - Emergency transition to error state | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:38.849032 | error_message=Invalid transition: idle -> idle | previous_state=idle
+2025-07-25 12:40:38 - terminal - INFO - BioEntry Terminal initialization completed successfully | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:38.849158
+2025-07-25 12:40:38 - terminal - INFO - Starting BioEntry Terminal main loop | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:38.849273
+2025-07-25 12:40:38 - terminal - INFO - Touch event detected: pos=(210, 474), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:38.850194
+2025-07-25 12:40:38 - terminal - INFO - Touch activation triggered - no component handled the event | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:38.850363
+2025-07-25 12:40:38 - terminal - INFO - Touch event detected: pos=(154, 431), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:38.850732
+2025-07-25 12:40:38 - terminal - INFO - Touch activation triggered - no component handled the event | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:38.850842
+2025-07-25 12:40:50 - terminal - INFO - Touch event detected: pos=(416, 723), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:50.598832
+2025-07-25 12:40:50 - terminal - INFO - Admin button clicked | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:50.599085
+2025-07-25 12:40:50 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:50.599193
+2025-07-25 12:40:50 - terminal - INFO - Screen deactivated: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:50.644631
+2025-07-25 12:40:50 - terminal - INFO - Screen activated: admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:50.644898
+2025-07-25 12:40:50 - terminal - INFO - Switched to admin section: system_status | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:50.645033
+2025-07-25 12:40:50 - terminal - INFO - Screen changed to: admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:50.645156
+2025-07-25 12:40:51 - terminal - INFO - Touch event detected: pos=(84, 126), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:51.497212
+2025-07-25 12:40:51 - terminal - INFO - Touch event detected: pos=(85, 152), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:51.550958
+2025-07-25 12:40:53 - terminal - INFO - Touch event detected: pos=(233, 86), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:53.228709
+2025-07-25 12:40:53 - terminal - INFO - Switched to admin section: configuration | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:53.229000
+2025-07-25 12:40:53 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:53.229142
+2025-07-25 12:40:53 - terminal - INFO - Touch event detected: pos=(166, 75), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:53.891782
+2025-07-25 12:40:54 - terminal - INFO - Touch event detected: pos=(144, 91), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:54.364445
+2025-07-25 12:40:54 - terminal - INFO - Switched to admin section: user_management | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:54.364730
+2025-07-25 12:40:54 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:54.364855
+2025-07-25 12:40:54 - terminal - INFO - Touch event detected: pos=(56, 85), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:54.742813
+2025-07-25 12:40:54 - terminal - INFO - Switched to admin section: system_status | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:54.743066
+2025-07-25 12:40:54 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:54.743176
+2025-07-25 12:40:55 - terminal - INFO - Touch event detected: pos=(148, 83), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:55.239829
+2025-07-25 12:40:55 - terminal - INFO - Switched to admin section: user_management | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:55.240135
+2025-07-25 12:40:55 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:55.240366
+2025-07-25 12:40:56 - terminal - INFO - Touch event detected: pos=(262, 75), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:56.233615
+2025-07-25 12:40:57 - terminal - INFO - Touch event detected: pos=(334, 78), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:57.171978
+2025-07-25 12:40:58 - terminal - INFO - Touch event detected: pos=(239, 72), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:58.191631
+2025-07-25 12:40:58 - terminal - INFO - Touch event detected: pos=(244, 98), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:58.613843
+2025-07-25 12:40:58 - terminal - INFO - Switched to admin section: configuration | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:58.614176
+2025-07-25 12:40:58 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:58.614415
+2025-07-25 12:40:59 - terminal - INFO - Touch event detected: pos=(338, 80), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:59.543221
+2025-07-25 12:40:59 - terminal - INFO - Switched to admin section: diagnostics | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:59.543487
+2025-07-25 12:40:59 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:40:59.543616
+2025-07-25 12:41:00 - terminal - INFO - Touch event detected: pos=(238, 98), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:41:00.254113
+2025-07-25 12:41:00 - terminal - INFO - Switched to admin section: configuration | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:41:00.254431
+2025-07-25 12:41:00 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:41:00.254551
+2025-07-25 12:41:01 - terminal - INFO - Touch event detected: pos=(144, 95), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:41:01.257851
+2025-07-25 12:41:01 - terminal - INFO - Switched to admin section: user_management | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:41:01.258111
+2025-07-25 12:41:01 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:41:01.258224
+2025-07-25 12:41:01 - terminal - INFO - Touch event detected: pos=(52, 97), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:41:01.867588
+2025-07-25 12:41:01 - terminal - INFO - Switched to admin section: system_status | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:41:01.867838
+2025-07-25 12:41:01 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:41:01.867948
+2025-07-25 12:41:03 - terminal - INFO - Quick action clicked: sync | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:41:03.858238
+2025-07-25 12:41:03 - terminal - INFO - Performing data synchronization | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:41:03.858478
+2025-07-25 12:41:03 - terminal - INFO - Action feedback: Synchronizing data... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:41:03.858562
+2025-07-25 12:41:05 - terminal - INFO - Quick action clicked: sync | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:41:05.719734
+2025-07-25 12:41:05 - terminal - INFO - Performing data synchronization | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:41:05.720174
+2025-07-25 12:41:05 - terminal - INFO - Action feedback: Synchronizing data... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:41:05.720412
+2025-07-25 12:41:06 - terminal - INFO - Touch event detected: pos=(335, 37), button=1, screen=admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:41:06.765706
+2025-07-25 12:41:06 - terminal - INFO - Admin screen back button clicked | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:41:06.766381
+2025-07-25 12:41:06 - terminal - INFO - Event handled by component: UIButton | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:41:06.766606
+2025-07-25 12:41:06 - terminal - INFO - State Transition: error -> idle | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:41:06.788313 | from_state=error | to_state=idle | trigger=admin_back_clicked | duration_seconds=27.939264
+2025-07-25 12:41:06 - terminal - INFO - Screen deactivated: admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:41:06.788730
+2025-07-25 12:41:06 - terminal - INFO - Screen activated: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:41:06.788951
+2025-07-25 12:41:06 - terminal - INFO - Screen changed to: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:41:06.789139
+2025-07-25 12:41:08 - terminal - WARNING - Connection error (attempt 1/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:41:08.909752
+2025-07-25 12:41:10 - terminal - WARNING - Connection error (attempt 2/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:41:10.914713
+2025-07-25 12:41:14 - terminal - WARNING - Connection error (attempt 3/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:41:14.922247
+2025-07-25 12:41:23 - terminal - INFO - Received signal 2 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:41:23.020389
+2025-07-25 12:41:23 - terminal - INFO - Starting graceful shutdown... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:41:23.060988
+2025-07-25 12:41:23 - terminal - INFO - Auto sync loop terminated | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:41:23.061302
+2025-07-25 12:41:23 - terminal - INFO - Auto sync stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:41:23.061467
+2025-07-25 12:41:23 - terminal - INFO - Simple camera manager stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:41:23.065580
+2025-07-25 12:41:23 - terminal - INFO - Proximity monitoring stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:41:23.065773
+2025-07-25 12:41:23 - terminal - INFO - Fingerprint sensor cleanup completed | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:41:23.065874
+2025-07-25 12:41:23 - terminal - INFO - Proximity monitoring stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:41:23.065955
+2025-07-25 12:41:23 - terminal - INFO - Proximity sensor cleanup completed | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:41:23.066026
+2025-07-25 12:41:23 - terminal - INFO - Cerrando conexi�n a la base de datos | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:41:23.066099
+2025-07-25 12:41:23 - terminal - INFO - UI Manager stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:41:23.169882
+2025-07-25 12:41:23 - terminal - INFO - Graceful shutdown completed | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:41:23.170286
+2025-07-25 12:48:01 - terminal - INFO - State Manager initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:01.160165 | initial_state=idle
+2025-07-25 12:48:01 - terminal - INFO - Face cascade loaded from: /usr/share/opencv4/haarcascades/haarcascade_frontalface_default.xml | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:01.221482
+2025-07-25 12:48:01 - terminal - INFO - Camera configured: 480x640 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:01.227895
+2025-07-25 12:48:01 - terminal - INFO - Simple camera manager initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:01.228253
+2025-07-25 12:48:01 - terminal - INFO - Fingerprint manager initialized - Mock mode: False | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:01.228408
+2025-07-25 12:48:01 - terminal - INFO - Proximity manager initialized - Mock mode: False | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:01.228519
+2025-07-25 12:48:01 - terminal - INFO - API Client initialized for terminal TERMINAL_001 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:01.228618
+2025-07-25 12:48:01 - terminal - INFO - API Client initialized for terminal TERMINAL_001 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:01.228714
+2025-07-25 12:48:01 - terminal - INFO - Verification service initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:01.228820
+2025-07-25 12:48:01 - terminal - INFO - Sync service initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:01.228911
+2025-07-25 12:48:01 - terminal - INFO - BioEntry Terminal initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:01.229011
+2025-07-25 12:48:01 - terminal - INFO - Starting BioEntry Terminal initialization... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:01.229202
+2025-07-25 12:48:01 - terminal - INFO - Initializing database... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:01.229288
+2025-07-25 12:48:01 - terminal - INFO - Base de datos inicializada exitosamente | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:01.232405 | db_path=/home/jesus/App/Bioentry-terminal-firmware/data/database.db
+2025-07-25 12:48:01 - terminal - INFO - Database initialization successful | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:01.232557
+2025-07-25 12:48:01 - terminal - INFO - Initializing hardware managers... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:01.232639
+2025-07-25 12:48:01 - terminal - INFO - Simple camera manager started | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:01.233023
+2025-07-25 12:48:01 - terminal - INFO - Simple camera manager started successfully | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:01.239093
+2025-07-25 12:48:01 - terminal - ERROR - PyFingerprint library not available | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:01.239601
+2025-07-25 12:48:01 - terminal - WARNING - Fingerprint sensor initialization failed - continuing without fingerprint support | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:01.239735
+2025-07-25 12:48:01 - terminal - ERROR - APDS-9930 library not available | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:01.239936
+2025-07-25 12:48:01 - terminal - WARNING - Proximity sensor initialization failed - manual activation only | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:01.240016
+2025-07-25 12:48:01 - terminal - INFO - Initializing UI system... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:01.240089
+2025-07-25 12:48:01 - terminal - INFO - UI Manager initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:01.772722
+2025-07-25 12:48:01 - terminal - INFO - Main screen initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:01.773070
+2025-07-25 12:48:01 - terminal - INFO - Success screen initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:01.773210
+2025-07-25 12:48:01 - terminal - INFO - Manual entry screen initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:01.773367
+2025-07-25 12:48:01 - terminal - INFO - Admin screen initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:01.773514
+2025-07-25 12:48:01 - terminal - INFO - Registering main screen: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:01.773584
+2025-07-25 12:48:01 - terminal - INFO - Registering success screen: success | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:01.773663
+2025-07-25 12:48:01 - terminal - INFO - Registering manual screen: manual_entry | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:01.773727
+2025-07-25 12:48:01 - terminal - INFO - Registering admin screen: admin | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:01.773791
+2025-07-25 12:48:01 - terminal - INFO - All registered screens: ['main', 'success', 'manual_entry', 'admin'] | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:01.773860
+2025-07-25 12:48:01 - terminal - INFO - Screen activated: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:01.773925
+2025-07-25 12:48:01 - terminal - INFO - Screen changed to: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:01.774009
+2025-07-25 12:48:01 - terminal - INFO - Initializing services... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:01.774078
+2025-07-25 12:48:01 - terminal - INFO - Auto sync started with 300s interval | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:01.774171
+2025-07-25 12:48:01 - terminal - WARNING - Connection error (attempt 1/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:01.776984
+2025-07-25 12:48:01 - terminal - WARNING - Connection error (attempt 1/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:01.778609
+2025-07-25 12:48:03 - terminal - INFO - Camera loop started | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:03.239353
+2025-07-25 12:48:03 - terminal - WARNING - Connection error (attempt 2/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:03.781442
+2025-07-25 12:48:03 - terminal - WARNING - Connection error (attempt 2/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:03.782958
+2025-07-25 12:48:07 - terminal - WARNING - Connection error (attempt 3/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:07.786016
+2025-07-25 12:48:07 - terminal - WARNING - Connection error (attempt 3/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:07.787757
+2025-07-25 12:48:13 - terminal - INFO - API connectivity: Offline | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:13.794176
+2025-07-25 12:48:13 - terminal - ERROR - APDS-9930 library not available | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:13.794674
+2025-07-25 12:48:13 - terminal - INFO - System already in IDLE state, skipping transition | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:13.794809
+2025-07-25 12:48:13 - terminal - INFO - BioEntry Terminal initialization completed successfully | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:13.794905
+2025-07-25 12:48:13 - terminal - INFO - Starting BioEntry Terminal main loop | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:13.795017
+2025-07-25 12:48:13 - terminal - INFO - Touch event detected: pos=(220, 389), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:13.795790
+2025-07-25 12:48:13 - terminal - INFO - Touch activation triggered - no component handled the event | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:13.795964
+2025-07-25 12:48:13 - terminal - INFO - Touch activation triggered | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:13.796116
+2025-07-25 12:48:13 - terminal - INFO - State Transition: idle -> activation | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:13.828183 | from_state=idle | to_state=activation | trigger=touch_activation | duration_seconds=12.668023
+2025-07-25 12:48:13 - terminal - INFO - Screen deactivated: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:13.828666
+2025-07-25 12:48:13 - terminal - INFO - Screen activated: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:13.829165
+2025-07-25 12:48:13 - terminal - INFO - Screen changed to: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:13.829676
+2025-07-25 12:48:43 - terminal - WARNING - Timeout in state activation | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:43.830431 | timeout_seconds=30
+2025-07-25 12:48:43 - terminal - INFO - State Transition: activation -> idle | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:43.830751 | from_state=activation | to_state=idle | trigger=timeout | duration_seconds=30.002123
+2025-07-25 12:48:43 - terminal - INFO - Screen deactivated: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:43.830962
+2025-07-25 12:48:43 - terminal - INFO - Screen activated: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:43.831073
+2025-07-25 12:48:43 - terminal - INFO - Screen changed to: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:43.831154
+2025-07-25 12:48:43 - terminal - WARNING - Connection error (attempt 1/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:43.869641
+2025-07-25 12:48:45 - terminal - WARNING - Connection error (attempt 2/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:45.877815
+2025-07-25 12:48:49 - terminal - WARNING - Connection error (attempt 3/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:49.883605
+2025-07-25 12:48:55 - terminal - INFO - Touch event detected: pos=(64, 415), button=1, screen=main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:55.922259
+2025-07-25 12:48:55 - terminal - INFO - Touch activation triggered - no component handled the event | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:55.922900
+2025-07-25 12:48:55 - terminal - INFO - Touch activation triggered | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:55.923185
+2025-07-25 12:48:55 - terminal - INFO - State Transition: idle -> activation | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:55.951759 | from_state=idle | to_state=activation | trigger=touch_activation | duration_seconds=12.120802
+2025-07-25 12:48:55 - terminal - INFO - Screen deactivated: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:55.952463
+2025-07-25 12:48:55 - terminal - INFO - Screen activated: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:55.952696
+2025-07-25 12:48:55 - terminal - INFO - Screen changed to: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:48:55.952829
+2025-07-25 12:49:12 - terminal - INFO - Received signal 2 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:49:12.516338
+2025-07-25 12:49:12 - terminal - INFO - Starting graceful shutdown... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:49:12.522754
+2025-07-25 12:49:12 - terminal - INFO - Auto sync loop terminated | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:49:12.523224
+2025-07-25 12:49:12 - terminal - INFO - Auto sync stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:49:12.523419
+2025-07-25 12:49:12 - terminal - INFO - Simple camera manager stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:49:12.527491
+2025-07-25 12:49:12 - terminal - INFO - Proximity monitoring stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:49:12.527753
+2025-07-25 12:49:12 - terminal - INFO - Fingerprint sensor cleanup completed | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:49:12.527878
+2025-07-25 12:49:12 - terminal - INFO - Proximity monitoring stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:49:12.527962
+2025-07-25 12:49:12 - terminal - INFO - Proximity sensor cleanup completed | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:49:12.528035
+2025-07-25 12:49:12 - terminal - INFO - Cerrando conexi�n a la base de datos | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:49:12.528111
+2025-07-25 12:49:12 - terminal - INFO - UI Manager stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:49:12.603214
+2025-07-25 12:49:12 - terminal - INFO - Graceful shutdown completed | terminal_id=TERMINAL_001 | timestamp=2025-07-25T17:49:12.603558

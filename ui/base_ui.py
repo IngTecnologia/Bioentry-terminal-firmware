@@ -19,29 +19,36 @@ from utils.state_manager import get_state_manager, SystemState
 
 
 class UIColors:
-    """Color constants for the UI"""
-    PRIMARY = (34, 139, 34)        # Forest Green
-    SECONDARY = (46, 125, 50)      # Dark Green
-    ACCENT = (76, 175, 80)         # Light Green
-    BACKGROUND = (245, 245, 245)   # Light Gray
+    """Color constants for the UI - Professional Blue Theme"""
+    PRIMARY = (25, 118, 210)       # Material Blue
+    SECONDARY = (21, 101, 192)     # Darker Blue
+    ACCENT = (33, 150, 243)        # Light Blue
+    BACKGROUND = (248, 249, 250)   # Very Light Gray
     SURFACE = (255, 255, 255)      # White
     ERROR = (244, 67, 54)          # Red
-    WARNING = (255, 193, 7)        # Amber
-    SUCCESS = (76, 175, 80)        # Green
+    WARNING = (255, 152, 0)        # Orange
+    SUCCESS = (76, 175, 80)        # Green (keep for success states)
     TEXT_PRIMARY = (33, 33, 33)    # Dark Gray
     TEXT_SECONDARY = (117, 117, 117) # Gray
     TEXT_DISABLED = (158, 158, 158) # Light Gray
     BORDER = (224, 224, 224)       # Light Border
     SHADOW = (0, 0, 0, 50)         # Semi-transparent black
+    
+    # Additional colors for modern design
+    CARD_BACKGROUND = (255, 255, 255)  # White cards
+    CARD_SHADOW = (0, 0, 0, 20)        # Light shadow
+    HOVER = (227, 242, 253)            # Light blue hover
 
 
 class UIFonts:
-    """Font constants for the UI"""
-    TITLE = 32
-    SUBTITLE = 24
-    BODY = 18
-    CAPTION = 14
-    BUTTON = 20
+    """Font constants for the UI - Optimized for 4" touchscreen"""
+    TITLE = 48        # Much larger for terminal title
+    SUBTITLE = 32     # Larger subtitles
+    BODY = 24         # Larger body text
+    CAPTION = 18      # Larger captions
+    BUTTON = 28       # Larger button text
+    LARGE_BUTTON = 36 # For main action buttons
+    SMALL = 16        # For admin/detailed info
 
 
 @dataclass
@@ -151,25 +158,49 @@ class UIButton(UIComponent):
             bg_color = UIColors.SURFACE
             text_color = UIColors.TEXT_PRIMARY
         
-        # Adjust for states
+        # Modern button effects
+        border_radius = 12  # More rounded corners
+        shadow_offset = 2
+        
+        # Adjust for states with better visual feedback
         if not self.enabled:
             bg_color = UIColors.TEXT_DISABLED
             text_color = UIColors.SURFACE
+            shadow_offset = 0
         elif self.pressed:
-            bg_color = tuple(max(0, c - 20) for c in bg_color)
+            bg_color = tuple(max(0, c - 30) for c in bg_color)
+            shadow_offset = 1
         elif self.hover:
-            bg_color = tuple(min(255, c + 20) for c in bg_color)
+            if self.style == "outline":
+                bg_color = UIColors.HOVER
+            else:
+                bg_color = tuple(min(255, c + 30) for c in bg_color)
+            shadow_offset = 3
+        
+        # Draw shadow for depth
+        if shadow_offset > 0:
+            shadow_rect = pygame.Rect(
+                self.rect.x + shadow_offset, 
+                self.rect.y + shadow_offset,
+                self.rect.width, 
+                self.rect.height
+            )
+            shadow_surface = pygame.Surface((self.rect.width, self.rect.height))
+            shadow_surface.set_alpha(30)
+            shadow_surface.fill((0, 0, 0))
+            surface.blit(shadow_surface, (shadow_rect.x, shadow_rect.y))
         
         # Draw button background
-        pygame.draw.rect(surface, bg_color, self.rect.get_pygame_rect(), border_radius=8)
+        pygame.draw.rect(surface, bg_color, self.rect.get_pygame_rect(), border_radius=border_radius)
         
         # Draw border for outline style
         if self.style == "outline":
             pygame.draw.rect(surface, UIColors.PRIMARY, self.rect.get_pygame_rect(), 
-                           width=2, border_radius=8)
+                           width=3, border_radius=border_radius)
         
-        # Draw text
-        font = pygame.font.Font(None, UIFonts.BUTTON)
+        # Draw text with appropriate font size
+        font_size = UIFonts.LARGE_BUTTON if self.rect.width > 150 else UIFonts.BUTTON
+        font = pygame.font.Font(None, font_size)
         text_surface = font.render(self.text, True, text_color)
         text_rect = text_surface.get_rect(center=(self.rect.center_x(), self.rect.center_y()))
         surface.blit(text_surface, text_rect)
@@ -303,13 +334,22 @@ class UIScreen:
     
     def handle_event(self, event: pygame.event.Event) -> bool:
         """Handle pygame event"""
-        # Handle touch screen activation for main screen
-        if event.type == pygame.MOUSEBUTTONDOWN and self.name == "main":
-            self._handle_touch_activation()
+        # Debug logging for touch events
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            self.logger.info(f"Touch event detected: pos={event.pos}, button={event.button}, screen={self.name}")
         
+        # First, let components handle the event (including buttons)
         for component in reversed(self.components):  # Top to bottom
             if component.handle_event(event):
+                self.logger.info(f"Event handled by component: {type(component).__name__}")
                 return True
+        
+        # If no component handled it, then handle touch screen activation for main screen
+        if event.type == pygame.MOUSEBUTTONDOWN and self.name == "main":
+            self.logger.info("Touch activation triggered - no component handled the event")
+            self._handle_touch_activation()
+            return True
+        
         return False
     
     def _handle_touch_activation(self) -> None:
@@ -349,6 +389,23 @@ class UIManager:
         # Initialize pygame
         pygame.init()
         
+        # Enable touch screen support explicitly
+        import os
+        # Force SDL to use the correct input driver for touchscreen
+        if not os.getenv('SDL_MOUSEDRV'):
+            os.environ['SDL_MOUSEDRV'] = 'TSLIB'
+        
+        # Debug: Check available input devices
+        print(f"DEBUG: Pygame version: {pygame.version.ver}")
+        print(f"DEBUG: SDL version: {pygame.version.SDL}")
+        try:
+            print(f"DEBUG: Display driver: {pygame.display.get_driver()}")
+        except:
+            print("DEBUG: Could not get display driver")
+        
+        # Check if mouse is initialized (it should be after pygame.init())
+        print(f"DEBUG: Mouse initialized: {hasattr(pygame.mouse, 'get_pressed')}")
+        
         # Get screen dimensions for fullscreen display
         info = pygame.display.Info()
         self.screen_width = info.current_w
@@ -360,6 +417,27 @@ class UIManager:
         
         # Hide mouse cursor for touchscreen interface
         pygame.mouse.set_visible(False)
+        
+        # Debug: Print screen info
+        print(f"DEBUG: Screen dimensions: {self.screen_width}x{self.screen_height}")
+        print(f"DEBUG: Screen mode: {'FULLSCREEN' if pygame.FULLSCREEN else 'WINDOWED'}")
+        
+        # Try to enable touch events explicitly
+        try:
+            # Allow all event types first
+            pygame.event.set_allowed(None)
+            # Then specifically ensure mouse events are allowed
+            pygame.event.set_allowed([pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP, pygame.MOUSEMOTION, pygame.KEYDOWN, pygame.QUIT])
+            print("DEBUG: Touch events explicitly enabled")
+        except Exception as e:
+            print(f"DEBUG: Could not configure touch events: {e}")
+        
+        # Test event polling
+        test_events = pygame.event.get()
+        print(f"DEBUG: Initial event queue had {len(test_events)} events")
+        
+        # Force event pump to ensure events are being processed
+        pygame.event.pump()
         
         # Screen management
         self.screens: Dict[str, UIScreen] = {}
@@ -535,6 +613,13 @@ class UIFullscreenCamera(UIComponent):
         self.face_detection_enabled = False
         self.face_boxes = []  # List of face detection boxes
         
+        # Smooth transition system for face detection
+        self.face_box_alpha = {}  # Track alpha for each box
+        self.face_box_last_seen = {}  # Track when each box was last seen
+        self.fade_speed = 8  # Alpha change per frame
+        self.max_alpha = 255
+        self.detection_stability_threshold = 3  # Frames to consider detection stable
+        
     def set_camera_frame(self, frame) -> None:
         """Set camera frame from numpy array or pygame surface"""
         if frame is None:
@@ -566,9 +651,46 @@ class UIFullscreenCamera(UIComponent):
             self.camera_surface = pygame.transform.scale(frame, (self.rect.width, self.rect.height))
     
     def set_face_detections(self, face_boxes: list) -> None:
-        """Set face detection boxes"""
+        """Set face detection boxes with smooth transitions"""
+        import time
+        current_time = time.time()
+        
+        # Update face boxes and track timing
         self.face_boxes = face_boxes or []
         self.face_detection_enabled = True
+        
+        # Create unique IDs for face boxes based on position
+        current_face_ids = set()
+        for i, box in enumerate(self.face_boxes):
+            face_id = f"face_{int(box[0]*100)}_{int(box[1]*100)}"
+            current_face_ids.add(face_id)
+            
+            # Initialize or update face tracking
+            if face_id not in self.face_box_alpha:
+                self.face_box_alpha[face_id] = 0
+            self.face_box_last_seen[face_id] = current_time
+        
+        # Fade out faces that are no longer detected
+        faces_to_remove = []
+        for face_id in list(self.face_box_alpha.keys()):
+            if face_id not in current_face_ids:
+                # Check if face has been gone long enough to start fading
+                if current_time - self.face_box_last_seen.get(face_id, 0) > 0.1:  # 100ms grace period
+                    self.face_box_alpha[face_id] = max(0, self.face_box_alpha[face_id] - self.fade_speed)
+                    if self.face_box_alpha[face_id] <= 0:
+                        faces_to_remove.append(face_id)
+        
+        # Remove completely faded faces
+        for face_id in faces_to_remove:
+            del self.face_box_alpha[face_id]
+            if face_id in self.face_box_last_seen:
+                del self.face_box_last_seen[face_id]
+        
+        # Fade in current faces
+        for face_id in current_face_ids:
+            if face_id in self.face_box_alpha:
+                self.face_box_alpha[face_id] = min(self.max_alpha, 
+                                                  self.face_box_alpha[face_id] + self.fade_speed)
     
     def draw(self, surface: pygame.Surface) -> None:
         if not self.visible:
@@ -587,65 +709,94 @@ class UIFullscreenCamera(UIComponent):
             text_rect = text_surface.get_rect(center=(self.rect.center_x(), self.rect.center_y()))
             surface.blit(text_surface, text_rect)
         
-        # Draw face detection boxes
-        if self.face_detection_enabled and self.face_boxes:
-            for box in self.face_boxes:
-                # box format: (x, y, width, height) in normalized coordinates
-                x, y, w, h = box
-                # Scale to fullscreen size
-                scaled_x = self.rect.x + int(x * self.rect.width)
-                scaled_y = self.rect.y + int(y * self.rect.height)
-                scaled_w = int(w * self.rect.width)
-                scaled_h = int(h * self.rect.height)
+        # Draw face detection boxes with smooth transitions
+        if self.face_detection_enabled and (self.face_boxes or self.face_box_alpha):
+            # Draw current faces
+            for i, box in enumerate(self.face_boxes):
+                face_id = f"face_{int(box[0]*100)}_{int(box[1]*100)}"
+                alpha = self.face_box_alpha.get(face_id, 0)
                 
-                # Draw green box for face detection
-                pygame.draw.rect(surface, UIColors.SUCCESS, 
-                               (scaled_x, scaled_y, scaled_w, scaled_h), 3)
-                
-                # Draw corner indicators
-                corner_size = 25
-                corner_thickness = 4
-                
-                # Top-left corner
-                pygame.draw.line(surface, UIColors.SUCCESS, 
-                               (scaled_x, scaled_y + corner_size), (scaled_x, scaled_y), corner_thickness)
-                pygame.draw.line(surface, UIColors.SUCCESS, 
-                               (scaled_x, scaled_y), (scaled_x + corner_size, scaled_y), corner_thickness)
-                
-                # Top-right corner
-                pygame.draw.line(surface, UIColors.SUCCESS, 
-                               (scaled_x + scaled_w - corner_size, scaled_y), (scaled_x + scaled_w, scaled_y), corner_thickness)
-                pygame.draw.line(surface, UIColors.SUCCESS, 
-                               (scaled_x + scaled_w, scaled_y), (scaled_x + scaled_w, scaled_y + corner_size), corner_thickness)
-                
-                # Bottom-left corner
-                pygame.draw.line(surface, UIColors.SUCCESS, 
-                               (scaled_x, scaled_y + scaled_h - corner_size), (scaled_x, scaled_y + scaled_h), corner_thickness)
-                pygame.draw.line(surface, UIColors.SUCCESS, 
-                               (scaled_x, scaled_y + scaled_h), (scaled_x + corner_size, scaled_y + scaled_h), corner_thickness)
-                
-                # Bottom-right corner
-                pygame.draw.line(surface, UIColors.SUCCESS, 
-                               (scaled_x + scaled_w - corner_size, scaled_y + scaled_h), (scaled_x + scaled_w, scaled_y + scaled_h), corner_thickness)
-                pygame.draw.line(surface, UIColors.SUCCESS, 
-                               (scaled_x + scaled_w, scaled_y + scaled_h), (scaled_x + scaled_w, scaled_y + scaled_h - corner_size), corner_thickness)
-                
-                # Draw "CARA DETECTADA" text
-                font = pygame.font.Font(None, UIFonts.SUBTITLE)
-                text = "CARA DETECTADA"
-                text_surface = font.render(text, True, UIColors.SUCCESS)
-                
-                # Position text above the detection box
-                text_x = scaled_x + (scaled_w - text_surface.get_width()) // 2
-                text_y = scaled_y - 35 if scaled_y > 40 else scaled_y + scaled_h + 10
-                
-                # Draw text background
-                text_bg_rect = pygame.Rect(text_x - 10, text_y - 5, 
-                                          text_surface.get_width() + 20, text_surface.get_height() + 10)
-                pygame.draw.rect(surface, (0, 0, 0, 180), text_bg_rect, border_radius=5)
-                
-                # Draw text
-                surface.blit(text_surface, (text_x, text_y))
+                if alpha > 10:  # Only draw if sufficiently visible
+                    x, y, w, h = box
+                    # Scale to fullscreen size
+                    scaled_x = self.rect.x + int(x * self.rect.width)
+                    scaled_y = self.rect.y + int(y * self.rect.height)
+                    scaled_w = int(w * self.rect.width)
+                    scaled_h = int(h * self.rect.height)
+                    
+                    # Create surface for alpha blending
+                    face_surface = pygame.Surface((scaled_w + 6, scaled_h + 6))
+                    face_surface.set_alpha(alpha)
+                    face_surface.fill((0, 0, 0, 0))
+                    
+                    # Draw modern face detection box with gradient effect
+                    color_intensity = int(alpha / 255.0 * 255)
+                    detection_color = (33, 150, 243, color_intensity)  # Blue with alpha
+                    
+                    # Draw main detection rectangle
+                    pygame.draw.rect(face_surface, detection_color[:3], 
+                                   (3, 3, scaled_w, scaled_h), 4)
+                    
+                    # Draw modern corner indicators with rounded corners
+                    corner_size = 30
+                    corner_thickness = 6
+                    corner_color = detection_color[:3]
+                    
+                    # Top-left corner
+                    pygame.draw.line(face_surface, corner_color, 
+                                   (3, 3 + corner_size), (3, 3), corner_thickness)
+                    pygame.draw.line(face_surface, corner_color, 
+                                   (3, 3), (3 + corner_size, 3), corner_thickness)
+                    
+                    # Top-right corner  
+                    pygame.draw.line(face_surface, corner_color, 
+                                   (scaled_w + 3 - corner_size, 3), (scaled_w + 3, 3), corner_thickness)
+                    pygame.draw.line(face_surface, corner_color, 
+                                   (scaled_w + 3, 3), (scaled_w + 3, 3 + corner_size), corner_thickness)
+                    
+                    # Bottom-left corner
+                    pygame.draw.line(face_surface, corner_color, 
+                                   (3, scaled_h + 3 - corner_size), (3, scaled_h + 3), corner_thickness)
+                    pygame.draw.line(face_surface, corner_color, 
+                                   (3, scaled_h + 3), (3 + corner_size, scaled_h + 3), corner_thickness)
+                    
+                    # Bottom-right corner
+                    pygame.draw.line(face_surface, corner_color, 
+                                   (scaled_w + 3 - corner_size, scaled_h + 3), (scaled_w + 3, scaled_h + 3), corner_thickness)
+                    pygame.draw.line(face_surface, corner_color, 
+                                   (scaled_w + 3, scaled_h + 3), (scaled_w + 3, scaled_h + 3 - corner_size), corner_thickness)
+                    
+                    # Blit the face detection surface
+                    surface.blit(face_surface, (scaled_x - 3, scaled_y - 3))
+                    
+                    # Draw "ROSTRO DETECTADO" text with fade
+                    if alpha > 150:  # Only show text when detection is stable
+                        font = pygame.font.Font(None, UIFonts.BODY)
+                        text = "ROSTRO DETECTADO"
+                        text_surface = font.render(text, True, UIColors.PRIMARY)
+                        
+                        # Position text above the detection box
+                        text_x = scaled_x + (scaled_w - text_surface.get_width()) // 2
+                        text_y = scaled_y - 40 if scaled_y > 50 else scaled_y + scaled_h + 15
+                        
+                        # Draw modern text background with rounded corners
+                        text_bg_rect = pygame.Rect(text_x - 15, text_y - 8, 
+                                                  text_surface.get_width() + 30, text_surface.get_height() + 16)
+                        
+                        # Create text background surface for alpha
+                        text_bg_surface = pygame.Surface((text_bg_rect.width, text_bg_rect.height))
+                        text_bg_surface.set_alpha(min(200, alpha))
+                        text_bg_surface.fill((255, 255, 255))
+                        pygame.draw.rect(text_bg_surface, (255, 255, 255), 
+                                       (0, 0, text_bg_rect.width, text_bg_rect.height), border_radius=8)
+                        
+                        surface.blit(text_bg_surface, (text_bg_rect.x, text_bg_rect.y))
+                        
+                        # Draw text with alpha
+                        text_alpha_surface = pygame.Surface(text_surface.get_size())
+                        text_alpha_surface.set_alpha(alpha)
+                        text_alpha_surface.blit(text_surface, (0, 0))
+                        surface.blit(text_alpha_surface, (text_x, text_y))
 
 
 class UIOverlay(UIComponent):
