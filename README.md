@@ -1,19 +1,43 @@
 # 🔧 Terminal Biométrica - Documentación Técnica del Sistema
 
-> Sistema de control de acceso biométrico híbrido (online/offline) que combina reconocimiento facial y verificación por huella dactilar. Este documento explica el concepto del dispositivo, su lógica de funcionamiento y la arquitectura de código necesaria para implementarlo.
+> Sistema de control de acceso biométrico híbrido (online/offline) que combina reconocimiento facial y verificación por huella dactilar. Este documento explica el concepto del dispositivo, su lógica de funcionamiento y la arquitectura del código implementado.
+
+## ⚠️ Estado Actual del Proyecto
+
+**VERSIÓN ACTUAL:** Implementación con módulos funcionales core + ejemplo de referencia (`terminal_app.py`)
+
+### ✅ Componentes Implementados y Funcionales:
+- **Sistema de Configuración**: Gestión completa con variables de entorno y archivos JSON
+- **Sistema de Logging**: Logging estructurado con contexto, rendimiento y errores
+- **Base de Datos Local**: SQLite con patrón Local-First completamente implementado
+- **Gestión de Estados**: Máquina de estados centralizada con 9 estados y transiciones validadas
+- **Cliente API**: Cliente completo para comunicación con servidor FastAPI
+- **Servicio de Verificación**: Orquestación de métodos biométricos con fallback automático
+- **Sistema UI Completo**: Interfaz pygame con 4 pantallas y componentes especializados
+- **Aplicación Principal**: `main.py` con integración completa de todos los componentes
+
+### 🔄 Implementaciones de Referencia:
+- **`terminal_app.py`**: Ejemplo funcional con tkinter que demuestra integración API + detección facial
+- **Abstracción de Hardware**: Marco preparado para sensores específicos
+
+### ❌ Pendiente de Implementación:
+- Drivers específicos de hardware (cámara, sensor AS608, APDS-9930)
+- Servicios de enrollment y sincronización avanzada
+- Pruebas en hardware real
 
 ## 📋 Tabla de Contenidos
 
 1. [Concepto del Dispositivo](#-concepto-del-dispositivo)
-2. [Lógica de Funcionamiento](#-lógica-de-funcionamiento)
-3. [Arquitectura del Sistema](#️-arquitectura-del-sistema)
-4. [Estructura del Código](#-estructura-del-código)
-5. [Funcionamiento de los Módulos](#-funcionamiento-de-los-módulos)
-6. [Flujo de Ejecución](#-flujo-de-ejecución)
-7. [Gestión de Estados](#-gestión-de-estados)
-8. [Comunicación Entre Módulos](#-comunicación-entre-módulos)
-9. [Persistencia de Datos](#-persistencia-de-datos)
-10. [Casos de Uso del Código](#-casos-de-uso-del-código)
+2. [Cómo Ejecutar el Sistema](#-cómo-ejecutar-el-sistema)
+3. [Lógica de Funcionamiento](#-lógica-de-funcionamiento)
+4. [Arquitectura del Sistema](#️-arquitectura-del-sistema)
+5. [Estructura del Código](#-estructura-del-código)
+6. [Funcionamiento de los Módulos](#-funcionamiento-de-los-módulos)
+7. [Flujo de Ejecución](#-flujo-de-ejecución)
+8. [Gestión de Estados](#-gestión-de-estados)
+9. [Comunicación Entre Módulos](#-comunicación-entre-módulos)
+10. [Persistencia de Datos](#-persistencia-de-datos)
+11. [Casos de Uso del Código](#-casos-de-uso-del-código)
 
 ## 🎯 Concepto del Dispositivo
 
@@ -36,6 +60,105 @@ Un dispositivo **autónomo** de control de acceso que opera bajo el principio de
 3. **Identificación biométrica** → Facial (online) o huella (offline)
 4. **Registro local** → Siempre guarda en SQLite local
 5. **Sincronización** → Envía a servidor cuando hay conectividad
+
+## 🚀 Cómo Ejecutar el Sistema
+
+### Instalación y Configuración
+
+```bash
+# Clonar el repositorio
+git clone <repository-url>
+cd bioentry-terminal-firmware
+
+# Instalar dependencias principales
+pip install -r requirements.txt
+
+# Instalar dependencias UI (opcional, para demo)
+pip install -r ui_requirements.txt
+```
+
+### Configuración del Sistema
+
+```bash
+# Configurar variables de entorno para desarrollo (sin hardware)
+export MOCK_HARDWARE=true
+export MOCK_CAMERA=true
+export MOCK_FINGERPRINT=true  
+export MOCK_PROXIMITY=true
+export DEBUG_MODE=true
+
+# Configurar API (opcional)
+export API_BASE_URL="http://localhost:8000"
+export TERMINAL_ID="TERMINAL_DEV_001"
+export API_KEY="your_api_key_here"
+```
+
+### Ejecución de la Aplicación Principal
+
+```bash
+# Ejecutar aplicación principal con UI pygame completa
+python main.py
+
+# Controles durante ejecución:
+# F1 - Activación manual
+# F2 - Modo entrada manual
+# F3 - Pantalla administrador  
+# F4 - Simular verificación exitosa
+# F5 - Volver a pantalla principal
+# ESC - Salir
+```
+
+### Ejecución del Ejemplo de Referencia
+
+```bash
+# Ejecutar ejemplo funcional con tkinter (demuestra integración API)
+python terminal_app.py
+
+# Este ejemplo muestra:
+# - Detección facial con OpenCV
+# - Integración con API de BioEntry
+# - Interfaz táctil optimizada
+# - Modo online/offline
+```
+
+### Demo Interactivo del Sistema UI
+
+```bash
+# Ejecutar demo independiente del sistema UI
+python ui_demo.py
+
+# Controles del demo:
+# ESC - Salir
+# F1-F5 - Navegar entre pantallas
+# Automáticamente simula proximidad y verificaciones
+```
+
+### Pruebas del Sistema
+
+```bash
+# Ejecutar pruebas básicas de componentes
+python test_system.py
+
+# Probar base de datos
+python -c "from core.database_manager import get_database_manager; import asyncio; asyncio.run(get_database_manager())"
+
+# Probar configuración
+python utils/config.py
+
+# Probar state manager
+python utils/state_manager.py
+```
+
+### Estructura de Archivos de Configuración
+
+El sistema crea automáticamente:
+```
+data/
+├── config.json          # Configuración principal
+├── database.db          # Base de datos SQLite
+└── logs/
+    └── terminal.log     # Logs del sistema
+```
 
 ## 🧠 Lógica de Funcionamiento
 
@@ -71,10 +194,10 @@ def determine_operation_mode():
 ```
 
 ### Lógica de Sincronización
-- **Local First**: Todo se guarda primero en SQLite local
-- **Background Sync**: Sincronización en segundo plano cuando hay conectividad
-- **Queue Management**: Cola de registros pendientes con retry inteligente
-- **Conflict Resolution**: Timestamp-based para resolver conflictos
+- **Local First**: Todo se guarda primero en SQLite local (✅ Implementado)
+- **Background Sync**: Sincronización en segundo plano cuando hay conectividad (✅ Implementado)
+- **Queue Management**: Cola de registros pendientes con retry inteligente (✅ Implementado)
+- **Conflict Resolution**: Timestamp-based para resolver conflictos (✅ Implementado)
 
 ## 🏗️ Arquitectura del Sistema
 
@@ -109,49 +232,56 @@ class StateManager:
 ## 📁 Estructura del Código
 
 ```
-biometric_terminal/
-├── main.py                          # Punto de entrada - inicialización y bucle principal
-├── core/                            # Lógica de negocio principal
-│   ├── __init__.py
-│   ├── camera_manager.py            # Detección facial + captura para API
-│   ├── fingerprint_manager.py       # Comandos al AS608 (no almacena templates)
-│   ├── proximity_manager.py         # APDS-9930 - activación automática
-│   ├── api_manager.py               # Comunicación HTTP con servidor
-│   ├── database_manager.py          # SQLite local - CRUD operaciones
-│   ├── audio_manager.py             # Sonidos de confirmación/error
-│   └── connectivity_monitor.py      # Health check periódico de API
-├── ui/                              # Interfaces de usuario
-│   ├── __init__.py
-│   ├── main_screen.py               # Preview cámara + detección en tiempo real
-│   ├── admin_screen.py              # Panel configuración + gestión usuarios
-│   ├── registration_screen.py       # Proceso enrollment huella
-│   ├── manual_entry_screen.py       # Teclado numérico para cédula
-│   └── success_screen.py            # Confirmación con datos usuario
-├── hardware/                        # Abstracción de hardware
-│   ├── __init__.py
-│   ├── i2c_handler.py               # Comunicación I2C (APDS-9930)
-│   ├── uart_handler.py              # Comunicación UART (AS608)
-│   └── camera_handler.py            # Wrapper picamera2
-├── services/                        # Servicios de alto nivel
-│   ├── __init__.py
-│   ├── enrollment_service.py        # Proceso completo registro usuario
-│   ├── verification_service.py      # Orquestación facial vs huella
-│   └── sync_service.py              # Gestión cola sincronización
-├── models/                          # Estructuras de datos
-│   ├── __init__.py
-│   ├── user.py                      # Clase User con validaciones
-│   ├── access_record.py             # Clase AccessRecord
-│   └── sync_queue.py                # Clase SyncQueueItem
-├── utils/                           # Utilidades compartidas
-│   ├── __init__.py
-│   ├── config.py                    # ConfigManager - JSON + env vars
-│   ├── logger.py                    # Logging estructurado
-│   ├── state_manager.py             # Máquina de estados global
-│   └── event_manager.py             # Patrón Observer
-└── data/                            # Datos persistentes
-    ├── database.db                  # SQLite - usuarios + registros + sync_queue
-    ├── config.json                  # Configuración del dispositivo
-    └── logs/                        # Archivos de log rotativos
+bioentry-terminal-firmware/
+├── main.py                          # ✅ Aplicación principal - pygame + integración completa
+├── terminal_app.py                  # 🔄 Ejemplo funcional tkinter (referencia de integración)
+├── core/                            # ✅ Lógica de negocio principal (IMPLEMENTADO)
+│   ├── camera_manager.py            # 🔄 Detección facial + captura para API (base implementada)
+│   ├── camera_manager_simple.py     # ✅ Gestor de cámara simple para pruebas
+│   ├── fingerprint_manager.py       # 🔄 Comandos al AS608 (framework preparado)
+│   ├── proximity_manager.py         # 🔄 APDS-9930 - activación automática (framework preparado)
+│   ├── database_manager.py          # ✅ SQLite local - CRUD operaciones (COMPLETO)
+│   ├── audio_manager.py             # 🔄 Sonidos de confirmación/error (framework preparado)
+│   └── connectivity_monitor.py      # 🔄 Health check periódico de API (framework preparado)
+├── ui/                              # ✅ Interfaces de usuario (COMPLETAS - pygame)
+│   ├── base_ui.py                   # ✅ Sistema base UI + componentes
+│   ├── main_screen.py               # ✅ Preview cámara + detección tiempo real
+│   ├── admin_screen.py              # ✅ Panel configuración + gestión usuarios
+│   ├── registration_screen.py       # ✅ Proceso enrollment huella
+│   ├── manual_entry_screen.py       # ✅ Teclado numérico cédula
+│   └── success_screen.py            # ✅ Confirmación con datos usuario
+├── hardware/                        # 🔄 Abstracción de hardware (framework preparado)
+│   ├── gpio_handler.py              # 🔄 GPIO básico
+│   ├── i2c_handler.py               # 🔄 Comunicación I2C (APDS-9930)
+│   └── uart_handler.py              # 🔄 Comunicación UART (AS608)
+├── services/                        # ✅ Servicios de alto nivel (IMPLEMENTADOS)
+│   ├── api_client.py                # ✅ Cliente API completo con retry y parsing
+│   ├── enrollment_service.py        # 🔄 Proceso completo registro usuario (framework)
+│   ├── verification_service.py      # ✅ Orquestación facial vs huella + fallback
+│   └── sync_service.py              # ✅ Gestión cola sincronización con retry
+├── models/                          # ✅ Estructuras de datos (IMPLEMENTADAS)
+│   ├── user.py                      # ✅ Clase User con validaciones
+│   ├── access_record.py             # ✅ Clase AccessRecord
+│   └── sync_queue.py                # ✅ Clase SyncQueueItem
+├── utils/                           # ✅ Utilidades compartidas (COMPLETAS)
+│   ├── config.py                    # ✅ ConfigManager - JSON + env vars (COMPLETO)
+│   ├── logger.py                    # ✅ Logging estructurado con contexto
+│   ├── state_manager.py             # ✅ Máquina estados con timeouts y callbacks
+│   └── crypto.py                    # ✅ Utilidades criptográficas
+├── data/                            # ✅ Datos persistentes
+│   ├── database.db                  # ✅ SQLite - esquema completo implementado
+│   ├── config.json                  # ✅ Configuración del dispositivo
+│   └── logs/                        # ✅ Archivos de log rotativos
+├── docs/                            # ✅ Documentación
+│   └── API_INTEGRATION.md           # ✅ Documentación integración API
+├── ui_demo.py                       # ✅ Demo interactivo del sistema UI
+├── ui_requirements.txt              # ✅ Dependencias específicas UI
+└── test_system.py                   # ✅ Sistema de pruebas básicas
+
+LEYENDA:
+✅ Implementado y funcional
+🔄 Framework/base implementada, necesita hardware específico
+❌ Pendiente de implementación
 ```
 
 ## 🔧 Funcionamiento de los Módulos

@@ -4,23 +4,28 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a biometric terminal firmware project for a hybrid online/offline access control system. The project contains a comprehensive implementation with working core modules including:
+This is a biometric terminal firmware project for a hybrid online/offline access control system. The project contains a comprehensive implementation with working core modules and a complete functional architecture.
 
-**IMPLEMENTED MODULES:**
+**FULLY IMPLEMENTED MODULES:**
 - ✅ **Configuration Management** (`utils/config.py`) - Complete dataclass-based config with environment variable support
-- ✅ **Logging System** (`utils/logger.py`) - Specialized logging with context-aware, performance, and error loggers
+- ✅ **Logging System** (`utils/logger.py`) - Specialized logging with context-aware, performance, and error loggers  
 - ✅ **Database Manager** (`core/database_manager.py`) - SQLite-based Local-First persistence with sync queue
 - ✅ **State Manager** (`utils/state_manager.py`) - Finite state machine with 9 states and controlled transitions
 - ✅ **Complete UI System** (`ui/`) - Full pygame-based interface with 4 screens and specialized components
+- ✅ **API Client** (`services/api_client.py`) - Complete HTTP client with retry, parsing, and all BioEntry endpoints
+- ✅ **Verification Service** (`services/verification_service.py`) - Orchestrates all verification methods with automatic fallback
+- ✅ **Sync Service** (`services/sync_service.py`) - Background synchronization with retry logic and queue management
+- ✅ **Main Application** (`main.py`) - Complete pygame-based terminal application with full integration
+- ✅ **Data Models** (`models/`) - Complete User, AccessRecord, and SyncQueue models with validation
 
-**PARTIALLY IMPLEMENTED:**
-- 🔄 **API Integration** - New terminal-specific endpoints added to main API
-- 🔄 **Hardware Abstraction** - Framework ready, individual drivers pending
+**REFERENCE IMPLEMENTATIONS:**
+- 🔄 **Terminal App Example** (`terminal_app.py`) - Functional tkinter demo with API integration + facial detection
+- 🔄 **Hardware Abstraction** - Framework ready, mock implementations available
 
-**PENDING IMPLEMENTATION:**
-- ❌ Hardware drivers (camera, fingerprint, proximity sensors)
-- ❌ Service layer (verification, enrollment, sync services)
-- ❌ Main application integration
+**HARDWARE-SPECIFIC PENDING:**
+- ❌ AS608 fingerprint sensor driver (framework exists, needs physical hardware)
+- ❌ APDS-9930 proximity sensor driver (framework exists, needs physical hardware)
+- ❌ Physical camera integration (simple camera manager implemented, needs Pi camera)
 
 ## Development Commands
 
@@ -29,17 +34,20 @@ This is a biometric terminal firmware project for a hybrid online/offline access
 # Install dependencies
 pip install -r requirements.txt
 
-# Run installation script (when implemented)
-./install.sh
+# Install UI dependencies (for pygame interface)
+pip install -r ui_requirements.txt
 
-# Start the system (when implemented)
-./run.sh
-
-# Run main application
+# Run main application (complete pygame-based terminal)
 python main.py
 
-# Run UI demo (standalone demonstration)
+# Run reference implementation (tkinter + API integration demo)
+python terminal_app.py
+
+# Run UI demo (standalone UI system demonstration)
 python ui_demo.py
+
+# Run basic system tests
+python test_system.py
 ```
 
 ### Development with Hardware Mocking
@@ -50,6 +58,29 @@ export MOCK_CAMERA=true
 export MOCK_FINGERPRINT=true
 export MOCK_PROXIMITY=true
 export DEBUG_MODE=true
+
+# Optional API configuration
+export API_BASE_URL="http://localhost:8000"
+export TERMINAL_ID="TERMINAL_DEV_001"
+export API_KEY="your_api_key_here"
+```
+
+### Testing Individual Components
+```bash
+# Test database manager
+python -c "from core.database_manager import get_database_manager; import asyncio; asyncio.run(get_database_manager())"
+
+# Test configuration system
+python utils/config.py
+
+# Test state manager
+python utils/state_manager.py
+
+# Test API client
+python services/api_client.py
+
+# Test verification service
+python services/verification_service.py
 ```
 
 ## Architecture Overview
@@ -64,10 +95,33 @@ The system follows a **hybrid online/offline architecture** with three operation
 
 ### Key Architectural Principles
 
-- **Local-First Data Strategy**: All access records saved to SQLite immediately, then synced to server
-- **State Machine**: Centralized state management via `StateManager` with defined transitions
-- **Event-Driven Communication**: Components communicate through `EventManager` using Observer pattern
-- **Hardware Abstraction**: Clean separation between hardware interfaces and business logic
+- **Local-First Data Strategy**: All access records saved to SQLite immediately, then synced to server (✅ IMPLEMENTED)
+- **State Machine**: Centralized state management via `StateManager` with defined transitions (✅ IMPLEMENTED)
+- **Service-Oriented Architecture**: High-level services orchestrate business logic (✅ IMPLEMENTED)
+- **Hardware Abstraction**: Clean separation between hardware interfaces and business logic (✅ FRAMEWORK READY)
+- **UI Component System**: Pygame-based modular UI with screen management (✅ IMPLEMENTED)
+
+### Current Working Architecture
+
+The project now has two functional applications:
+
+#### 1. Main Application (`main.py`)
+- **Complete pygame-based terminal** with full integration
+- State machine-driven UI transitions  
+- Hardware abstraction with mock support
+- Real-time camera integration via `simple_camera_manager`
+- Complete verification workflow with API integration
+- Background sync services
+
+#### 2. Reference Implementation (`terminal_app.py`) 
+- **Functional tkinter demonstration** of core concepts
+- Real API integration with BioEntry server
+- OpenCV-based face detection with Haar cascades
+- Online/offline mode switching
+- Touch-optimized fullscreen interface
+- Demonstrates complete verification workflow
+
+Both applications share the same core modules and demonstrate different UI approaches for the same underlying system.
 
 ### Directory Structure and Responsibilities
 
@@ -124,13 +178,80 @@ utils/        # Shared utilities
 - **APDS-9930 Proximity Sensor**: Automatic activation via I2C
 - **4" Touchscreen**: User interface (400x800 vertical)
 
-### Database Schema (SQLite)
+### Database Schema (SQLite) - IMPLEMENTED
 
 ```sql
-users: id, employee_id, document_id, name, fingerprint_template_id, is_active
-access_records: user_id, timestamp, method, verification_type, confidence_score, is_synced
-sync_queue: record_id, action, attempts, status, last_attempt
+-- IMPLEMENTED SCHEMA IN database_manager.py
+CREATE TABLE users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    employee_id TEXT UNIQUE NOT NULL,
+    document_id TEXT UNIQUE NOT NULL,
+    name TEXT NOT NULL,
+    department TEXT,
+    position TEXT,
+    company TEXT DEFAULT 'principal',
+    fingerprint_template_id INTEGER,
+    photo_hash TEXT,
+    is_active BOOLEAN DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    synced_at TIMESTAMP
+);
+
+CREATE TABLE access_records (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    server_id TEXT,
+    user_id INTEGER,
+    document_id TEXT NOT NULL,
+    employee_name TEXT NOT NULL,
+    access_timestamp TIMESTAMP NOT NULL,
+    method TEXT NOT NULL,  -- 'online' | 'offline'
+    verification_type TEXT NOT NULL,  -- 'facial' | 'fingerprint' | 'manual'
+    confidence_score REAL,
+    device_id TEXT NOT NULL,
+    location_name TEXT,
+    is_synced BOOLEAN DEFAULT 0,
+    sync_attempts INTEGER DEFAULT 0,
+    last_sync_attempt TIMESTAMP,
+    sync_error_message TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE sync_queue (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    record_id INTEGER,
+    record_type TEXT NOT NULL,
+    action TEXT NOT NULL,
+    payload TEXT NOT NULL,  -- JSON serialized
+    attempts INTEGER DEFAULT 0,
+    max_attempts INTEGER DEFAULT 5,
+    last_attempt TIMESTAMP,
+    status TEXT DEFAULT 'pending',
+    error_message TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Additional tables for system management
+CREATE TABLE terminal_config (
+    key TEXT PRIMARY KEY,
+    value TEXT NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE performance_metrics (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    metric_name TEXT NOT NULL,
+    value REAL NOT NULL,
+    unit TEXT DEFAULT 'ms',
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    metadata TEXT
+);
 ```
+
+**Complete with indexes for optimization:**
+- User lookups by document_id and fingerprint_template_id
+- Access records by timestamp and sync status
+- Performance metrics by timestamp and metric name
 
 ### Key Implementation Notes
 
@@ -228,3 +349,39 @@ python ui_demo.py
 The demo includes automatic proximity simulation, mock camera feeds, and realistic verification workflows.
 
 This architecture provides a solid foundation for a production-ready biometric terminal with robust offline capabilities and seamless online integration.
+
+## Current Implementation Status
+
+### What Works Now
+
+1. **Complete Core System**: All core modules (config, logging, database, state management) are fully functional
+2. **API Integration**: Complete HTTP client with all BioEntry endpoints implemented and tested
+3. **Verification Pipeline**: Full verification service with automatic fallback between methods
+4. **UI System**: Complete pygame-based interface with 4 screens and responsive design
+5. **Data Persistence**: SQLite database with Local-First pattern and sync queue implementation
+6. **Reference Application**: `terminal_app.py` demonstrates real facial recognition with API integration
+
+### How to Run the System
+
+```bash
+# Set up development environment
+export MOCK_HARDWARE=true
+export DEBUG_MODE=true
+
+# Run main pygame application
+python main.py
+
+# Or run the reference tkinter demo
+python terminal_app.py
+
+# Test UI system independently
+python ui_demo.py
+```
+
+### Next Development Steps
+
+1. **Hardware Drivers**: Implement actual AS608 and APDS-9930 drivers (frameworks ready)
+2. **Physical Testing**: Test on actual Raspberry Pi hardware with sensors
+3. **Production Deployment**: Configure for production environment with real API server
+
+The system is architecturally complete and ready for hardware integration and production deployment.
