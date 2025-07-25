@@ -2929,3 +2929,60 @@ AttributeError: 'StateManager' object has no attribute 'set_state'
 2025-07-25 11:01:17 - terminal - INFO - Cerrando conexi�n a la base de datos | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:01:17.127912
 2025-07-25 11:01:17 - terminal - ERROR - Error during shutdown: 'UIManager' object has no attribute 'cleanup' | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:01:17.127989
 2025-07-25 11:01:17 - terminal - INFO - Received signal 2 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:01:17.331206
+2025-07-25 11:44:15 - terminal - INFO - State Manager initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:15.645532 | initial_state=idle
+2025-07-25 11:44:15 - terminal - INFO - Face cascade loaded from: /usr/share/opencv4/haarcascades/haarcascade_frontalface_default.xml | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:15.706159
+2025-07-25 11:44:15 - terminal - INFO - Camera configured: 480x640 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:15.712299
+2025-07-25 11:44:15 - terminal - INFO - Simple camera manager initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:15.712599
+2025-07-25 11:44:15 - terminal - INFO - Fingerprint manager initialized - Mock mode: False | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:15.712744
+2025-07-25 11:44:15 - terminal - INFO - Proximity manager initialized - Mock mode: False | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:15.712853
+2025-07-25 11:44:15 - terminal - INFO - API Client initialized for terminal TERMINAL_001 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:15.712948
+2025-07-25 11:44:15 - terminal - INFO - API Client initialized for terminal TERMINAL_001 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:15.713043
+2025-07-25 11:44:15 - terminal - INFO - Verification service initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:15.713149
+2025-07-25 11:44:15 - terminal - INFO - Sync service initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:15.713239
+2025-07-25 11:44:15 - terminal - INFO - BioEntry Terminal initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:15.713321
+2025-07-25 11:44:15 - terminal - INFO - Starting BioEntry Terminal initialization... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:15.713510
+2025-07-25 11:44:15 - terminal - INFO - Initializing database... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:15.713597
+2025-07-25 11:44:15 - terminal - INFO - Base de datos inicializada exitosamente | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:15.717956 | db_path=/home/jesus/App/Bioentry-terminal-firmware/data/database.db
+2025-07-25 11:44:15 - terminal - INFO - Database initialization successful | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:15.718121
+2025-07-25 11:44:15 - terminal - INFO - Initializing hardware managers... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:15.718205
+2025-07-25 11:44:15 - terminal - INFO - Simple camera manager started | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:15.718582
+2025-07-25 11:44:15 - terminal - INFO - Simple camera manager started successfully | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:15.724397
+2025-07-25 11:44:15 - terminal - ERROR - PyFingerprint library not available | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:15.724873
+2025-07-25 11:44:15 - terminal - WARNING - Fingerprint sensor initialization failed - continuing without fingerprint support | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:15.724988
+2025-07-25 11:44:15 - terminal - ERROR - APDS-9930 library not available | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:15.725187
+2025-07-25 11:44:15 - terminal - WARNING - Proximity sensor initialization failed - manual activation only | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:15.725270
+2025-07-25 11:44:15 - terminal - INFO - Initializing UI system... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:15.725345
+2025-07-25 11:44:16 - terminal - INFO - UI Manager initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:16.565926
+2025-07-25 11:44:16 - terminal - INFO - Main screen initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:16.566301
+2025-07-25 11:44:16 - terminal - INFO - Success screen initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:16.566461
+2025-07-25 11:44:16 - terminal - INFO - Manual entry screen initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:16.566653
+2025-07-25 11:44:16 - terminal - INFO - Admin screen initialized | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:16.566814
+2025-07-25 11:44:16 - terminal - INFO - Screen activated: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:16.566933
+2025-07-25 11:44:16 - terminal - INFO - Screen changed to: main | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:16.567005
+2025-07-25 11:44:16 - terminal - INFO - Initializing services... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:16.567075
+2025-07-25 11:44:16 - terminal - INFO - Auto sync started with 300s interval | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:16.567181
+2025-07-25 11:44:16 - terminal - WARNING - Connection error (attempt 1/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:16.569923
+2025-07-25 11:44:16 - terminal - WARNING - Connection error (attempt 1/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:16.571552
+2025-07-25 11:44:17 - terminal - INFO - Camera loop started | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:17.724641
+2025-07-25 11:44:18 - terminal - WARNING - Connection error (attempt 2/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:18.574370
+2025-07-25 11:44:18 - terminal - WARNING - Connection error (attempt 2/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:18.575830
+2025-07-25 11:44:22 - terminal - WARNING - Connection error (attempt 3/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:22.580962
+2025-07-25 11:44:22 - terminal - WARNING - Connection error (attempt 3/4) | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:22.582774
+2025-07-25 11:44:28 - terminal - INFO - API connectivity: Offline | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:28.589732
+2025-07-25 11:44:28 - terminal - ERROR - APDS-9930 library not available | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:28.590126
+2025-07-25 11:44:28 - terminal - ERROR - Error in state transition: Invalid transition: idle -> idle | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:28.590256 | from_state=idle | to_state=idle | trigger=initialization
+2025-07-25 11:44:28 - terminal - ERROR - Emergency transition to error state | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:28.590361 | error_message=Invalid transition: idle -> idle | previous_state=idle
+2025-07-25 11:44:28 - terminal - INFO - BioEntry Terminal initialization completed successfully | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:28.590440
+2025-07-25 11:44:28 - terminal - INFO - Starting BioEntry Terminal main loop | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:28.590520
+2025-07-25 11:44:57 - terminal - INFO - Received signal 2 | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:57.704457
+2025-07-25 11:44:57 - terminal - INFO - Starting graceful shutdown... | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:57.731969
+2025-07-25 11:44:57 - terminal - INFO - Auto sync loop terminated | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:57.732259
+2025-07-25 11:44:57 - terminal - INFO - Auto sync stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:57.732367
+2025-07-25 11:44:57 - terminal - INFO - Simple camera manager stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:57.736223
+2025-07-25 11:44:57 - terminal - INFO - Proximity monitoring stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:57.736476
+2025-07-25 11:44:57 - terminal - INFO - Fingerprint sensor cleanup completed | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:57.736643
+2025-07-25 11:44:57 - terminal - INFO - Proximity monitoring stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:57.736832
+2025-07-25 11:44:57 - terminal - INFO - Proximity sensor cleanup completed | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:57.736996
+2025-07-25 11:44:57 - terminal - INFO - Cerrando conexi�n a la base de datos | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:57.737165
+2025-07-25 11:44:57 - terminal - INFO - UI Manager stopped | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:57.825997
+2025-07-25 11:44:57 - terminal - INFO - Graceful shutdown completed | terminal_id=TERMINAL_001 | timestamp=2025-07-25T16:44:57.826341

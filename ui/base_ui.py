@@ -349,11 +349,17 @@ class UIManager:
         # Initialize pygame
         pygame.init()
         
-        # Screen setup for 480x800 vertical display
-        self.screen_width = 480
-        self.screen_height = 800
-        self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
+        # Get screen dimensions for fullscreen display
+        info = pygame.display.Info()
+        self.screen_width = info.current_w
+        self.screen_height = info.current_h
+        
+        # Set fullscreen mode like terminal_app.py
+        self.screen = pygame.display.set_mode((self.screen_width, self.screen_height), pygame.FULLSCREEN)
         pygame.display.set_caption("BioEntry Terminal")
+        
+        # Hide mouse cursor for touchscreen interface
+        pygame.mouse.set_visible(False)
         
         # Screen management
         self.screens: Dict[str, UIScreen] = {}
@@ -406,6 +412,11 @@ class UIManager:
                 if event.type == pygame.QUIT:
                     self.running = False
                     break
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        self.logger.info("Exit requested via ESC key")
+                        self.running = False
+                        break
                 
                 # Let current screen handle event
                 if self.current_screen:
@@ -433,6 +444,10 @@ class UIManager:
         self.running = False
         pygame.quit()
         self.logger.info("UI Manager stopped")
+    
+    def cleanup(self) -> None:
+        """Cleanup UI resources"""
+        self.stop()
     
     def _on_idle_state(self, state: SystemState, data: Any) -> None:
         """Handle idle state"""
@@ -534,9 +549,11 @@ class UIFullscreenCamera(UIComponent):
                 # Resize frame to fullscreen
                 frame_resized = cv2.resize(frame, (self.rect.width, self.rect.height))
                 
-                # Camera manager already provides RGB format, but pygame expects different axis order
-                # Convert RGB to pygame format
-                frame_surface = pygame.surfarray.make_surface(frame_resized.swapaxes(0, 1))
+                # Convert BGR to RGB (same as terminal_app.py)
+                frame_rgb = cv2.cvtColor(frame_resized, cv2.COLOR_BGR2RGB)
+                
+                # Convert to pygame surface with correct axis order
+                frame_surface = pygame.surfarray.make_surface(frame_rgb.swapaxes(0, 1))
                 self.camera_surface = frame_surface
                 
             except Exception as e:
